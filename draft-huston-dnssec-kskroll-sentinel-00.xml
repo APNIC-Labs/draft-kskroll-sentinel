@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-huston-kskroll-sentinel-00.txt" ipr="trust200902">
+<rfc category="std" docName="draft-huston-kskroll-sentinel-01.txt" ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Sentinel for Detecting Trusted Keys in DNSSEC</title>
 
@@ -16,11 +16,17 @@
         <uri>http://www.apnic.net</uri>
       </address>
     </author>
-    <author fullname="Joao da Silva Damas" initials="J." surname="Damas">
+    <author fullname="Joao Silva Damas" initials="J." surname="Damas">
       <organization abbrev="APNIC"></organization>
       <address>
         <email>joao@apnic.net</email>
         <uri>http://www.apnic.net</uri>
+      </address>
+    </author>
+    <author fullname="Warren Kumari" initials="W." surname="Kumari">
+      <organization abbrev="Google"></organization>
+      <address>
+        <email>warren@kumari.net</email>
       </address>
     </author>
     <date month="October" year="2017" />
@@ -89,8 +95,8 @@
       <t>If the outcome of the DNS response validation process
       indicates that the response is authentic, and if the original
       query contains exactly one label that matches the template
-      ".is-ta-&lt;tag-index&gt;.", then the following rule should be
-      applied to the response.  If the resolver has placed a Root Zone
+      ".is-ta-&lt;tag-index&gt;.", then this rule should be
+      applied to the response:  If the resolver has placed a Root Zone
       Key Signing Key with tag index value matching the value
       specified in the query into the local resolver's store of
       trusted keys, then the resolver should return a response
@@ -103,8 +109,8 @@
       <t>If the outcome of the DNS response validation process
       indicates that the response is authentic, and if the original
       query contains exactly one label that matches the template
-      ".not-ta-&lt;tag-index&gt;.", then the following rule should be
-      applied to the response.  If the resolver has not placed a Root
+      ".not-ta-&lt;tag-index&gt;.", then thOS rule should be
+      applied to the response:  If the resolver has not placed a Root
       Zone Key Signing Key with tag index value matching the value
       specified in the query into the local resolver's store of
       trusted keys, then the resolver should return a response
@@ -122,15 +128,113 @@
 
     <section title="Sentinel Processing">
 
-       <t>[Text to be added as to how to pose queries and interpret responses]</t>
+       <t>This proposed test that uses the DNS resolver mechanism
+       described in this document is based on three DNS names that
+       have three distinct DNS resolution behaviours. The test is
+       intended to allow a user to determine the state of their DNS
+       resolution system, and in particular whether or not they are
+       using validating DNS resolvers that have picked up an incoming
+       trust anchor in a key roll, if indeed that can be determined at
+       all.</t>
+
+       <t>The name format can be defined in a number of ways, and no
+       name form is intrinsically better than any other in terms of
+       the test itself. The key attribute here is that
+       DNSSEC-validating resolvers when tasked with validating a
+       response to a A or AAAA query for one of these recognised
+       names, performs a certain additional test following the
+       conventional validation function, and the result of this test
+       may change a validated response to a response that indicates
+       validation failure.</t>
+
+       <t>The sentinel process is envisaged to use a test with three
+       names: A. a name containing the label ".is-ta-<tag-index>.",
+       B. a name containing the label ".not-ta-<tag-index>.", and C. a
+       third name that is signed with a DNSSEC signature that cannot
+       be validated. The responses recieved from queries to resolve
+       each of these names would allow us to infer a trust key state
+       of the resolution environment.</t>
+
+       <list style="symbols"><t>Case 1: A DNSSEC-Validating resolver that includes this
+       mechanism that has loaded the nominated key into its trusted
+       key stash will respond with an A record response for "is-ta",
+       SERVFAIL for "not-ta" and SERVFAIL for the invalid name.</t>
+
+       <t>Case 2: A DNSSEC-Validating resolver that includes this
+       mechanism that has not loaded the nominated key into its
+       trusted key stash will respond with an SERVFAIL record for
+       "is-ta", an A record response for "not-ta" and SERVFAIL for the
+       invalid name.</t>
+
+       <t>Case 3: A DNSSEC-Validating resolver that does not include
+       this mechanism will respond with an A record response for
+       "is-ta", an A record response for "not-ta" and SERVFAIL for the
+       invalid name.</t>
+
+       <t>Case 4: A non-DNSSEC-Validating resolver will respond with
+       an A record response for "is-ta", an A record response for
+       "not-ta" and an A record response for the invalid name.</t></list>
+
+       <t>Given the clear delineation between these three cases, if a
+       client directs these three queries to a simple resolver, the
+       variation in response to the three queries should allow the
+       client to determine the category of the resolver, and if it
+       supports this mechanism, whether or not it has loaded a
+       particular key into its local trusted key stash.</t>
+
+<figure><artwork>
+
+   +-------------+----------+-----------+------------+
+   | Type\Query  |  is_ta   |   not_ta  |  invalid   |
+   +-------------+----------+-----------+------------+
+   | Case 1      |    A     |  SERVFAIL |  SERVFAIL  |
+   | Case 2      | SERVFAIL |      A    |  SERVFAIL  |
+   | Case 3      |    A     |      A    |  SERVFAIL  |
+   | Case 4      |    A     |      A    |     A      |
+   +-------------+----------+-----------+------------+
+  </artwork></figure>
 
     </section>
 
     <section title="Sentinel Considerations">
 
-       <t>[Text to be added about considerations relating to caching, and resolver forwarding
-           partial deployment of the mechanism, as well as any other issues that may arise
-           with this mechanism]</t>
+       <t>The description related to the interpretation of a simple
+       situation where the test queries were being passed to a single
+       resolver who was then querying authoritative name servers,
+       including the root servers directly.</t>
+
+       <t>What about the case where the end client uses multiple
+       resolvers in their configuration? In these cases the SERVFAIL
+       responses will prompt the stub to repeat the query against the
+       other configured resolvers. If any of the client's resolvers
+       are non-validating resolvers the tests will result in the
+       client reporting that it has a non-validating DNS environment,
+       which is effectively the case. It all of the client resolvers
+       are DNSSEC-validating resolvers, but some do not support this
+       trusted key mechanism, then the result will be indeterminate
+       with respect to trusted key status. Equally, if all the
+       client's resolvers support this mechanism, but some have loaded
+       the key into the trusted key stash and some have not, then the
+       result is indeterminate.</t>
+
+       <t>[The case of a resolver using a forwarder should also be
+       considered. If the resolver is non-validating, and it has a
+       single forwarder clause, then the resolver will presumably
+       mirror the capabilities of the forwarder target resolver, and
+       if it has multuple forwarders, then the above considerations
+       will apply. However, what does it mean for a validating
+       resolver to have a forwarder clause? If it uses the CD flag on
+       all forwarded responses, then this resolver is acting like a
+       standalone resolver, and the same applies if one of the
+       forwarder targets ir non-validating, or if all the forwarder
+       targets do not support this mechanism, and the considertations
+       of the previous section apply. If the forwarder also supports
+       this mechanism and the local resolver's queries do not carry
+       the CD bit, then if the trusted key state differs between the
+       local resolver and its forwarder then the aggregate outsome is
+       SERVFAIL to all queries. This is an indeterminant
+       response.]</t>
+
       
     </section>
 
