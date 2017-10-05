@@ -7,9 +7,9 @@
 DNSOP                                                          G. Huston
 Internet-Draft                                                  J. Damas
 Intended status: Standards Track                                   APNIC
-Expires: April 6, 2018                                         W. Kumari
+Expires: April 8, 2018                                         W. Kumari
                                                                   Google
-                                                         October 3, 2017
+                                                         October 5, 2017
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 6, 2018.
+   This Internet-Draft will expire on April 8, 2018.
 
 Copyright Notice
 
@@ -55,7 +55,7 @@ Copyright Notice
 
 
 
-Huston, et al.            Expires April 6, 2018                 [Page 1]
+Huston, et al.            Expires April 8, 2018                 [Page 1]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -71,15 +71,15 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Sentinel Mechanism  . . . . . . . . . . . . . . . . . . . . .   3
-   3.  Sentinel Processing . . . . . . . . . . . . . . . . . . . . .   3
+   3.  Sentinel Processing . . . . . . . . . . . . . . . . . . . . .   4
    4.  Sentinel Test Result Considerations . . . . . . . . . . . . .   5
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   6
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
+   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
      8.2.  Informative References  . . . . . . . . . . . . . . . . .   7
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
@@ -111,7 +111,7 @@ Table of Contents
 
 
 
-Huston, et al.            Expires April 6, 2018                 [Page 2]
+Huston, et al.            Expires April 8, 2018                 [Page 2]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -126,15 +126,19 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
    DNSSEC-Validating resolvers that implement this mechanism MUST be
    performing validation of responses in accordance with the DNSSEC
-   response validation specification [RFC4035].
+   response validation specification [RFC4035].  The mechanism is to be
+   applied only to queries that have the DNSSEC OK (DO) bit set and the
+   Checking Disabled (CD) bit cleared, and the query type is A or AAAA.
+   In all other cases the mechanism described here is not to be applied
+   to the response.
 
    If the outcome of the DNS response validation process indicates that
    the response is authentic, and if the original query contains exactly
    one label that matches the template ".is-ta-<tag-index>.", then the
    following rule should be applied to the response: If the resolver has
-   placed a Root Zone Key Signing Key with tag index value matching the
-   value specified in the query into the local resolver's store of
-   trusted keys, then the resolver should return a response indicating
+   placed a Root Zone Key Signing Key with a tag index value matching
+   the value specified in the query into the local resolver's store of
+   trusted keys, then the resolver MUST return a response indicating
    that the response contains authenticated data according to section
    5.8 of [RFC6840].  Otherwise, the resolver MUST return RCODE 2
    (server failure).  Note that the <tag-index> is specified in the DNS
@@ -144,39 +148,44 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    the response is authentic, and if the original query contains exactly
    one label that matches the template ".not-ta-<tag-index>.", then the
    following rule should be applied to the response: If the resolver has
-   not placed a Root Zone Key Signing Key with tag index value matching
-   the value specified in the query into the local resolver's store of
-   trusted keys, then the resolver should return a response indicating
-   that the response contains authenticated data according to section
-   5.8 of [RFC6840].  Otherwise, the resolver MUST return RCODE 2
-   (server failure).  Note that the <tag-index> is specified in the DNS
-   label using hex notation.
+   not placed a Root Zone Key Signing Key with a tag index value
+   matching the value specified in the query into the local resolver's
+   store of trusted keys, then the resolver should return a response
+   indicating that the response contains authenticated data according to
+   section 5.8 of [RFC6840].  Otherwise, the resolver MUST return RCODE
+   2 (server failure).  Note that the <tag-index> is specified in the
+   DNS label using hex notation.
 
    If a query contains one instance of both of these query templates
    then the resolver MUST NOT alter the outcome of the DNS response
-   validation process.
-
-3.  Sentinel Processing
-
-   This proposed test that uses the DNS resolver mechanism described in
-   this document is based on three DNS names that have three distinct
-   DNS resolution behaviours.  The test is intended to allow a user to
-   determine the state of their DNS resolution system, and in particular
-   whether or not they are using validating DNS resolvers that have
+   validation process, as this query form should not be used as a
+   trusted key sentinel query.
 
 
 
 
-Huston, et al.            Expires April 6, 2018                 [Page 3]
+
+
+
+Huston, et al.            Expires April 8, 2018                 [Page 3]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
-   picked up an incoming trust anchor in a key roll, if indeed that can
-   be determined at all.
+3.  Sentinel Processing
+
+   This proposed test that uses the DNS response mechanism described in
+   this document is based on three DNS names that have three distinct
+   DNS resolution behaviours.  The test is intended to allow a user to
+   determine the state of their DNS resolution system, and in particular
+   whether or not they are using validating DNS resolvers that have
+   picked up an incoming trust anchor in a forthcoming key roll, if that
+   can be determined.
 
    The name format can be defined in a number of ways, and no name form
    is intrinsically better than any other in terms of the test itself.
+   It is assumed that the labels can occur at any point within the
+   domain name.
 
    When validating a response to an A or AAAA query for one of these
    recognised names, a DNSSEC-validating resolver performs an additional
@@ -186,50 +195,54 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
    The sentinel process is envisaged to use a test with three names:
 
-   a.  a name containing the label ".is-ta-<tag-index>."
+   a.  a name containing the label ".is-ta-<tag-index>.".  This name
+       MUST be validly signed.
 
-   b.  a name containing the label ".not-ta-<tag-index>."
+   b.  a name containing the label ".not-ta-<tag-index>.".  This name
+       MUST be validly signed
 
-   c.  a third name that is signed with a DNSSEC signature that cannot
-       be validated.
+   c.  a third name that is signed with a DNSSEC signature.  This name
+       MUST be signed, but the signature is to be deliberately altered
+       such that it cannot be validated.
 
    The responses received from queries to resolve each of these names
    would allow us to infer a trust key state of the resolution
    environment.
 
    o  Case 1: A DNSSEC-Validating resolver that includes this mechanism
-      that has loaded the nominated key into its trusted key stash will
-      respond with an A record response for "is-ta", SERVFAIL for "not-
-      ta" and SERVFAIL for the invalid name.
+      that has loaded the nominated key into its trusted key store will
+      respond with an A (or AAAA) record response for "is-ta", SERVFAIL
+      for "not-ta" and SERVFAIL for the invalid name.
 
    o  Case 2: A DNSSEC-Validating resolver that includes this mechanism
-      that has not loaded the nominated key into its trusted key stash
-      will respond with an SERVFAIL record for "is-ta", an A record
-      response for "not-ta" and SERVFAIL for the invalid name.
-
-   o  Case 3: A DNSSEC-Validating resolver that does not include this
-      mechanism will respond with an A record response for "is-ta", an A
+      that has not loaded the nominated key into its trusted key store
+      will respond with an SERVFAIL record for "is-ta", an A (or AAAA)
       record response for "not-ta" and SERVFAIL for the invalid name.
 
-   o  Case 4: A non-DNSSEC-Validating resolver will respond with an A
-      record response for "is-ta", an A record response for "not-ta" and
-      an A record response for the invalid name.
-
-   Given the clear delineation between these three cases, if a client
-   directs these three queries to a simple resolver, the variation in
-   response to the three queries should allow the client to determine
-   the category of the resolver, and if it supports this mechanism,
 
 
 
 
-Huston, et al.            Expires April 6, 2018                 [Page 4]
+Huston, et al.            Expires April 8, 2018                 [Page 4]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
-   whether or not it has loaded a particular key into its local trusted
-   key stash.
+   o  Case 3: A DNSSEC-Validating resolver that does not include this
+      mechanism will respond with an A record response for "is-ta", an A
+      (or AAAA) record response for "not-ta" and SERVFAIL for the
+      invalid name.
+
+   o  Case 4: A non-DNSSEC-Validating resolver will respond with an A
+      (or AAAA) record response for the "is-ta" queery, the "not-ta"
+      query and the DNSSEC-invalid name query.
+
+   Given the clear delineation between these three cases, if a client
+   directs these three queries to a simple recursive resolver, the
+   variation in response to the three queries should allow the client to
+   determine the category of the resolver as to whether it supports this
+   mechanism, whether or not it has loaded a particular key into its
+   local trusted key store.
 
 
       +-------------+----------+-----------+------------+
@@ -242,50 +255,49 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
       +-------------+----------+-----------+------------+
 
    A Case 1 response pattern says that the nominated key is trusted by
-   the resolver and has been loaded into its local trusted key stash.  A
+   the resolver and has been loaded into its local trusted key store.  A
    Case 2 response pattern says that the nominated key is not yet
-   trusted by the resolver in its own right.
-
-   A Case 3 response is indeterminate, and a Case 4 response indicates
-   that the client does not have a validating resolver.
+   trusted by the resolver in its own right.  A Case 3 response is
+   indeterminate, and a Case 4 response indicates that the client does
+   not have a validating resolver.
 
 4.  Sentinel Test Result Considerations
 
    The description in the previous section describes a simple situation
-   where the test queries were being passed to a single resolver who was
-   then querying authoritative name servers, including the root servers
-   directly.
+   where the test queries were being passed to a single recursive
+   resolver who was then querying authoritative name servers, including
+   the root servers directly.
 
-   There is also the common case where the end client uses multiple
-   resolvers in their configuration?  In these cases the SERVFAIL
-   responses from one resolver will prompt the end client to repeat the
-   query against one of the other configured resolvers.
+   A common case is where the end client uses multiple resolvers in
+   their local DNS configuration.  In these cases the SERVFAIL responses
+   from one resolver will prompt the end client to repeat the query
+   against one of the other configured resolvers.
 
    If any of the client's resolvers are non-validating resolvers, the
    tests will result in the client reporting that it has a non-
    validating DNS environment, which is effectively the case.
 
-   If all of the client resolvers are DNSSEC-validating resolvers, but
-   some do not support this trusted key mechanism, then the result will
-   be indeterminate with respect to trusted key status.  Equally, if all
-   the client's resolvers support this mechanism, but some have loaded
-   the key into the trusted key stash and some have not, then the result
-   is indeterminate.
-
-   There is also the common case of a resolver using a forwarder.
-
-   If the resolver is non-validating, and it has a single forwarder
-   clause, then the resolver will presumably mirror the capabilities of
 
 
-
-Huston, et al.            Expires April 6, 2018                 [Page 5]
+Huston, et al.            Expires April 8, 2018                 [Page 5]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
-   the forwarder target resolver.  If this non-validating resolver it
-   has multiple forwarders, then the above considerations will apply.
+   If all of the client resolvers are DNSSEC-validating resolvers, but
+   some do not support this trusted key mechanism, then the result will
+   be indeterminate with respect to trusted key status.  Equally, if all
+   the client's resolvers support this mechanism, but some have loaded
+   the key into the trusted key store and some have not, then the result
+   is indeterminate.
+
+   There is also the case of a resolver using a forwarder.
+
+   If the resolver is non-validating, and it has a single forwarder
+   clause, then the resolver will presumably mirror the capabilities of
+   the forwarder target resolver.  If this non-validating resolver has
+   multiple forwarders, then the above considerations cdescribed above
+   will apply.
 
    If a validating resolver has a forwarding configuration, and uses the
    CD flag on all forwarded queries, then this resolver is acting in a
@@ -295,12 +307,18 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    not apply this trusted key mechanism, the same considerations apply.
 
    If both the validating resolver and the forwarder support this
-   mechanism, and the local resolver's queries do not carry the CD bit,
-   and the trusted key state differs between the resolver and the
-   forwarder target then either the outcome is indeterminate validating
-   (Case 3), or a case of mixed signals (SERVFAIL in all three
-   responses), which is similarly an indeterminate response with respect
-   to the trusted key state.
+   trusted key sentinel mechanism, and the local resolver's queries do
+   not carry the CD bit, and the trusted key state differs between the
+   forwarding resolver and the forwarder target then either the outcome
+   is indeterminate validating (Case 3), or a case of mixed signals
+   (SERVFAIL in all three responses), which is also an indeterminate
+   response with respect to the trusted key state.  It is difficult to
+   understand the rationale for this situation, in that a validating
+   recursive resolver is capable of evaluating the authenticity of DNS
+   responses using its own trust material.  By clearing the CD bit in
+   forwarded queries the local forwarding resolver is not able to
+   directly validate the responses relating to those queries where the
+   forwarder target is indicating a validation failure.
 
 5.  Security Considerations
 
@@ -312,6 +330,15 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    unauthenticated responses to be marked as authenticated, and does not
    alter the security properties of DNSSEC with respect to the
    interpretation of the authenticity of responses that are do marked.
+
+
+
+
+
+Huston, et al.            Expires April 8, 2018                 [Page 6]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+
 
    The mechanism does not require any further significant processing of
    DNS responses, and queries of the form described in this document do
@@ -331,14 +358,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    for the more general stimulation of thoughts about monitoring the
    progress of a roll of the Key Signing Key of the Root Zone of the
    DNS.
-
-
-
-
-Huston, et al.            Expires April 6, 2018                 [Page 6]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
-
 
 8.  References
 
@@ -366,6 +385,17 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 8.2.  Informative References
 
+
+
+
+
+
+
+Huston, et al.            Expires April 8, 2018                 [Page 7]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+
+
    [RFC8145]  Wessels, D., Kumari, W., and P. Hoffman, "Signaling Trust
               Anchor Knowledge in DNS Security Extensions (DNSSEC)", RFC
               8145, DOI 10.17487/RFC8145, April 2017, <https://www.rfc-
@@ -391,5 +421,31 @@ Authors' Addresses
 
 
 
-Huston, et al.            Expires April 6, 2018                 [Page 7]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Huston, et al.            Expires April 8, 2018                 [Page 8]
 ```
