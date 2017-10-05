@@ -250,10 +250,13 @@
       non-validating resolver. Similarly, if all the forwarder targets do not
       apply this trusted key mechanism, the same considerations apply.</t>
 
-      <t>If both the validating resolver and the forwarder support this
-      trusted key sentinel mechanism, and the local resolver's queries do not carry the CD bit, and
-      the trusted key state differs between the forwarding resolver and the forwarder
-      target then either the outcome is indeterminate validating (Case 3), or
+      <t>A more complex case is where the following conditions all hold:
+      <list><t>both the validating resolver and the forwarder target resolver support this
+      trusted key sentinel mechanism, and</t> 
+      <t>the local resolver's queries do not carry the CD bit, and</t>
+      <t>the trusted key state differs between the forwarding resolver and the forwarder
+      target resolver</t></list>
+       then either the outcome is indeterminate validating (Case 3), or
       a case of mixed signals (SERVFAIL in all three responses), which is
       also an indeterminate response with respect to the trusted key
       state. It is difficult to understand the rationale for this situation,
