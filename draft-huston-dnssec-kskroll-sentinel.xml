@@ -68,11 +68,13 @@
       Tag field whose value is equal to the Key Tag of the DNSKEY RR that
       validates the signature.</t>
 
-      <t>This document specifies how validating resolvers should respond to
-      certain queries so that a user can deduce whether a particular key has
-      been loaded into that resolver's trusted key store. This mechanism can
-      be used to determine whether a certain Root Zone KSK is ready to be used
-      as a trusted key within the context of a key roll.</t>
+      <t>This document specifies how validating resolvers can respond
+      to certain queries in a manner that allows a querier to deduce
+      whether a particular key has been loaded into that resolver's
+      trusted key store. In particular, this response mechanism can be
+      used to determine whether a certain Root Zone KSK is ready to be
+      used as a trusted key within the context of a key roll by this
+      resolver.</t>
 
       <t>This new mechanism is OPTIONAL to implement and use, although for
       reasons of supporting broad-based measurement techniques, it is strongly
@@ -94,11 +96,11 @@
 
       <t>This mechanism makes use of 2 special labels,
       ".is-ta-&lt;tag-index&gt;." (Intended to be used in a query where the
-      response can answer the qeustion: Is this keytag a trust anchor which the
-      validating DNS resolver is currently trusting?) and ".not-ta-&lt;tag-index&gt;." (Is
-      this keytag NOT in the resolver's current trust store?). The use of a
+      response can answer the question: Is this the key tag a trust anchor which the
+      validating DNS resolver is currently trusting?) and ".not-ta-&lt;tag-index&gt;." (The response can answer the question: Is
+      this the key tag of a key that is NOT in the resolver's current trust store?). The use of a
       question and the inverse of the question also allows for the detection of
-      resolvers which do not implment this mechanism.</t>
+      resolvers which do not implement this mechanism.</t>
 
       <t>If the outcome of the DNS response validation process indicates that
       the response is authentic, and if the original query contains exactly
@@ -127,6 +129,18 @@
       <t>If a query contains one instance of both of these query templates
       then the resolver MUST NOT alter the outcome of the DNS response
       validation process.</t>
+
+      <t>This mechanism is to be applied only by resolvers that
+      perform DNSSEC validation, and applies only to responses to an A
+      or AAAA query (Query Type value 1 or 28) where the resolver has
+      authenticated the response according to the DNSSEC validation
+      process and where the query name contains either of the labels
+      described in this section. In this case, the resolver is to
+      perform an additional test following the conventional validation
+      function as described in this section, and the result of this
+      test directs whether the resolver is to change an authentic
+      response to a response that indicates validation failure.</t>
+
     </section>
 
     <section title="Sentinel Processing">
@@ -139,13 +153,9 @@
       all.</t>
 
       <t>The name format can be defined in a number of ways, and no name form
-      is intrinsically better than any other in terms of the test itself. </t>
-
-      <t>When validating a response to an A or AAAA query for one of these
-      recognised names, a DNSSEC-validating resolver performs an additional
-      test following the conventional validation function, and the result of
-      this test may change a validated response to a response that indicates
-      validation failure.</t>
+      is intrinsically better than any other in terms of the test itself. The critical
+      aspect of the DNS names used in any such test is that they contain the
+      specified label for either the positive and negative test.</t>
 
       <t>The sentinel process is envisaged to use a test with three names:
       </t>

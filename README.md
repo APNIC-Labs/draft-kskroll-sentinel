@@ -7,9 +7,9 @@
 DNSOP                                                          G. Huston
 Internet-Draft                                                  J. Damas
 Intended status: Standards Track                                   APNIC
-Expires: April 10, 2018                                        W. Kumari
+Expires: April 11, 2018                                        W. Kumari
                                                                   Google
-                                                         October 7, 2017
+                                                         October 8, 2017
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 10, 2018.
+   This Internet-Draft will expire on April 11, 2018.
 
 Copyright Notice
 
@@ -55,7 +55,7 @@ Copyright Notice
 
 
 
-Huston, et al.           Expires April 10, 2018                 [Page 1]
+Huston, et al.           Expires April 11, 2018                 [Page 1]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -77,7 +77,7 @@ Table of Contents
    7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .   7
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
@@ -92,11 +92,12 @@ Table of Contents
    value is equal to the Key Tag of the DNSKEY RR that validates the
    signature.
 
-   This document specifies how validating resolvers should respond to
-   certain queries so that a user can deduce whether a particular key
-   has been loaded into that resolver's trusted key store.  This
-   mechanism can be used to determine whether a certain Root Zone KSK is
-   ready to be used as a trusted key within the context of a key roll.
+   This document specifies how validating resolvers can respond to
+   certain queries in a manner that allows a querier to deduce whether a
+   particular key has been loaded into that resolver's trusted key
+   store.  In particular, this response mechanism can be used to
+   determine whether a certain Root Zone KSK is ready to be used as a
+   trusted key within the context of a key roll by this resolver.
 
    This new mechanism is OPTIONAL to implement and use, although for
    reasons of supporting broad-based measurement techniques, it is
@@ -110,8 +111,7 @@ Table of Contents
 
 
 
-
-Huston, et al.           Expires April 10, 2018                 [Page 2]
+Huston, et al.           Expires April 11, 2018                 [Page 2]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -130,11 +130,12 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
    This mechanism makes use of 2 special labels, ".is-ta-<tag-index>."
    (Intended to be used in a query where the response can answer the
-   qeustion: Is this keytag a trust anchor which the validating DNS
-   resolver is currently trusting?) and ".not-ta-<tag-index>."  (Is this
-   keytag NOT in the resolver's current trust store?).  The use of a
+   question: Is this the key tag a trust anchor which the validating DNS
+   resolver is currently trusting?) and ".not-ta-<tag-index>."  (The
+   response can answer the question: Is this the key tag of a key that
+   is NOT in the resolver's current trust store?).  The use of a
    question and the inverse of the question also allows for the
-   detection of resolvers which do not implment this mechanism.
+   detection of resolvers which do not implement this mechanism.
 
    If the outcome of the DNS response validation process indicates that
    the response is authentic, and if the original query contains exactly
@@ -166,11 +167,21 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
 
-
-Huston, et al.           Expires April 10, 2018                 [Page 3]
+Huston, et al.           Expires April 11, 2018                 [Page 3]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
+
+   This mechanism is to be applied only by resolvers that perform DNSSEC
+   validation, and applies only to responses to an A or AAAA query
+   (Query Type value 1 or 28) where the resolver has authenticated the
+   response according to the DNSSEC validation process and where the
+   query name contains either of the labels described in this section.
+   In this case, the resolver is to perform an additional test following
+   the conventional validation function as described in this section,
+   and the result of this test directs whether the resolver is to change
+   an authentic response to a response that indicates validation
+   failure.
 
 3.  Sentinel Processing
 
@@ -184,12 +195,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
    The name format can be defined in a number of ways, and no name form
    is intrinsically better than any other in terms of the test itself.
-
-   When validating a response to an A or AAAA query for one of these
-   recognised names, a DNSSEC-validating resolver performs an additional
-   test following the conventional validation function, and the result
-   of this test may change a validated response to a response that
-   indicates validation failure.
+   The critical aspect of the DNS names used in any such test is that
+   they contain the specified label for either the positive and negative
+   test.
 
    The sentinel process is envisaged to use a test with three names:
 
@@ -212,6 +220,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
       respond with an A record response for "is-ta", SERVFAIL for "not-
       ta" and SERVFAIL for the invalid name.
 
+
+
+
+Huston, et al.           Expires April 11, 2018                 [Page 4]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+
+
    o  Vold: A DNSSEC-Validating resolver that includes this mechanism
       that has not loaded the nominated key into its trusted key stash
       will respond with an SERVFAIL record for "is-ta", an A record
@@ -220,13 +236,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    o  Vleg: A DNSSEC-Validating resolver that does not include this
       mechanism will respond with an A record response for "is-ta", an A
       record response for "not-ta" and SERVFAIL for the invalid name.
-
-
-
-Huston, et al.           Expires April 10, 2018                 [Page 4]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
-
 
    o  nonV: A non-DNSSEC-Validating resolver will respond with an A
       record response for "is-ta", an A record response for "not-ta" and
@@ -268,6 +277,13 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    one resolver will prompt the end client to repeat the query against
    one of the other configured resolvers.
 
+
+
+Huston, et al.           Expires April 11, 2018                 [Page 5]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+
+
    If any of the client's resolvers are non-validating resolvers, the
    tests will result in the client reporting that it has a non-
    validating DNS environment (nonV), which is effectively the case.
@@ -276,14 +292,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    some do not support this trusted key mechanism, then the result will
    be indeterminate with respect to trusted key status (Vleg).
    Simlarly, if all the client's resolvers support this mechanism, but
-
-
-
-Huston, et al.           Expires April 10, 2018                 [Page 5]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
-
-
    some have loaded the key into the trusted key stash and some have
    not, then the result is indeterminate (Vleg).
 
@@ -323,6 +331,15 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    trust state of root zone key signing keys in the DNS resolution
    system that they use.
 
+
+
+
+
+Huston, et al.           Expires April 11, 2018                 [Page 6]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+
+
    The mechanism does not require resolvers to set otherwise
    unauthenticated responses to be marked as authenticated, and does not
    alter the security properties of DNSSEC with respect to the
@@ -332,13 +349,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    DNS responses, and queries of the form described in this document do
    not impose any additional load that could be exploited in an attack
    over the the normal DNSSEC validation processing load.
-
-
-
-Huston, et al.           Expires April 10, 2018                 [Page 6]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
-
 
 6.  IANA Considerations
 
@@ -378,23 +388,20 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
               DOI 10.17487/RFC6840, February 2013,
               <https://www.rfc-editor.org/info/rfc6840>.
 
+
+
+
+Huston, et al.           Expires April 11, 2018                 [Page 7]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+
+
 8.2.  Informative References
 
    [RFC8145]  Wessels, D., Kumari, W., and P. Hoffman, "Signaling Trust
               Anchor Knowledge in DNS Security Extensions (DNSSEC)",
               RFC 8145, DOI 10.17487/RFC8145, April 2017,
               <https://www.rfc-editor.org/info/rfc8145>.
-
-
-
-
-
-
-
-Huston, et al.           Expires April 10, 2018                 [Page 7]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
-
 
 Authors' Addresses
 
@@ -440,12 +447,5 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-Huston, et al.           Expires April 10, 2018                 [Page 8]
+Huston, et al.           Expires April 11, 2018                 [Page 8]
 ```
