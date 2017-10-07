@@ -207,17 +207,17 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    would allow us to infer a trust key state of the resolution
    environment.
 
-   o  Case 1: A DNSSEC-Validating resolver that includes this mechanism
+   o  Vnew: A DNSSEC-Validating resolver that includes this mechanism
       that has loaded the nominated key into its trusted key stash will
       respond with an A record response for "is-ta", SERVFAIL for "not-
       ta" and SERVFAIL for the invalid name.
 
-   o  Case 2: A DNSSEC-Validating resolver that includes this mechanism
+   o  Vold: A DNSSEC-Validating resolver that includes this mechanism
       that has not loaded the nominated key into its trusted key stash
       will respond with an SERVFAIL record for "is-ta", an A record
       response for "not-ta" and SERVFAIL for the invalid name.
 
-   o  Case 3: A DNSSEC-Validating resolver that does not include this
+   o  Vleg: A DNSSEC-Validating resolver that does not include this
       mechanism will respond with an A record response for "is-ta", an A
       record response for "not-ta" and SERVFAIL for the invalid name.
 
@@ -228,7 +228,7 @@ Huston, et al.           Expires April 10, 2018                 [Page 4]
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
-   o  Case 4: A non-DNSSEC-Validating resolver will respond with an A
+   o  nonV: A non-DNSSEC-Validating resolver will respond with an A
       record response for "is-ta", an A record response for "not-ta" and
       an A record response for the invalid name.
 
@@ -243,39 +243,39 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
       +-------------+----------+-----------+------------+
       | Type\Query  |  is_ta   |   not_ta  |  invalid   |
       +-------------+----------+-----------+------------+
-      | Case 1      |    A     |  SERVFAIL |  SERVFAIL  |
-      | Case 2      | SERVFAIL |      A    |  SERVFAIL  |
-      | Case 3      |    A     |      A    |  SERVFAIL  |
-      | Case 4      |    A     |      A    |     A      |
+      | Vnew        |    A     |  SERVFAIL |  SERVFAIL  |
+      | Vold        | SERVFAIL |      A    |  SERVFAIL  |
+      | Vleg        |    A     |      A    |  SERVFAIL  |
+      | nonV        |    A     |      A    |     A      |
       +-------------+----------+-----------+------------+
 
-   A Case 1 response pattern says that the nominated key is trusted by
-   the resolver and has been loaded into its local trusted key stash.  A
-   Case 2 response pattern says that the nominated key is not yet
-   trusted by the resolver in its own right.  A Case 3 response is
-   indeterminate, and a Case 4 response indicates that the client does
-   not have a validating resolver.
+   A Vnew response pattern says that the nominated key is trusted by the
+   resolver and has been loaded into its local trusted key stash.  A
+   Vleg response pattern says that the nominated key is not yet trusted
+   by the resolver in its own right.  A Vleg response is indeterminate,
+   and a nonV response indicates that the client does not have a
+   validating resolver.
 
 4.  Sentinel Test Result Considerations
 
    The description in the previous section describes a simple situation
-   where the test queries were being passed to a single resolver who was
-   then querying authoritative name servers, including the root servers
-   directly.
+   where the test queries were being passed to a single recursive
+   resolver that directly queried authoritative name servers, including
+   the root servers.
 
-   There is also the common case where the end client uses multiple
-   resolvers in their configuration.  In these cases the SERVFAIL
-   responses from one resolver will prompt the end client to repeat the
-   query against one of the other configured resolvers.
+   There is also the common case where the end client is configured to
+   use multiple resolvers.  In these cases the SERVFAIL responses from
+   one resolver will prompt the end client to repeat the query against
+   one of the other configured resolvers.
 
    If any of the client's resolvers are non-validating resolvers, the
    tests will result in the client reporting that it has a non-
-   validating DNS environment, which is effectively the case.
+   validating DNS environment (nonV), which is effectively the case.
 
    If all of the client resolvers are DNSSEC-validating resolvers, but
    some do not support this trusted key mechanism, then the result will
-   be indeterminate with respect to trusted key status.  Equally, if all
-   the client's resolvers support this mechanism, but some have loaded
+   be indeterminate with respect to trusted key status (Vleg).
+   Simlarly, if all the client's resolvers support this mechanism, but
 
 
 
@@ -284,19 +284,20 @@ Huston, et al.           Expires April 10, 2018                 [Page 5]
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
-   the key into the trusted key stash and some have not, then the result
-   is indeterminate.
+   some have loaded the key into the trusted key stash and some have
+   not, then the result is indeterminate (Vleg).
 
-   There is also the common case of a resolver using a forwarder.
+   There is also the common case of a recursive resolver using a
+   forwarder.
 
    If the resolver is non-validating, and it has a single forwarder
    clause, then the resolver will presumably mirror the capabilities of
    the forwarder target resolver.  If this non-validating resolver it
    has multiple forwarders, then the above considerations will apply.
 
-   If a validating resolver has a forwarding configuration, and uses the
-   CD flag on all forwarded queries, then this resolver is acting in a
-   manner that is identical to a standalone resolver.  The same
+   If the validating resolver has a forwarding configuration, and uses
+   the CD flag on all forwarded queries, then this resolver is acting in
+   a manner that is identical to a standalone resolver.  The same
    consideration applies if any one one of the forwarder targets is a
    non-validating resolver.  Similarly, if all the forwarder targets do
    not apply this trusted key mechanism, the same considerations apply.
@@ -311,8 +312,8 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
       the trusted key state differs between the forwarding resolver and
       the forwarder target resolver
 
-   then either the outcome is indeterminate validating (Case 3), or a
-   case of mixed signals (SERVFAIL in all three responses), which is
+   then either the outcome is indeterminate validating (Vleg), or a case
+   of mixed signals (SERVFAIL in all three responses), which is
    similarly an indeterminate response with respect to the trusted key
    state.
 
@@ -331,7 +332,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    DNS responses, and queries of the form described in this document do
    not impose any additional load that could be exploited in an attack
    over the the normal DNSSEC validation processing load.
-
 
 
 
