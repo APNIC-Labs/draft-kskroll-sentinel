@@ -7,9 +7,9 @@
 DNSOP                                                          G. Huston
 Internet-Draft                                                  J. Damas
 Intended status: Standards Track                                   APNIC
-Expires: April 10, 2018                                        W. Kumari
+Expires: April 11, 2018                                        W. Kumari
                                                                   Google
-                                                         October 7, 2017
+                                                         October 8, 2017
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
@@ -33,14 +33,14 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 10, 2018.
+   This Internet-Draft will expire on April 11, 2018.
 
 Copyright Notice
 
@@ -49,13 +49,13 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
 
 
 
-Huston, et al.           Expires April 10, 2018                 [Page 1]
+Huston, et al.           Expires April 11, 2018                 [Page 1]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -72,7 +72,7 @@ Table of Contents
    2.  Sentinel Mechanism  . . . . . . . . . . . . . . . . . . . . .   3
    3.  Sentinel Processing . . . . . . . . . . . . . . . . . . . . .   4
    4.  Sentinel Test Result Considerations . . . . . . . . . . . . .   5
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
@@ -82,7 +82,7 @@ Table of Contents
 
 1.  Introduction
 
-   The DNS Security Extensions (DNSSEC) [RFC4033]", [RFC4034] and
+   The DNS Security Extensions (DNSSEC) [RFC4033], [RFC4034] and
    [RFC4035] were developed to provide origin authentication and
    integrity protection for DNS data by using digital signatures.
    DNSSEC uses Key Tags to efficiently match signatures to the keys from
@@ -111,7 +111,7 @@ Table of Contents
 
 
 
-Huston, et al.           Expires April 10, 2018                 [Page 2]
+Huston, et al.           Expires April 11, 2018                 [Page 2]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -131,11 +131,12 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    This mechanism makes use of 2 special labels, ".is-ta-<tag-index>."
    (Intended to be used in a query where the response can answer the
    question: Is this the key tag a trust anchor which the validating DNS
-   resolver is currently trusting?) and ".not-ta-<tag-index>."  (The
-   response can answer the question: Is this the key tag of a key that
-   is NOT in the resolver's current trust store?).  The use of a
-   question and the inverse of the question also allows for the
-   detection of resolvers which do not implement this mechanism.
+   resolver is currently trusting?) and ".not-ta-<tag-index>."
+   (Intended to be used in a query where the response can answer the
+   question: Is this the key tag of a key that is NOT in the resolver's
+   current trust store?).  The use of the positive question and its
+   inverse also allows for the detection of resolvers which do not
+   implement this mechanism.
 
    If the outcome of the DNS response validation process indicates that
    the response is authentic, and if the original query contains exactly
@@ -161,16 +162,19 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    (server failure).  Note that the <tag-index> is specified in the DNS
    label using hex notation.
 
-   If a query contains one instance of both of these query templates
-   then the resolver MUST NOT alter the outcome of the DNS response
-   validation process.
 
 
 
-Huston, et al.           Expires April 10, 2018                 [Page 3]
+
+
+Huston, et al.           Expires April 11, 2018                 [Page 3]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
+
+   If a query contains one instance of both of these query templates
+   then the resolver MUST NOT alter the outcome of the DNS response
+   validation process.
 
    This mechanism is to be applied only by resolvers that perform DNSSEC
    validation, and applies only to responses to an A or AAAA query
@@ -215,19 +219,20 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
    o  Vnew: A DNSSEC-Validating resolver that includes this mechanism
       that has loaded the nominated key into its trusted key stash will
+
+
+
+
+Huston, et al.           Expires April 11, 2018                 [Page 4]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+
+
       respond with an A record response for "is-ta", SERVFAIL for "not-
       ta" and SERVFAIL for the invalid name.
 
    o  Vold: A DNSSEC-Validating resolver that includes this mechanism
       that has not loaded the nominated key into its trusted key stash
-
-
-
-Huston, et al.           Expires April 10, 2018                 [Page 4]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
-
-
       will respond with an SERVFAIL record for "is-ta", an A record
       response for "not-ta" and SERVFAIL for the invalid name.
 
@@ -270,19 +275,19 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    resolver that directly queried authoritative name servers, including
    the root servers.
 
+
+
+
+
+Huston, et al.           Expires April 11, 2018                 [Page 5]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+
+
    There is also the common case where the end client is configured to
    use multiple resolvers.  In these cases the SERVFAIL responses from
    one resolver will prompt the end client to repeat the query against
    one of the other configured resolvers.
-
-
-
-
-
-Huston, et al.           Expires April 10, 2018                 [Page 5]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
-
 
    If any of the client's resolvers are non-validating resolvers, the
    tests will result in the client reporting that it has a non-
@@ -325,25 +330,26 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    similarly an indeterminate response with respect to the trusted key
    state.
 
+
+
+
+
+
+Huston, et al.           Expires April 11, 2018                 [Page 6]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+
+
 5.  Security Considerations
 
    This document describes a mechanism to allow users to determine the
    trust state of root zone key signing keys in the DNS resolution
    system that they use.
 
-
-
-
-
-Huston, et al.           Expires April 10, 2018                 [Page 6]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
-
-
    The mechanism does not require resolvers to set otherwise
    unauthenticated responses to be marked as authenticated, and does not
    alter the security properties of DNSSEC with respect to the
-   interpretation of the authenticity of responses that are do marked.
+   interpretation of the authenticity of responses that are so marked.
 
    The mechanism does not require any further significant processing of
    DNS responses, and queries of the form described in this document do
@@ -369,9 +375,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 8.1.  Normative References
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements", RFC
-              4033, DOI 10.17487/RFC4033, March 2005, <https://www.rfc-
-              editor.org/info/rfc4033>.
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, DOI 10.17487/RFC4033, March 2005,
+              <https://www.rfc-editor.org/info/rfc4033>.
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
@@ -383,25 +389,24 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
               Extensions", RFC 4035, DOI 10.17487/RFC4035, March 2005,
               <https://www.rfc-editor.org/info/rfc4035>.
 
-   [RFC6840]  Weiler, S., Ed. and D. Blacka, Ed., "Clarifications and
-              Implementation Notes for DNS Security (DNSSEC)", RFC 6840,
-              DOI 10.17487/RFC6840, February 2013, <https://www.rfc-
-              editor.org/info/rfc6840>.
 
 
-
-
-Huston, et al.           Expires April 10, 2018                 [Page 7]
+Huston, et al.           Expires April 11, 2018                 [Page 7]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
+   [RFC6840]  Weiler, S., Ed. and D. Blacka, Ed., "Clarifications and
+              Implementation Notes for DNS Security (DNSSEC)", RFC 6840,
+              DOI 10.17487/RFC6840, February 2013,
+              <https://www.rfc-editor.org/info/rfc6840>.
+
 8.2.  Informative References
 
    [RFC8145]  Wessels, D., Kumari, W., and P. Hoffman, "Signaling Trust
-              Anchor Knowledge in DNS Security Extensions (DNSSEC)", RFC
-              8145, DOI 10.17487/RFC8145, April 2017, <https://www.rfc-
-              editor.org/info/rfc8145>.
+              Anchor Knowledge in DNS Security Extensions (DNSSEC)",
+              RFC 8145, DOI 10.17487/RFC8145, April 2017,
+              <https://www.rfc-editor.org/info/rfc8145>.
 
 Authors' Addresses
 
@@ -442,10 +447,5 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-Huston, et al.           Expires April 10, 2018                 [Page 8]
+Huston, et al.           Expires April 11, 2018                 [Page 8]
 ```

@@ -58,7 +58,7 @@
 
   <middle>
     <section anchor="intro" title="Introduction">
-      <t>The DNS Security Extensions (DNSSEC) <xref target="RFC4033"/>", <xref
+      <t>The DNS Security Extensions (DNSSEC) <xref target="RFC4033"/>, <xref
       target="RFC4034"/> and <xref target="RFC4035"/> were developed to
       provide origin authentication and integrity protection for DNS data by
       using digital signatures. DNSSEC uses Key Tags to efficiently match
@@ -97,9 +97,9 @@
       ".is-ta-&lt;tag-index&gt;." (Intended to be used in a query where the
       response can answer the question: Is this the key tag a trust anchor
       which the validating DNS resolver is currently trusting?) and
-      ".not-ta-&lt;tag-index&gt;." (The response can answer the question: Is
+      ".not-ta-&lt;tag-index&gt;." (Intended to be used in a query where the response can answer the question: Is
       this the key tag of a key that is NOT in the resolver's current trust
-      store?). The use of a question and the inverse of the question also
+      store?). The use of the positive question and its inverse also
       allows for the detection of resolvers which do not implement this
       mechanism.</t>
 
@@ -281,7 +281,7 @@
       <t>The mechanism does not require resolvers to set otherwise
       unauthenticated responses to be marked as authenticated, and does not
       alter the security properties of DNSSEC with respect to the
-      interpretation of the authenticity of responses that are do marked.</t>
+      interpretation of the authenticity of responses that are so marked.</t>
 
       <t>The mechanism does not require any further significant processing of
       DNS responses, and queries of the form described in this document do not
