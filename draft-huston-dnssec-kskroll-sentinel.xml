@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-huston-kskroll-sentinel-01.txt"
+<rfc category="std" docName="draft-huston-kskroll-sentinel-02.txt"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Sentinel for Detecting
@@ -94,18 +94,18 @@
       response validation specification <xref target="RFC4035"/>.</t>
 
       <t>This mechanism makes use of 2 special labels,
-      ".is-ta-&lt;tag-index&gt;." (Intended to be used in a query where the
+      "._is-ta-&lt;tag-index&gt;." (Intended to be used in a query where the
       response can answer the question: Is this the key tag a trust anchor
       which the validating DNS resolver is currently trusting?) and
-      ".not-ta-&lt;tag-index&gt;." (Intended to be used in a query where the response can answer the question: Is
+      "._not-ta-&lt;tag-index&gt;." (Intended to be used in a query where the response can answer the question: Is
       this the key tag of a key that is NOT in the resolver's current trust
-      store?). The use of the positive question and its inverse also
-      allows for the detection of resolvers which do not implement this
+      store?). The use of the positive question and its inverse
+      allows for queries to detect whether resolvers support this
       mechanism.</t>
 
       <t>If the outcome of the DNS response validation process indicates that
       the response is authentic, and if the original query contains exactly
-      one label that matches the template ".is-ta-&lt;tag-index&gt;.", then
+      one label that matches the template "._is-ta-&lt;tag-index&gt;.", then
       the following rule should be applied to the response: If the resolver
       has placed a Root Zone Key Signing Key with tag index value matching the
       value specified in the query into the local resolver's store of trusted
@@ -117,7 +117,7 @@
 
       <t>If the outcome of the DNS response validation process indicates that
       the response is authentic, and if the original query contains exactly
-      one label that matches the template ".not-ta-&lt;tag-index&gt;.", then
+      one label that matches the template "._not-ta-&lt;tag-index&gt;.", then
       the following rule should be applied to the response: If the resolver
       has not placed a Root Zone Key Signing Key with tag index value matching
       the value specified in the query into the local resolver's store of
@@ -159,11 +159,11 @@
       <t>The sentinel process is envisaged to use a test with three names:</t>
 
       <t><list style="letters">
-          <t>a name containing the label ".is-ta-&lt;tag-index&gt;.". This is
+          <t>a name containing the label "._is-ta-&lt;tag-index&gt;.". This is
           a validly signed name so that responses about names in this zone can
           be authenticated by a validating resolver.</t>
 
-          <t>a name containing the label ".not-ta-&lt;tag-index&gt;.". This is
+          <t>a name containing the label "._not-ta-&lt;tag-index&gt;.". This is
           also a validly-signed name.</t>
 
           <t>a third name that is signed with a DNSSEC signature that cannot
