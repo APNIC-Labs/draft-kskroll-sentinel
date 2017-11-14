@@ -7,9 +7,9 @@
 DNSOP                                                          G. Huston
 Internet-Draft                                                  J. Damas
 Intended status: Standards Track                                   APNIC
-Expires: April 4, 2018                                         W. Kumari
+Expires: May 18, 2018                                          W. Kumari
                                                                   Google
-                                                            October 2017
+                                                       November 14, 2017
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 4, 2018.
+   This Internet-Draft will expire on May 18, 2018.
 
 Copyright Notice
 
@@ -55,9 +55,9 @@ Copyright Notice
 
 
 
-Huston, et al.            Expires April 4, 2018                 [Page 1]
+Huston, et al.            Expires May 18, 2018                  [Page 1]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
 
 
    to this document.  Code Components extracted from this document must
@@ -111,9 +111,9 @@ Table of Contents
 
 
 
-Huston, et al.            Expires April 4, 2018                 [Page 2]
+Huston, et al.            Expires May 18, 2018                  [Page 2]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
 
 
 1.1.  Terminology
@@ -167,9 +167,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
 
-Huston, et al.            Expires April 4, 2018                 [Page 3]
+Huston, et al.            Expires May 18, 2018                  [Page 3]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
 
 
    If a query contains one instance of both of these query templates
@@ -223,9 +223,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
 
-Huston, et al.            Expires April 4, 2018                 [Page 4]
+Huston, et al.            Expires May 18, 2018                  [Page 4]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
 
 
       respond with an A record response for "_is-ta", SERVFAIL for
@@ -279,9 +279,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
 
-Huston, et al.            Expires April 4, 2018                 [Page 5]
+Huston, et al.            Expires May 18, 2018                  [Page 5]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
 
 
    There is also the common case where the end client is configured to
@@ -335,9 +335,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
 
-Huston, et al.            Expires April 4, 2018                 [Page 6]
+Huston, et al.            Expires May 18, 2018                  [Page 6]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
 
 
 5.  Security Considerations
@@ -391,9 +391,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
 
-Huston, et al.            Expires April 4, 2018                 [Page 7]
+Huston, et al.            Expires May 18, 2018                  [Page 7]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
+Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
 
 
    [RFC6840]  Weiler, S., Ed. and D. Blacka, Ed., "Clarifications and
@@ -447,5 +447,5 @@ Authors' Addresses
 
 
 
-Huston, et al.            Expires April 4, 2018                 [Page 8]
+Huston, et al.            Expires May 18, 2018                  [Page 8]
 ```
