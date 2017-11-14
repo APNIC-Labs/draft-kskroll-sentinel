@@ -7,13 +7,13 @@
 DNSOP                                                          G. Huston
 Internet-Draft                                                  J. Damas
 Intended status: Standards Track                                   APNIC
-Expires: April 29, 2018                                        W. Kumari
+Expires: April 4, 2018                                         W. Kumari
                                                                   Google
-                                                        October 26, 2017
+                                                            October 2017
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
-                  draft-huston-kskroll-sentinel-02.txt
+                  draft-huston-kskroll-sentinel-03.txt
 
 Abstract
 
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 29, 2018.
+   This Internet-Draft will expire on April 4, 2018.
 
 Copyright Notice
 
@@ -55,7 +55,7 @@ Copyright Notice
 
 
 
-Huston, et al.           Expires April 29, 2018                 [Page 1]
+Huston, et al.            Expires April 4, 2018                 [Page 1]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -111,7 +111,7 @@ Table of Contents
 
 
 
-Huston, et al.           Expires April 29, 2018                 [Page 2]
+Huston, et al.            Expires April 4, 2018                 [Page 2]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -139,8 +139,8 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    mechanism.
 
    If the outcome of the DNS response validation process indicates that
-   the response is authentic, and if the original query contains exactly
-   one label that matches the template "._is-ta-<tag-index>.", then the
+   the response is authentic, and if the left-most label of the original
+   query name matches the template "._is-ta-<tag-index>.", then the
    following rule should be applied to the response: If the resolver has
    placed a Root Zone Key Signing Key with tag index value matching the
    value specified in the query into the local resolver's store of
@@ -151,8 +151,8 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
    label using hex notation.
 
    If the outcome of the DNS response validation process indicates that
-   the response is authentic, and if the original query contains exactly
-   one label that matches the template "._not-ta-<tag-index>.", then the
+   the response is authentic, and if the left-most label of the qriginal
+   query name matches the template "._not-ta-<tag-index>.", then the
    following rule should be applied to the response: If the resolver has
    not placed a Root Zone Key Signing Key with tag index value matching
    the value specified in the query into the local resolver's store of
@@ -167,7 +167,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
 
-Huston, et al.           Expires April 29, 2018                 [Page 3]
+Huston, et al.            Expires April 4, 2018                 [Page 3]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -223,26 +223,26 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
 
-Huston, et al.           Expires April 29, 2018                 [Page 4]
+Huston, et al.            Expires April 4, 2018                 [Page 4]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
-      respond with an A record response for "is-ta", SERVFAIL for "not-
-      ta" and SERVFAIL for the invalid name.
+      respond with an A record response for "_is-ta", SERVFAIL for
+      "_not-ta" and SERVFAIL for the invalid name.
 
    o  Vold: A DNSSEC-Validating resolver that includes this mechanism
       that has not loaded the nominated key into its trusted key stash
-      will respond with an SERVFAIL record for "is-ta", an A record
-      response for "not-ta" and SERVFAIL for the invalid name.
+      will respond with an SERVFAIL record for "_is-ta", an A record
+      response for "_not-ta" and SERVFAIL for the invalid name.
 
    o  Vleg: A DNSSEC-Validating resolver that does not include this
-      mechanism will respond with an A record response for "is-ta", an A
-      record response for "not-ta" and SERVFAIL for the invalid name.
+      mechanism will respond with an A record response for "_is-ta", an
+      A record response for "_not-ta" and SERVFAIL for the invalid name.
 
    o  nonV: A non-DNSSEC-Validating resolver will respond with an A
-      record response for "is-ta", an A record response for "not-ta" and
-      an A record response for the invalid name.
+      record response for "_is-ta", an A record response for "_not-ta"
+      and an A record response for the invalid name.
 
    Given the clear delineation amongst these three cases, if a client
    directs these three queries to a simple resolver, the variation in
@@ -253,7 +253,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
       +-------------+----------+-----------+------------+
-      | Type\Query  |  is_ta   |   not_ta  |  invalid   |
+      | Type\Query  |  _is-ta  |  _not-ta  |  invalid   |
       +-------------+----------+-----------+------------+
       | Vnew        |    A     |  SERVFAIL |  SERVFAIL  |
       | Vold        | SERVFAIL |      A    |  SERVFAIL  |
@@ -279,7 +279,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
 
-Huston, et al.           Expires April 29, 2018                 [Page 5]
+Huston, et al.            Expires April 4, 2018                 [Page 5]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -335,7 +335,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
 
-Huston, et al.           Expires April 29, 2018                 [Page 6]
+Huston, et al.            Expires April 4, 2018                 [Page 6]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -391,7 +391,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
 
 
-Huston, et al.           Expires April 29, 2018                 [Page 7]
+Huston, et al.            Expires April 4, 2018                 [Page 7]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel          October 2017
 
@@ -447,5 +447,5 @@ Authors' Addresses
 
 
 
-Huston, et al.           Expires April 29, 2018                 [Page 8]
+Huston, et al.            Expires April 4, 2018                 [Page 8]
 ```

@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-huston-kskroll-sentinel-02.txt"
+<rfc category="std" docName="draft-huston-kskroll-sentinel-03.txt"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Sentinel for Detecting
@@ -104,8 +104,7 @@
       mechanism.</t>
 
       <t>If the outcome of the DNS response validation process indicates that
-      the response is authentic, and if the original query contains exactly
-      one label that matches the template "._is-ta-&lt;tag-index&gt;.", then
+      the response is authentic, and if the left-most label of the original query name matches the template "._is-ta-&lt;tag-index&gt;.", then
       the following rule should be applied to the response: If the resolver
       has placed a Root Zone Key Signing Key with tag index value matching the
       value specified in the query into the local resolver's store of trusted
@@ -116,8 +115,7 @@
       using hex notation.</t>
 
       <t>If the outcome of the DNS response validation process indicates that
-      the response is authentic, and if the original query contains exactly
-      one label that matches the template "._not-ta-&lt;tag-index&gt;.", then
+      the response is authentic, and if the left-most label of the qriginal query name matches the template "._not-ta-&lt;tag-index&gt;.", then
       the following rule should be applied to the response: If the resolver
       has not placed a Root Zone Key Signing Key with tag index value matching
       the value specified in the query into the local resolver's store of
@@ -177,20 +175,20 @@
       <t><list style="symbols">
           <t>Vnew: A DNSSEC-Validating resolver that includes this mechanism
           that has loaded the nominated key into its trusted key stash will
-          respond with an A record response for "is-ta", SERVFAIL for "not-ta"
+          respond with an A record response for "_is-ta", SERVFAIL for "_not-ta"
           and SERVFAIL for the invalid name.</t>
 
           <t>Vold: A DNSSEC-Validating resolver that includes this mechanism
           that has not loaded the nominated key into its trusted key stash
-          will respond with an SERVFAIL record for "is-ta", an A record
-          response for "not-ta" and SERVFAIL for the invalid name.</t>
+          will respond with an SERVFAIL record for "_is-ta", an A record
+          response for "_not-ta" and SERVFAIL for the invalid name.</t>
 
           <t>Vleg: A DNSSEC-Validating resolver that does not include this
-          mechanism will respond with an A record response for "is-ta", an A
-          record response for "not-ta" and SERVFAIL for the invalid name.</t>
+          mechanism will respond with an A record response for "_is-ta", an A
+          record response for "_not-ta" and SERVFAIL for the invalid name.</t>
 
           <t>nonV: A non-DNSSEC-Validating resolver will respond with an A
-          record response for "is-ta", an A record response for "not-ta" and
+          record response for "_is-ta", an A record response for "_not-ta" and
           an A record response for the invalid name.</t>
         </list></t>
 
@@ -204,7 +202,7 @@
           <artwork><![CDATA[
 
    +-------------+----------+-----------+------------+
-   | Type\Query  |  is_ta   |   not_ta  |  invalid   |
+   | Type\Query  |  _is-ta  |  _not-ta  |  invalid   |
    +-------------+----------+-----------+------------+
    | Vnew        |    A     |  SERVFAIL |  SERVFAIL  |
    | Vold        | SERVFAIL |      A    |  SERVFAIL  |
