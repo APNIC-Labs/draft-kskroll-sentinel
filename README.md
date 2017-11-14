@@ -13,7 +13,7 @@ Expires: May 18, 2018                                          W. Kumari
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
-                  draft-huston-kskroll-sentinel-03.txt
+                  draft-huston-kskroll-sentinel-04.txt
 
 Abstract
 
@@ -128,10 +128,10 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
    performing validation of responses in accordance with the DNSSEC
    response validation specification [RFC4035].
 
-   This mechanism makes use of 2 special labels, "._is-ta-<tag-index>."
+   This mechanism makes use of 2 special labels, "_is-ta-<tag-index>."
    (Intended to be used in a query where the response can answer the
    question: Is this the key tag a trust anchor which the validating DNS
-   resolver is currently trusting?) and "._not-ta-<tag-index>."
+   resolver is currently trusting?) and "_not-ta-<tag-index>."
    (Intended to be used in a query where the response can answer the
    question: Is this the key tag of a key that is NOT in the resolver's
    current trust store?).  The use of the positive question and its
@@ -140,7 +140,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
 
    If the outcome of the DNS response validation process indicates that
    the response is authentic, and if the left-most label of the original
-   query name matches the template "._is-ta-<tag-index>.", then the
+   query name matches the template "_is-ta-<tag-index>.", then the
    following rule should be applied to the response: If the resolver has
    placed a Root Zone Key Signing Key with tag index value matching the
    value specified in the query into the local resolver's store of
@@ -152,7 +152,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
 
    If the outcome of the DNS response validation process indicates that
    the response is authentic, and if the left-most label of the qriginal
-   query name matches the template "._not-ta-<tag-index>.", then the
+   query name matches the template "_not-ta-<tag-index>.", then the
    following rule should be applied to the response: If the resolver has
    not placed a Root Zone Key Signing Key with tag index value matching
    the value specified in the query into the local resolver's store of
@@ -203,12 +203,12 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
 
    The sentinel process is envisaged to use a test with three names:
 
-   a.  a name containing the label "._is-ta-<tag-index>.".  This is a
-       validly signed name so that responses about names in this zone
-       can be authenticated by a validating resolver.
+   a.  a name containing the left-most label "_is-ta-<tag-index>.".
+       This is a validly signed name so that responses about names in
+       this zone can be authenticated by a validating resolver.
 
-   b.  a name containing the label "._not-ta-<tag-index>.".  This is
-       also a validly-signed name.
+   b.  a name containing the left-most label "_not-ta-<tag-index>.".
+       This is also a validly-signed name.
 
    c.  a third name that is signed with a DNSSEC signature that cannot
        be validated.
