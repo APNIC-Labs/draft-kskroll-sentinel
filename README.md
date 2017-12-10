@@ -7,9 +7,9 @@
 DNSOP                                                          G. Huston
 Internet-Draft                                                  J. Damas
 Intended status: Standards Track                                   APNIC
-Expires: May 5, 2018                                           W. Kumari
+Expires: June 14, 2018                                         W. Kumari
                                                                   Google
-                                                           November 2017
+                                                       December 11, 2017
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on May 5, 2018.
+   This Internet-Draft will expire on June 14, 2018.
 
 Copyright Notice
 
@@ -55,9 +55,9 @@ Copyright Notice
 
 
 
-Huston, et al.             Expires May 5, 2018                  [Page 1]
+Huston, et al.            Expires June 14, 2018                 [Page 1]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
+Internet-Draft         DNSSEC Trusted Key Sentinel         December 2017
 
 
    to this document.  Code Components extracted from this document must
@@ -71,7 +71,7 @@ Table of Contents
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Sentinel Mechanism  . . . . . . . . . . . . . . . . . . . . .   3
    3.  Sentinel Processing . . . . . . . . . . . . . . . . . . . . .   4
-   4.  Sentinel Test Result Considerations . . . . . . . . . . . . .   5
+   4.  Sentinel Test Result Considerations . . . . . . . . . . . . .   6
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
@@ -111,9 +111,9 @@ Table of Contents
 
 
 
-Huston, et al.             Expires May 5, 2018                  [Page 2]
+Huston, et al.            Expires June 14, 2018                 [Page 2]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
+Internet-Draft         DNSSEC Trusted Key Sentinel         December 2017
 
 
 1.1.  Terminology
@@ -138,53 +138,55 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
    inverse allows for queries to detect whether resolvers support this
    mechanism.
 
-   If the outcome of the DNS response validation process indicates that
-   the response is authentic, and if the left-most label of the original
-   query name matches the template "_is-ta-<tag-index>.", then the
-   following rule should be applied to the response: If the resolver has
-   placed a Root Zone Key Signing Key with tag index value matching the
-   value specified in the query into the local resolver's store of
-   trusted keys, then the resolver should return a response indicating
-   that the response contains authenticated data according to section
-   5.8 of [RFC6840].  Otherwise, the resolver MUST return RCODE 2
-   (server failure).  Note that the <tag-index> is specified in the DNS
-   label using hex notation.
+   If the outcome of the DNSSEC validation process on the response RRset
+   indicates that the response RRset is authentic, and if the left-most
+   label of the original query name matches the template "_is-ta-<tag-
+   index>.", then the following rule should be applied to the response:
+   If the resolver has placed a Root Zone Key Signing Key with tag index
+   value matching the value specified in the query into the local
+   resolver's store of trusted keys, then the resolver should return a
+   response indicating that the response contains authenticated data
+   according to section 5.8 of [RFC6840].  Otherwise, the resolver MUST
+   return RCODE 2 (server failure).  Note that the <tag-index> is
+   specified in the DNS label using hex notation.
 
-   If the outcome of the DNS response validation process indicates that
-   the response is authentic, and if the left-most label of the qriginal
-   query name matches the template "_not-ta-<tag-index>.", then the
-   following rule should be applied to the response: If the resolver has
-   not placed a Root Zone Key Signing Key with tag index value matching
-   the value specified in the query into the local resolver's store of
-   trusted keys, then the resolver should return a response indicating
-   that the response contains authenticated data according to section
-   5.8 of [RFC6840].  Otherwise, the resolver MUST return RCODE 2
-   (server failure).  Note that the <tag-index> is specified in the DNS
-   label using hex notation.
-
-
+   If the outcome of the DNSSEC validation process aplied to the
+   response RRset indicates that the response RRset is authentic, and if
+   the left-most label of the original query name matches the template
+   "_not-ta-<tag-index>.", then the following rule should be applied to
+   the response: If the resolver has not placed a Root Zone Key Signing
+   Key with tag index value matching the value specified in the query
+   into the local resolver's store of trusted keys, then the resolver
+   should return a response indicating that the response contains
+   authenticated data according to section 5.8 of [RFC6840].  Otherwise,
+   the resolver MUST return RCODE 2 (server failure).  Note that the
+   <tag-index> is specified in the DNS label using hex notation.
 
 
 
 
-Huston, et al.             Expires May 5, 2018                  [Page 3]
+
+
+Huston, et al.            Expires June 14, 2018                 [Page 3]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
+Internet-Draft         DNSSEC Trusted Key Sentinel         December 2017
 
 
    If a query contains one instance of both of these query templates
    then the resolver MUST NOT alter the outcome of the DNS response
    validation process.
 
-   This mechanism is to be applied only by resolvers that perform DNSSEC
-   validation, and applies only to responses to an A or AAAA query
-   (Query Type value 1 or 28) where the resolver has authenticated the
-   response according to the DNSSEC validation process and where the
-   query name contains either of the labels described in this section.
-   In this case, the resolver is to perform an additional test following
-   the conventional validation function as described in this section.
-   The result of this test directs whether the resolver is to change an
-   authentic response to a response that indicates validation failure.
+   This mechanism is to be applied only by resolvers that are performing
+   DNSSEC validation, and applies only to RRset responses to an A or
+   AAAA query (Query Type value 1 or 28) where the resolver has
+   authenticated the response RRset according to the DNSSEC validation
+   process and where the query name contains either of the labels
+   described in this section.  In this case, the resolver is to perform
+   an additional test following the conventional validation function, as
+   described in this section.  The result of this additional test
+   determines whether the resolver is to change a response that
+   indicates that the RRset is authentic to a response that indicates
+   DNSSEC validation failure.
 
 3.  Sentinel Processing
 
@@ -199,35 +201,40 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
    is intrinsically better than any other in terms of the test itself.
    The critical aspect of the DNS names used in any such test is that
    they contain the specified label for either the positive and negative
-   test.
+   test as the left-most label in the query name.
 
-   The sentinel process is envisaged to use a test with three names:
+   The sentinel process is envisaged to use a test with three query
+   names:
 
-   a.  a name containing the left-most label "_is-ta-<tag-index>.".
-       This is a validly signed name so that responses about names in
-       this zone can be authenticated by a validating resolver.
+   a.  a query name containing the left-most label "_is-ta-<tag-
+       index>.".  This corresponds to a a validly-signed RRset in the
+       zone, so that responses associated with queried names in this
+       zone can be authenticated by a DNSSEC-validating resolver.
 
-   b.  a name containing the left-most label "_not-ta-<tag-index>.".
-       This is also a validly-signed name.
+   b.  a query name containing the left-most label "_not-ta-<tag-
+       index>.".  This is also a validly-signed name.
 
-   c.  a third name that is signed with a DNSSEC signature that cannot
-       be validated.
+   c.  a third query name that is signed with a DNSSEC signature that
+       cannot be validated (i.e. the corresponding RRset is not signed
+       with a valid RRSIG record).
 
    The responses received from queries to resolve each of these names
    would allow us to infer a trust key state of the resolution
-   environment.
+
+
+
+Huston, et al.            Expires June 14, 2018                 [Page 4]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel         December 2017
+
+
+   environment.  To describe this process, we can classify resolvers
+   into four distinct behavior types, for which we will use the labels:
+   "Vnew", "Vold", "Vleg", and "nonV".  These labels correspond to
+   behaviour types as follows:
 
    o  Vnew: A DNSSEC-Validating resolver that includes this mechanism
       that has loaded the nominated key into its trusted key stash will
-
-
-
-
-Huston, et al.             Expires May 5, 2018                  [Page 4]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
-
-
       respond with an A record response for "_is-ta", SERVFAIL for
       "_not-ta" and SERVFAIL for the invalid name.
 
@@ -265,8 +272,17 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
    resolver and has been loaded into its local trusted key stash.  A
    Vleg response pattern says that the nominated key is not yet trusted
    by the resolver in its own right.  A Vleg response is indeterminate,
-   and a nonV response indicates that the client does not have a
-   validating resolver.
+   and a nonV response indicates that the resolver does not perform
+   DNSSEC validation.
+
+
+
+
+
+Huston, et al.            Expires June 14, 2018                 [Page 5]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel         December 2017
+
 
 4.  Sentinel Test Result Considerations
 
@@ -274,15 +290,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
    where the test queries were being passed to a single recursive
    resolver that directly queried authoritative name servers, including
    the root servers.
-
-
-
-
-
-Huston, et al.             Expires May 5, 2018                  [Page 5]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
-
 
    There is also the common case where the end client is configured to
    use multiple resolvers.  In these cases the SERVFAIL responses from
@@ -325,20 +332,18 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
       the trusted key state differs between the forwarding resolver and
       the forwarder target resolver
 
+
+
+
+Huston, et al.            Expires June 14, 2018                 [Page 6]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel         December 2017
+
+
    then either the outcome is indeterminate validating (Vleg), or a case
    of mixed signals (SERVFAIL in all three responses), which is
    similarly an indeterminate response with respect to the trusted key
    state.
-
-
-
-
-
-
-Huston, et al.             Expires May 5, 2018                  [Page 6]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
-
 
 5.  Security Considerations
 
@@ -384,17 +389,17 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
               RFC 4034, DOI 10.17487/RFC4034, March 2005,
               <https://www.rfc-editor.org/info/rfc4034>.
 
+
+
+Huston, et al.            Expires June 14, 2018                 [Page 7]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel         December 2017
+
+
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Protocol Modifications for the DNS Security
               Extensions", RFC 4035, DOI 10.17487/RFC4035, March 2005,
               <https://www.rfc-editor.org/info/rfc4035>.
-
-
-
-Huston, et al.             Expires May 5, 2018                  [Page 7]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel         November 2017
-
 
    [RFC6840]  Weiler, S., Ed. and D. Blacka, Ed., "Clarifications and
               Implementation Notes for DNS Security (DNSSEC)", RFC 6840,
@@ -442,10 +447,5 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-Huston, et al.             Expires May 5, 2018                  [Page 8]
+Huston, et al.            Expires June 14, 2018                 [Page 8]
 ```
