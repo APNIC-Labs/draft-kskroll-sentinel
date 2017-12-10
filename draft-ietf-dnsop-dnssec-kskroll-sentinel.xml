@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-huston-kskroll-sentinel-04.txt"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-00.txt"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Sentinel for Detecting
@@ -171,10 +171,10 @@
 
       <t>The responses received from queries to resolve each of these names
       would allow us to infer a trust key state of the resolution
-      environment. To describe this process, we can classify
+      environment. To describe this process of classification, we can classify
       resolvers into four distinct behavior types, for which we will
       use the labels: "Vnew", "Vold", "Vleg", and "nonV".  These labels
-      correspond to behaviour types as follows:</t>
+      correspond to resolver behaviour types as follows:</t>
 
       <t><list style="symbols">
           <t>Vnew: A DNSSEC-Validating resolver that includes this mechanism
@@ -217,7 +217,7 @@
         </figure></t>
 
       <t>A Vnew response pattern says that the nominated key is trusted by the
-      resolver and has been loaded into its local trusted key stash. A Vleg
+      resolver and has been loaded into its local trusted key stash. A Vold
       response pattern says that the nominated key is not yet trusted by the
       resolver in its own right. A Vleg response is indeterminate, and a nonV
       response indicates that the resolver does not perform DNSSEC validation.</t>
@@ -296,7 +296,7 @@
     </section>
 
     <section title="Acknowledgements">
-      <t>This document has borrowed extensively from RFC8145 for the
+      <t>This document has borrowed extensively from <xref target="RFC8145"/> for the
       introductory text, and the authors would like to acknowledge and thank
       the authors of that document both for some text excerpts and for the
       more general stimulation of thoughts about monitoring the progress of a

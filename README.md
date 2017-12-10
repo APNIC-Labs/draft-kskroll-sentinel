@@ -13,7 +13,7 @@ Expires: June 14, 2018                                         W. Kumari
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
-                  draft-huston-kskroll-sentinel-04.txt
+                draft-ietf-dnsop-kskroll-sentinel-00.txt
 
 Abstract
 
@@ -228,10 +228,10 @@ Huston, et al.            Expires June 14, 2018                 [Page 4]
 Internet-Draft         DNSSEC Trusted Key Sentinel         December 2017
 
 
-   environment.  To describe this process, we can classify resolvers
-   into four distinct behavior types, for which we will use the labels:
-   "Vnew", "Vold", "Vleg", and "nonV".  These labels correspond to
-   behaviour types as follows:
+   environment.  To describe this process of classification, we can
+   classify resolvers into four distinct behavior types, for which we
+   will use the labels: "Vnew", "Vold", "Vleg", and "nonV".  These
+   labels correspond to resolver behaviour types as follows:
 
    o  Vnew: A DNSSEC-Validating resolver that includes this mechanism
       that has loaded the nominated key into its trusted key stash will
@@ -270,7 +270,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         December 2017
 
    A Vnew response pattern says that the nominated key is trusted by the
    resolver and has been loaded into its local trusted key stash.  A
-   Vleg response pattern says that the nominated key is not yet trusted
+   Vold response pattern says that the nominated key is not yet trusted
    by the resolver in its own right.  A Vleg response is indeterminate,
    and a nonV response indicates that the resolver does not perform
    DNSSEC validation.
@@ -368,7 +368,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         December 2017
 
 7.  Acknowledgements
 
-   This document has borrowed extensively from RFC8145 for the
+   This document has borrowed extensively from [RFC8145] for the
    introductory text, and the authors would like to acknowledge and
    thank the authors of that document both for some text excerpts and
    for the more general stimulation of thoughts about monitoring the
