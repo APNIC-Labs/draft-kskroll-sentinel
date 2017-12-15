@@ -102,13 +102,18 @@
       store?). The use of the positive question and its inverse
       allows for queries to detect whether resolvers support this
       sentinel mechanism.</t>
+      
+      <t>The special labels are associated with the zone to which the trust anchor
+      applies. In most cases on the Internet today, that will be the root zone,
+      but a resolver that implements this protocol MUST apply it for any zone
+      for which the resolver has a trust anchor.</t>
 
       <t>If the outcome of the DNSSEC validation process on the response RRset indicates that
       the response RRset is authentic, and if the left-most label of the original query name matches the template "_is-ta-&lt;tag-index&gt;.", then
       the following rule should be applied to the response: If the resolver
-      has placed a Root Zone Key Signing Key with tag index value matching the
+      has placed a Key Signing Key with tag index value matching the
       value specified in the query into the local resolver's store of trusted
-      keys, then the resolver should return a response indicating that the
+      keys for the zone, then the resolver should return a response indicating that the
       response contains authenticated data according to section 5.8 of <xref
       target="RFC6840"/>. Otherwise, the resolver MUST return RCODE 2 (server
       failure). Note that the &lt;tag-index&gt; is specified in the DNS label
@@ -117,9 +122,9 @@
       <t>If the outcome of the DNSSEC validation process aplied to the response RRset indicates that
       the response RRset is authentic, and if the left-most label of the original query name matches the template "_not-ta-&lt;tag-index&gt;.", then
       the following rule should be applied to the response: If the resolver
-      has not placed a Root Zone Key Signing Key with tag index value matching
+      has not placed a Key Signing Key with tag index value matching
       the value specified in the query into the local resolver's store of
-      trusted keys, then the resolver should return a response indicating that
+      trusted keys for the zone, then the resolver should return a response indicating that
       the response contains authenticated data according to section 5.8 of
       <xref target="RFC6840"/>. Otherwise, the resolver MUST return RCODE 2
       (server failure). Note that the &lt;tag-index&gt; is specified in the
@@ -147,7 +152,7 @@
       resolution behaviours. The test is intended to allow a user to determine
       the state of their DNS resolution system, and, in particular, whether or
       not they are using validating DNS resolvers that have picked up an
-      incoming trust anchor as a trusted key in a root zone KSK roll scenario.</t>
+      incoming trust anchor as a trusted key in a KSK roll scenario.</t>
 
       <t>The name format can be defined in a number of ways, and no name form
       is intrinsically better than any other in terms of the test itself. The
@@ -226,8 +231,7 @@
     <section title="Sentinel Test Result Considerations">
       <t>The description in the previous section describes a simple situation
       where the test queries were being passed to a single recursive resolver
-      that directly queried authoritative name servers, including the root
-      servers.</t>
+      that directly queried authoritative name servers.</t>
 
       <t>There is also the common case where the end client is configured to
       use multiple resolvers. In these cases the SERVFAIL responses from one
@@ -276,7 +280,7 @@
 
     <section title="Security Considerations">
       <t>This document describes a mechanism to allow users to determine the
-      trust state of root zone key signing keys in the DNS resolution system
+      trust state of zone key signing keys in the DNS resolution system
       that they use.</t>
 
       <t>The mechanism does not require resolvers to set otherwise
@@ -300,7 +304,7 @@
       introductory text, and the authors would like to acknowledge and thank
       the authors of that document both for some text excerpts and for the
       more general stimulation of thoughts about monitoring the progress of a
-      roll of the Key Signing Key of the Root Zone of the DNS.</t>
+      roll of the Key Signing Key of the root zone of the DNS.</t>
     </section>
   </middle>
 
