@@ -7,9 +7,9 @@
 DNSOP                                                          G. Huston
 Internet-Draft                                                  J. Damas
 Intended status: Standards Track                                   APNIC
-Expires: August 15, 2018                                       W. Kumari
+Expires: August 16, 2018                                       W. Kumari
                                                                   Google
-                                                       February 11, 2018
+                                                       February 12, 2018
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
@@ -36,7 +36,7 @@ Abstract
 
    [ NOTE: This version uses the labels "kskroll-sentinel-is-ta-<tag-
    index>", "kskroll-sentinel-not-ta-<tag-index>"; older versions of
-   this document used "_is-ta-<tag-index>", "_not-ta-<tag-index>". ]
+   this document used "_is-ta-<tag-index>", "_not-ta-<tag-index>".  ]
 
 Status of This Memo
 
@@ -55,12 +55,12 @@ Status of This Memo
 
 
 
-Huston, et al.           Expires August 15, 2018                [Page 1]
+Huston, et al.           Expires August 16, 2018                [Page 1]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
-   This Internet-Draft will expire on August 15, 2018.
+   This Internet-Draft will expire on August 16, 2018.
 
 Copyright Notice
 
@@ -111,7 +111,7 @@ Table of Contents
 
 
 
-Huston, et al.           Expires August 15, 2018                [Page 2]
+Huston, et al.           Expires August 16, 2018                [Page 2]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -143,9 +143,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 2.  Use Case
 
    [Ed note: This is currently towards the front of the document; we
-   might want to make it be an appendix at publication time (or even
-   just remove it!), but until then I think it is worth having up front,
-   as it makes the rest of the document much easier to understand ]
+   will make it an appendix at publication time, but until then it is
+   worth having up front, as it makes the rest of the document much
+   easier to understand ]
 
    This section provides a non-normative example of how the sentinel
    mechanism could be used, and what each participant does.  It is
@@ -167,7 +167,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 15, 2018                [Page 3]
+Huston, et al.           Expires August 16, 2018                [Page 3]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -215,15 +215,15 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    invalid.example.com record is bogus, and none of his resolvers will
    resolve it).  He is able to fetch both of the other resources - from
    this he knows (see the logic below) that he is using legacy, non-
-   validating resolvers.  The KSK sentinel method cannot not provided
-   him with a definitive answer.
+   validating resolvers.  The KSK sentinel method cannot provided him
+   with a definitive answer.
 
    Dave's resolvers implement the sentinel method, and have picked up
    the new KSK.  For the same reason as Charlie, he cannot fetch the
 
 
 
-Huston, et al.           Expires August 15, 2018                [Page 4]
+Huston, et al.           Expires August 16, 2018                [Page 4]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -272,14 +272,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    Geoff would like to do a large scale test and provide the information
    back to Alice.  He uses some mechanism (such as an advertising
    network) to cause a large number of users to attempt to resolve the 3
-   resources, and the analyzes the results of the tests to determine
+   resources, and then analyzes the results of the tests to determine
    what percentage of users will be affected by the KSK rollover event.
 
 
 
 
 
-Huston, et al.           Expires August 15, 2018                [Page 5]
+Huston, et al.           Expires August 16, 2018                [Page 5]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -317,7 +317,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    detect whether resolvers support this sentinel mechanism.  Note that
    the test is "Is there a key with this KeyID in the resolver's current
    trust store for the DNS root", not "Is there any key with this KeyID
-   in the trust store", nor "What a key with this KeyID used to validate
+   in the trust store", nor "Was a key with this KeyID used to validate
    this query?".  [This is still an active discussion on the DNSOP list
    ]
 
@@ -335,7 +335,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 15, 2018                [Page 6]
+Huston, et al.           Expires August 16, 2018                [Page 6]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -391,7 +391,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 15, 2018                [Page 7]
+Huston, et al.           Expires August 16, 2018                [Page 7]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -447,7 +447,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 15, 2018                [Page 8]
+Huston, et al.           Expires August 16, 2018                [Page 8]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -503,7 +503,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 15, 2018                [Page 9]
+Huston, et al.           Expires August 16, 2018                [Page 9]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -559,7 +559,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 15, 2018               [Page 10]
+Huston, et al.           Expires August 16, 2018               [Page 10]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -615,7 +615,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 15, 2018               [Page 11]
+Huston, et al.           Expires August 16, 2018               [Page 11]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -671,5 +671,5 @@ Authors' Addresses
 
 
 
-Huston, et al.           Expires August 15, 2018               [Page 12]
+Huston, et al.           Expires August 16, 2018               [Page 12]
 ```
