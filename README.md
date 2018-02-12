@@ -90,7 +90,7 @@ Table of Contents
    8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  11
    9.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  11
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  11
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
      10.2.  Informative References . . . . . . . . . . . . . . . . .  12
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
@@ -578,7 +578,13 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    progress of a roll of the Key Signing Key of the Root Zone of the
    DNS.
 
-   The authors would like the especially thank Ralph Dolmans,
+   The authors would like the especially thank Joe Abley, Mehmet Akcin,
+   Mark Andrews, Richard Barnes, Ray Bellis, Stephane Bortzmeyer, David
+   Conrad, Ralph Dolmans, Steinar Haug, Bob Harold, Wes Hardaker, Paul
+   Hoffman, Matt Larson, Edward Lewis, George Michaelson, Benno
+   Overeinder, Matthew Pounsett, Andreas Schulze, Mukund Sivaraman, Petr
+   Spacek.  Andrew Sullivan, Paul Vixie, Duane Wessels and Paul Wouters
+   for their helpful feedback.
 
    [TODO: Add people who have contributed!]
 
@@ -603,12 +609,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 10.  References
 
-10.1.  Normative References
-
-   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements", RFC
-              4033, DOI 10.17487/RFC4033, March 2005, <https://www.rfc-
-              editor.org/info/rfc4033>.
 
 
 
@@ -619,6 +619,13 @@ Huston, et al.           Expires August 16, 2018               [Page 11]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
+
+10.1.  Normative References
+
+   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
+              Rose, "DNS Security Introduction and Requirements", RFC
+              4033, DOI 10.17487/RFC4033, March 2005, <https://www.rfc-
+              editor.org/info/rfc4033>.
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
@@ -659,13 +666,6 @@ Authors' Addresses
    Warren Kumari
 
    Email: warren@kumari.net
-
-
-
-
-
-
-
 
 
 

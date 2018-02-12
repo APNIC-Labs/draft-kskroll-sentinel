@@ -479,7 +479,13 @@
       the more general stimulation of thoughts about monitoring the progress
       of a roll of the Key Signing Key of the Root Zone of the DNS.</t>
 
-      <t>The authors would like the especially thank Ralph Dolmans,</t>
+      <t>The authors would like the especially thank Joe Abley, Mehmet Akcin,
+      Mark Andrews, Richard Barnes, Ray Bellis, Stephane Bortzmeyer, David
+      Conrad, Ralph Dolmans, Steinar Haug, Bob Harold, Wes Hardaker, Paul
+      Hoffman, Matt Larson, Edward Lewis, George Michaelson, Benno Overeinder,
+      Matthew Pounsett, Andreas Schulze, Mukund Sivaraman, Petr Spacek. Andrew
+      Sullivan, Paul Vixie, Duane Wessels and Paul Wouters for their helpful
+      feedback.</t>
 
       <t>[TODO: Add people who have contributed!]</t>
     </section>
