@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-01"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-02"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Sentinel for Detecting
@@ -39,7 +39,7 @@
       </address>
     </author>
 
-    <date day="12" month="February" year="2018"/>
+    <date day="21" month="February" year="2018"/>
 
     <area>Internet</area>
 
@@ -60,7 +60,7 @@
       http://www.ksk-test.net .</t>
 
       <t>[ This document is being collaborated on in Github at:
-      https://github.com/APNIC-Labs/draft-kskroll-sentinel.. The most recent
+      https://github.com/APNIC-Labs/draft-kskroll-sentinel. The most recent
       version of the document, open issues, etc should all be available here.
       The authors (gratefully) accept pull requests. Text in square brackets
       will be removed before publication. ]</t>
@@ -486,11 +486,11 @@
 
       <t>The authors would like the especially thank Joe Abley, Mehmet Akcin,
       Mark Andrews, Richard Barnes, Ray Bellis, Stephane Bortzmeyer, David
-      Conrad, Ralph Dolmans, Steinar Haug, Bob Harold, Wes Hardaker, Paul
-      Hoffman, Matt Larson, Jinmei Tatuya Edward Lewis, George Michaelson,
-      Benno Overeinder, Matthew Pounsett, Andreas Schulze, Mukund Sivaraman,
-      Petr Spacek. Andrew Sullivan, Paul Vixie, Duane Wessels and Paul Wouters
-      for their helpful feedback.</t>
+      Conrad, Ralph Dolmans, John Dickinson, Steinar Haug, Bob Harold, Wes
+      Hardaker, Paul Hoffman, Matt Larson, Jinmei Tatuya, Edward Lewis, George
+      Michaelson, Benno Overeinder, Matthew Pounsett, Andreas Schulze, Mukund
+      Sivaraman, Petr Spacek. Andrew Sullivan, Paul Vixie, Duane Wessels and
+      Paul Wouters for their helpful feedback.</t>
 
       <t>[TODO: Add people who have contributed!]</t>
     </section>
@@ -500,11 +500,22 @@
       The below is mainly large changes, and is not authoritative.</t>
 
       <t>From -01 to 02:<list>
-          <t>Removed Address Record definition. </t>
+          <t>Removed Address Record definition.</t>
 
           <t>Clarified that many things can cause SERVFAIL.</t>
 
           <t>Made examples FQDN.</t>
+
+          <t>Fixed a number of typos.</t>
+
+          <t>Had accidentally said that Charlie was using a non-validating
+          resolver in example.</t>
+
+          <t>[ TODO(WK): Doc says keytags are hex, is this really what the WG
+          wants? ] </t>
+
+          <t>And active key is one that can be used *now* (not e.g
+          AddPend)</t>
         </list></t>
 
       <t>From -00 to 01:<list style="symbols">

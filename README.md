@@ -7,13 +7,13 @@
 DNSOP                                                          G. Huston
 Internet-Draft                                                  J. Damas
 Intended status: Standards Track                                   APNIC
-Expires: August 16, 2018                                       W. Kumari
+Expires: August 25, 2018                                       W. Kumari
                                                                   Google
-                                                       February 12, 2018
+                                                       February 21, 2018
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
-                  draft-ietf-dnsop-kskroll-sentinel-01
+                  draft-ietf-dnsop-kskroll-sentinel-02
 
 Abstract
 
@@ -31,7 +31,7 @@ Abstract
    test.net .
 
    [ This document is being collaborated on in Github at:
-   https://github.com/APNIC-Labs/draft-kskroll-sentinel.. The most
+   https://github.com/APNIC-Labs/draft-kskroll-sentinel.  The most
    recent version of the document, open issues, etc should all be
    available here.  The authors (gratefully) accept pull requests.  Text
    in square brackets will be removed before publication. ]
@@ -55,7 +55,7 @@ Status of This Memo
 
 
 
-Huston, et al.           Expires August 16, 2018                [Page 1]
+Huston, et al.           Expires August 25, 2018                [Page 1]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -63,7 +63,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 16, 2018.
+   This Internet-Draft will expire on August 25, 2018.
 
 Copyright Notice
 
@@ -111,7 +111,7 @@ Table of Contents
 
 
 
-Huston, et al.           Expires August 16, 2018                [Page 2]
+Huston, et al.           Expires August 25, 2018                [Page 2]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -167,7 +167,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 16, 2018                [Page 3]
+Huston, et al.           Expires August 25, 2018                [Page 3]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -223,7 +223,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 16, 2018                [Page 4]
+Huston, et al.           Expires August 25, 2018                [Page 4]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -279,7 +279,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 16, 2018                [Page 5]
+Huston, et al.           Expires August 25, 2018                [Page 5]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -335,7 +335,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 16, 2018                [Page 6]
+Huston, et al.           Expires August 25, 2018                [Page 6]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -391,7 +391,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 16, 2018                [Page 7]
+Huston, et al.           Expires August 25, 2018                [Page 7]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -447,7 +447,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 16, 2018                [Page 8]
+Huston, et al.           Expires August 25, 2018                [Page 8]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -503,7 +503,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 16, 2018                [Page 9]
+Huston, et al.           Expires August 25, 2018                [Page 9]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -559,7 +559,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-Huston, et al.           Expires August 16, 2018               [Page 10]
+Huston, et al.           Expires August 25, 2018               [Page 10]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
@@ -575,11 +575,11 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
    The authors would like the especially thank Joe Abley, Mehmet Akcin,
    Mark Andrews, Richard Barnes, Ray Bellis, Stephane Bortzmeyer, David
-   Conrad, Ralph Dolmans, Steinar Haug, Bob Harold, Wes Hardaker, Paul
-   Hoffman, Matt Larson, Jinmei Tatuya Edward Lewis, George Michaelson,
-   Benno Overeinder, Matthew Pounsett, Andreas Schulze, Mukund
-   Sivaraman, Petr Spacek.  Andrew Sullivan, Paul Vixie, Duane Wessels
-   and Paul Wouters for their helpful feedback.
+   Conrad, Ralph Dolmans, John Dickinson, Steinar Haug, Bob Harold, Wes
+   Hardaker, Paul Hoffman, Matt Larson, Jinmei Tatuya, Edward Lewis,
+   George Michaelson, Benno Overeinder, Matthew Pounsett, Andreas
+   Schulze, Mukund Sivaraman, Petr Spacek.  Andrew Sullivan, Paul Vixie,
+   Duane Wessels and Paul Wouters for their helpful feedback.
 
    [TODO: Add people who have contributed!]
 
@@ -596,6 +596,16 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
       Made examples FQDN.
 
+      Fixed a number of typos.
+
+      Had accidentally said that Charlie was using a non-validating
+      resolver in example.
+
+      [ TODO(WK): Doc says keytags are hex, is this really what the WG
+      wants? ]
+
+      And active key is one that can be used *now* (not e.g AddPend)
+
    From -00 to 01:
 
    o  Added a conversational description of how the system is intended
@@ -603,22 +613,19 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
    o  Clarification that this is for the root.
 
+
+
+Huston, et al.           Expires August 25, 2018               [Page 11]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
+
+
    o  Changed the label template from _is-ta-<tag> to kskroll-sentinel-
       is-ta-<tag-index>.  This is because BIND (at least) will not allow
       records which start with an underscore to have address records
       (CNAMEs, yes, A/AAAA no).  Some browsers / operating systems also
       will not fetch resources from names which start with an
       underscore.
-
-
-
-
-
-
-Huston, et al.           Expires August 16, 2018               [Page 11]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
-
 
 10.  References
 
@@ -663,17 +670,16 @@ Authors' Addresses
    URI:   http://www.apnic.net
 
 
+
+Huston, et al.           Expires August 25, 2018               [Page 12]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
+
+
    Joao Silva Damas
 
    Email: joao@apnic.net
    URI:   http://www.apnic.net
-
-
-
-
-Huston, et al.           Expires August 16, 2018               [Page 12]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
    Warren Kumari
@@ -721,11 +727,5 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-
-
-
-
-
-
-Huston, et al.           Expires August 16, 2018               [Page 13]
+Huston, et al.           Expires August 25, 2018               [Page 13]
 ```
