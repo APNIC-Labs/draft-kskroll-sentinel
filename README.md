@@ -89,13 +89,13 @@ Table of Contents
    4.  Sentinel Processing . . . . . . . . . . . . . . . . . . . . .   7
    5.  Sentinel Test Result Considerations . . . . . . . . . . . . .   9
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
    8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  11
    9.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  11
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
      10.2.  Informative References . . . . . . . . . . . . . . . . .  12
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
 
 1.  Introduction
 
@@ -412,11 +412,12 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    environment.  The techniques describes in this document rely on
    (DNSSEC validating) resolvers responding with SERVFAIL (RCODE 2) to
    valid answers.  Note that a slew of other issues can also cause
-   SERVFAIL responses, so false positive or negative results may
-   sometimes occur.  To describe this process of classification, we can
-   classify resolvers into four distinct behavior types, for which we
-   will use the labels: "Vnew", "Vold", "Vleg", and "nonV".  These
-   labels correspond to resolver behaviour types as follows:
+   SERVFAIL responses, and so the sentinel processing (Section 4) may
+   sometimes result in incorrect conclusions.  To describe this process
+   of classification, we can classify resolvers into four distinct
+   behavior typos, for which we will use the labels: "Vnew", "Vold",
+   "Vleg", and "nonV".  These labels correspond to resolver behaviour
+   types as follows:
 
    o  Vnew: A DNSSEC-Validating resolver that is configured to implement
       this mechanism has loaded the nominated key into its local trusted
@@ -442,8 +443,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
       response for "kskroll-sentinel-not-ta" and an A record response
       for the invalid name.
 
-   Given the clear delineation amongst these three cases, if a client
-   directs these three queries to a simple resolver, the variation in
+
 
 
 
@@ -452,6 +452,8 @@ Huston, et al.           Expires August 25, 2018                [Page 8]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
+   Given the clear delineation amongst these three cases, if a client
+   directs these three queries to a simple resolver, the variation in
    response to the three queries should allow the client to determine
    the category of the resolver, and if it supports this mechanism,
    whether or not it has loaded a particular key into its local trusted
@@ -497,8 +499,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    some have loaded the key into the trusted key stash and some have
    not, then the result is indeterminate ("Vleg").
 
-   There is also the common case of a recursive resolver using a
-   forwarder.
 
 
 
@@ -507,6 +507,9 @@ Huston, et al.           Expires August 25, 2018                [Page 9]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
+
+   There is also the common case of a recursive resolver using a
+   forwarder.
 
    If the resolver is non-validating, and it has a single forwarder
    clause, then the resolver will presumably mirror the capabilities of
@@ -551,10 +554,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    not impose any additional load that could be exploited in an attack
    over the the normal DNSSEC validation processing load.
 
-7.  IANA Considerations
 
-   [Note to IANA, to be removed prior to publication: there are no IANA
-   considerations stated in this version of the document.]
 
 
 
@@ -563,6 +563,11 @@ Huston, et al.           Expires August 25, 2018               [Page 10]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
+
+7.  IANA Considerations
+
+   [Note to IANA, to be removed prior to publication: there are no IANA
+   considerations stated in this version of the document.]
 
 8.  Acknowledgements
 
@@ -608,17 +613,17 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
    From -00 to 01:
 
-   o  Added a conversational description of how the system is intended
-      to work.
-
-   o  Clarification that this is for the root.
-
 
 
 Huston, et al.           Expires August 25, 2018               [Page 11]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
+
+   o  Added a conversational description of how the system is intended
+      to work.
+
+   o  Clarification that this is for the root.
 
    o  Changed the label template from _is-ta-<tag> to kskroll-sentinel-
       is-ta-<tag-index>.  This is because BIND (at least) will not allow
@@ -662,18 +667,21 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
               8145, DOI 10.17487/RFC8145, April 2017, <https://www.rfc-
               editor.org/info/rfc8145>.
 
-Authors' Addresses
 
-   Geoff Huston
-
-   Email: gih@apnic.net
-   URI:   http://www.apnic.net
 
 
 
 Huston, et al.           Expires August 25, 2018               [Page 12]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
+
+
+Authors' Addresses
+
+   Geoff Huston
+
+   Email: gih@apnic.net
+   URI:   http://www.apnic.net
 
 
    Joao Silva Damas
@@ -685,14 +693,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    Warren Kumari
 
    Email: warren@kumari.net
-
-
-
-
-
-
-
-
 
 
 

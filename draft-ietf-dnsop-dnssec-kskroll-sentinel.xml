@@ -343,12 +343,12 @@
       would allow us to infer a trust key state of the resolution environment.
       The techniques describes in this document rely on (DNSSEC validating)
       resolvers responding with SERVFAIL (RCODE 2) to valid answers. Note that
-      a slew of other issues can also cause SERVFAIL responses, so false
-      positive or negative results may sometimes occur. To describe this
-      process of classification, we can classify resolvers into four distinct
-      behavior types, for which we will use the labels: "Vnew", "Vold",
-      "Vleg", and "nonV". These labels correspond to resolver behaviour types
-      as follows:</t>
+      a slew of other issues can also cause SERVFAIL responses, and so the
+      sentinel processing (Section 4) may sometimes result in incorrect
+      conclusions. To describe this process of classification, we can classify
+      resolvers into four distinct behavior typos, for which we will use the
+      labels: "Vnew", "Vold", "Vleg", and "nonV". These labels correspond to
+      resolver behaviour types as follows:</t>
 
       <t><list style="symbols">
           <t>Vnew: A DNSSEC-Validating resolver that is configured to
