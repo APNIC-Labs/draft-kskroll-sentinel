@@ -140,7 +140,7 @@
       will be (and report this back to Alice).</t>
 
       <t>Geoff sets an authoritative DNS server for example.com, and also a
-      webserver (www.example.com). He adds 3 AAAA records to example.com:
+      webserver (www.example.com). He adds three address records to example.com:
         <list>
           <t>invalid.example.com. IN AAAA 2001:db8::1</t>
 
@@ -297,7 +297,7 @@
       response validation process.</t>
 
       <t>This mechanism is to be applied only by resolvers that are performing
-      DNSSEC validation, and applies only to responses to an A or AAAA query
+      DNSSEC validation, and applies only to responses to queries for A or AAAA records
       (Query Type value 1 or 28) where the resolver has authenticated the
       response according to the DNSSEC validation process and where the query
       name contains either of the labels described in this section as its
@@ -371,12 +371,12 @@
 
           <t hangText="Vleg:">A DNSSEC-Validating resolver that does not
           implement this mechanism will respond with an A or AAAA RRset
-          response for "kskroll-sentinel-is-ta", an A record response for
+          response for "kskroll-sentinel-is-ta", an A or AAAA RRset response for
           "kskroll-sentinel-not-ta" and SERVFAIL for the invalid name.</t>
 
           <t hangText="nonV:">A non-DNSSEC-Validating resolver will respond
           with an A or AAAA record response for "kskroll-sentinel-is-ta", an A
-          record response for "kskroll-sentinel-not-ta" and an A record
+          record response for "kskroll-sentinel-not-ta" and an A or AAAA RRset
           response for the invalid name.</t>
         </list></t>
 
