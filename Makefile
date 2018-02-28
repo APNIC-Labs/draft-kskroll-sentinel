@@ -34,6 +34,7 @@ ps2pdf ?= ps2pdf
 
 
 ## Work out what to build
+
 draft := $(basename $(lastword $(sort $(wildcard draft-*.xml)) $(sort $(wildcard draft-*.org)) $(sort $(wildcard draft-*.md))))
 
 ifeq (,$(draft))
@@ -54,10 +55,10 @@ default:
 	@echo
 
 
-.PHONY: latest txt html pdf submit diff clean update
+.PHONY: latest txt html pdf submit diff clean update ghpages
 
 latest: txt html
-txt: $(draft).txt
+txt: $(draft).txt README.md
 html: $(draft).html
 pdf: $(draft).pdf
 
@@ -70,7 +71,6 @@ clean:
 	-rm -f $(draft).{txt,html,pdf} index.html
 	-rm -f $(draft)-[0-9][0-9].{xml,md,org,txt,html,pdf}
 	-rm -f *.diff.html
-	-rm -f README.md
 ifneq (.xml,$(draft_type))
 	-rm -f $(draft).xml
 endif
@@ -80,14 +80,13 @@ endif
 diff:
 	git diff $(draft).xml
 
-README.md: $(draft).xml
+
+commit: $(draft).txt README.md
 	@echo "Making README.md and committing and pushing to github. Run 'make tag' to add and push a tag."
 	@echo '**Important:** Read CONTRIBUTING.md before submitting feedback or contributing' > README.md
 	@echo \`\`\` >> README.md
 	@cat $(draft).txt >> README.md
 	@echo \`\`\` >> README.md
-
-commit: $(draft).txt README.md
 	read -p "Commit message: " msg; \
 	git commit -a -m "$$msg";
 	@git push
@@ -111,9 +110,56 @@ tag:
 
 %.txt: %.xml
 	$(xml2rfc) $< -o $@ --text
+	@echo "Making README.md - this does not commit to GitHub (you want 'make commit' for that."
+	@echo '**Important:** Read CONTRIBUTING.md before submitting feedback or contributing' > README.md
+	@echo \`\`\` >> README.md
+	@cat $(draft).txt >> README.md
+	@echo \`\`\` >> README.md
 
 %.html: %.xml
 	$(xml2rfc) $< -o $@ --html
 
 %.pdf: %.txt
 	$(enscript) --margins 76::76: -B -q -p - $^ | $(ps2pdf) - $@
+
+
+## Update the gh-pages branch with useful files
+
+
+# Only run upload if we are local or on the master branch
+IS_LOCAL := $(if $(TRAVIS),,true)
+ifeq (master,$(TRAVIS_BRANCH))
+IS_MASTER := $(findstring false,$(TRAVIS_PULL_REQUEST))
+else
+IS_MASTER :=
+endif
+
+index.html: $(draft).html
+	cp $< $@
+
+ghpages: index.html $(draft).txt
+ifneq (,$(or $(IS_LOCAL),$(IS_MASTER)))
+	mkdir $(GHPAGES_TMP)
+	cp -f $^ $(GHPAGES_TMP)
+	git clean -qfdX
+ifeq (true,$(TRAVIS))
+	git config user.email "ci-bot@example.com"
+	git config user.name "Travis CI Bot"
+	git checkout -q --orphan gh-pages
+	git rm -qr --cached .
+	git clean -qfd
+	git pull -qf origin gh-pages --depth=5
+else
+	git checkout gh-pages
+	git pull
+endif
+	mv -f $(GHPAGES_TMP)/* $(CURDIR)
+	git add $^
+	if test `git status -s | wc -l` -gt 0; then git commit -m "Script updating gh-pages."; fi
+ifneq (,$(GH_TOKEN))
+	@echo git push https://github.com/$(TRAVIS_REPO_SLUG).git gh-pages
+	@git push https://$(GH_TOKEN)@github.com/$(TRAVIS_REPO_SLUG).git gh-pages
+endif
+	-git checkout -qf "$(GIT_ORIG)"
+	-rm -rf $(GHPAGES_TMP)
+endif
