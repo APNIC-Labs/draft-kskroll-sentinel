@@ -103,9 +103,6 @@
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
         document are to be interpreted as described in RFC 2119.</t>
 
-        <t>Note that example.com, AAAA records and the IPv6 documentation
-        prefix (2001:db8::/32) are only examples - A records (or CNAMES),
-        other IPs, other domains work just as well.</t>
       </section>
     </section>
 
@@ -142,7 +139,8 @@
       will be (and report this back to Alice).</t>
 
       <t>Geoff sets an authoritative DNS server for example.com, and also a
-      webserver (www.example.com). He adds 3 AAAA records to example.com:<list>
+      webserver (www.example.com). He adds 3 AAAA records to example.com:
+        <list>
           <t>invalid.example.com. IN AAAA 2001:db8::1</t>
 
           <t>kskroll-sentinel-is-ta-2222.example.com. IN AAAA 2001:db8::1</t>
@@ -150,6 +148,10 @@
           <t>kskroll-sentinel-not-ta-2222.example.com. IN AAAA 2001:db8::1</t>
         </list></t>
 
+      <t>Note that the use of "example.com" names and the addresses here are examples.
+      In a real deployment, the domain names need to be under control
+      of the researcher, and the addresses much be real, reachable addresses.</t>
+      
       <t>Geoff then DNSSEC signs the example.com zone, and intentionally makes
       the invalid.example.com record invalid/bogus (for example, by editing
       the signed zone and entering garbage for the signature). Geoff also
