@@ -22,10 +22,10 @@ Abstract
    signatures.  These digital signatures can be verified by building a
    chain of trust starting from a trust anchor and proceeding down to a
    particular node in the DNS.  This document specifies a mechanism that
-   will allow an end user to determine the trusted key state for the
-   root key of the resolvers that handle that user's DNS queries.  Note
-   that this method is only applicable for determing which keys are in
-   the trust store for the root key.
+   will allow an end user and third parties to determine the trusted key
+   state for the root key of the resolvers that handle that user's DNS
+   queries.  Note that this method is only applicable for determing
+   which keys are in the trust store for the root key.
 
    There is an example / toy implementation of this at http://www.ksk-
    test.net .
@@ -36,11 +36,11 @@ Abstract
    available here.  The authors (gratefully) accept pull requests.  Text
    in square brackets will be removed before publication. ]
 
-   [ NOTE: This version uses the labels "kskroll-sentinel-is-ta-<tag-
-   index>", "kskroll-sentinel-not-ta-<tag-index>"; older versions of
-   this document used "_is-ta-<tag-index>", "_not-ta-<tag-index>".  Also
-   note that the format of the tag-index is now decimal.  Apolgies to
-   those who have began implmenting.]
+   [ NOTE: This version uses the labels "kskroll-sentinel-is-ta-<key-
+   tag>", "kskroll-sentinel-not-ta-<key-tag>"; older versions of this
+   document used "_is-ta-<key-tag>", "_not-ta-<key-tag>".  Also note
+   that the format of the tag-index is now zero-filled decimal.
+   Apolgies to those who have began implmenting.]
 
 Status of This Memo
 
@@ -50,7 +50,7 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
 
 
@@ -74,7 +74,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -91,12 +91,13 @@ Table of Contents
    4.  Processing Sentinel Results . . . . . . . . . . . . . . . . .   7
    5.  Sentinel Test Result Considerations . . . . . . . . . . . . .   9
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  11
-   9.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  11
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  13
+   7.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  11
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  11
+   10. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  12
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  13
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
 
 1.  Introduction
@@ -107,7 +108,6 @@ Table of Contents
    DNSSEC uses Key Tags to efficiently match signatures to the keys from
    which they are generated.  The Key Tag is a 16-bit value computed
    from the RDATA portion of a DNSKEY RR using a formula similar to a
-   ones-complement checksum.  RRSIG RRs contain a Key Tag field whose
 
 
 
@@ -116,6 +116,7 @@ Huston, et al.          Expires September 1, 2018               [Page 2]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
+   ones-complement checksum.  RRSIG RRs contain a Key Tag field whose
    value is equal to the Key Tag of the DNSKEY RR that validates the
    signature.
 
@@ -137,10 +138,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
    document are to be interpreted as described in RFC 2119.
-
-   Note that example.com, AAAA records and the IPv6 documentation prefix
-   (2001:db8::/32) are only examples - A records (or CNAMES), other IPs,
-   other domains work just as well.
 
 2.  Use Case
 
@@ -164,6 +161,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
    Bob, Charlie, Dave, Ed are all users.  They use the DNS recursive
    resolvers supplied by their ISPs.  They would like to confirm that
+   their ISPs have picked up the new KSK.  Bob's ISP does not perform
+   validation.  Charlie's ISP does validate, but the resolvers have not
+   yet been upgraded to support this mechanism.  Dave and Ed's resolvers
 
 
 
@@ -172,9 +172,6 @@ Huston, et al.          Expires September 1, 2018               [Page 3]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
-   their ISPs have picked up the new KSK.  Bob's ISP does not perform
-   validation.  Charlie's ISP does validate, but the resolvers have not
-   yet been upgraded to support this mechanism.  Dave and Ed's resolvers
    have been upgraded to support this mechanism; Dave's resolver has the
    new KSK, Ed's resolver hasn't managed to install the 2222 KSK in its
    trust store yet.
@@ -192,6 +189,11 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
       kskroll-sentinel-is-ta-2222.example.com.  IN AAAA 2001:db8::1
 
       kskroll-sentinel-not-ta-2222.example.com.  IN AAAA 2001:db8::1
+
+   Note that the use of "example.com" names and the addresses here are
+   examples.  In a real deployment, the domain names need to be under
+   control of the researcher, and the addresses much be real, reachable
+   addresses.
 
    Geoff then DNSSEC signs the example.com zone, and intentionally makes
    the invalid.example.com record invalid/bogus (for example, by editing
@@ -218,8 +220,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    fetch the http://invalid.example.com/1x1.gif resource (the
    invalid.example.com record is bogus, and none of his resolvers will
    resolve it).  He is able to fetch both of the other resources - from
-   this he knows (see the logic below) that he is using legacy,
-   validating resolvers.  The KSK sentinel method cannot provided him
 
 
 
@@ -228,6 +228,8 @@ Huston, et al.          Expires September 1, 2018               [Page 4]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
+   this he knows (see the logic below) that he is using legacy,
+   validating resolvers.  The KSK sentinel method cannot provided him
    with a definitive answer to the question of what root trust anchors
    this resolver is using.
 
@@ -273,9 +275,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    the "kskroll-sentinel-not-ta-2222" resource.  This tells Ed that his
    resolvers have not installed the new KSK.
 
-   Geoff would like to do a large scale test and provide the information
-   back to Alice.  He uses some mechanism such as causing users to go to
-   a web page to cause a large number of users to attempt to resolve the
+
 
 
 
@@ -284,6 +284,9 @@ Huston, et al.          Expires September 1, 2018               [Page 5]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
+   Geoff would like to do a large scale test and provide the information
+   back to Alice.  He uses some mechanism such as causing users to go to
+   a web page to cause a large number of users to attempt to resolve the
    three resources, and then analyzes the results of the tests to
    determine what percentage of users will be affected by the KSK
    rollover event.
@@ -310,12 +313,12 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    response validation specification [RFC4035].
 
    This sentinel mechanism makes use of two special labels.  The
-   "kskroll-sentinel-is-ta-<tag-index>" label is used in a query where
-   the response can answer whether this is the key tag of a trust anchor
-   which the validating DNS resolver is currently trusting.  The
-   "kskroll-sentinel-not-ta-<tag-index>" label is used in a query where
-   the response can answer whether this is the key tag of a trust anchor
-   which the validating DNS resolver is NOT currently trusting.
+   "kskroll-sentinel-is-ta-<key-tag>" label is used in a query where the
+   response can answer whether this the Key Tag of a trust anchor which
+   the validating DNS resolver is currently trusting.  The "kskroll-
+   sentinel-not-ta-<key-tag>" label is used in a query where the
+   response can answer whether this the Key Tag of a trust anchor that
+   is NOT in currently trusting.
 
    The use of the positive question and its inverse allows for queries
    to detect whether resolvers support this sentinel mechanism.  Note
@@ -329,9 +332,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    If the outcome of the DNSSEC validation process on the response
    indicates that the response is authentic, and if the left-most label
    of the original query name matches the template "kskroll-sentinel-is-
-   ta-<tag-index>.", then the following rule should be applied to the
-   response: If the resolver has placed a root zone KSK with tag index
-   value matching the value specified in the query into the local
 
 
 
@@ -340,6 +340,9 @@ Huston, et al.          Expires September 1, 2018               [Page 6]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
+   ta-<key-tag>.", then the following rule should be applied to the
+   response: If the resolver has placed a root zone KSK with Key Tag
+   value matching the value specified in the query into the local
    resolver's store of trusted keys, then the resolver should return a
    response indicating that the response contains authenticated data
    according to section 5.8 of [RFC6840].  Otherwise, the resolver MUST
@@ -350,14 +353,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    If the outcome of the DNSSEC validation process applied to the
    response indicates that the response is authentic, and if the left-
    most label of the original query name matches the template "kskroll-
-   sentinel-not-ta-<tag-index>.", then the following rule should be
+   sentinel-not-ta-<key-tag>.", then the following rule should be
    applied to the response: If the resolver has not placed a root zone
-   KSK with tag index value matching the value specified in the query
-   into the local resolver's store of trusted keys, then the resolver
-   should return a response indicating that the response contains
-   authenticated data according to section 5.8 of [RFC6840].  Otherwise,
-   the resolver MUST return RCODE 2 (server failure).  Note that the
-   <tag-index> is specified in the DNS label using decimal notation.
+   KSK with Key Tag value matching the value specified in the query into
+   the local resolver's store of trusted keys, then the resolver should
+   return a response indicating that the response contains authenticated
+   data according to section 5.8 of [RFC6840].  Otherwise, the resolver
+   MUST return RCODE 2 (server failure).  Note that the <key-tag> is
+   specified in the DNS label using decimal notation.
 
    In all other cases the resolver MUST NOT alter the outcome of the DNS
    response validation process.
@@ -379,14 +382,11 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    This proposed test that uses the sentinel detection mechanism
    described in this document is based on the use of three DNS names
    that have three distinct DNS resolution behaviours.  The test is
-   intended to allow a user to determine the state of their DNS
-   resolution system, and, in particular, whether or not they are using
-   validating DNS resolvers that use a particular trust anchor for the
-   root zone.
+   intended to allow a user or a third party to determine the state of
+   their DNS resolution system, and, in particular, whether or not they
+   are using validating DNS resolvers that use a particular trust anchor
+   for the root zone.
 
-   The critical aspect of the DNS names used in this mechanism is that
-   they contain the specified label for either the positive and negative
-   test as the left-most label in the query name.
 
 
 
@@ -396,17 +396,21 @@ Huston, et al.          Expires September 1, 2018               [Page 7]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
+   The critical aspect of the DNS names used in this mechanism is that
+   they contain the specified label for either the positive and negative
+   test as the left-most label in the query name.
+
    The sentinel detection process uses a test with three query names:
 
    o  A query name containing the left-most label "kskroll-sentinel-is-
-      ta-<tag-index>.".  This corresponds to a a validly-signed RRset in
+      ta-<key-tag>.".  This corresponds to a a validly-signed RRset in
       the zone, so that responses associated with queried names in this
       zone can be authenticated by a DNSSEC-validating resolver.  Any
       validly-signed DNS zone can be used for this test.
 
    o  A query name containing the left-most label "kskroll-sentinel-not-
-      ta-<tag-index>.".  This is also a validly-signed name.  Any
-      validly-signed DNS zone can be used for this test.
+      ta-<key-tag>.".  This is also a validly-signed name.  Any validly-
+      signed DNS zone can be used for this test.
 
    o  A query name that is signed with a DNSSEC signature that cannot be
       validated (such as if the corresponding RRset is not signed with a
@@ -439,10 +443,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
       "kskroll-sentinel-not-ta" queries and SERVFAIL for the invalidly
       signed name queries.
 
-   Vleg:  A DNSSEC-Validating resolver that does not implement this
-      mechanism will respond with an A or AAAA RRset response for
-      "kskroll-sentinel-is-ta", an A record response for "kskroll-
-      sentinel-not-ta" and SERVFAIL for the invalid name.
 
 
 
@@ -451,6 +451,11 @@ Huston, et al.          Expires September 1, 2018               [Page 8]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
+
+   Vleg:  A DNSSEC-Validating resolver that does not implement this
+      mechanism will respond with an A or AAAA RRset response for
+      "kskroll-sentinel-is-ta", an A record response for "kskroll-
+      sentinel-not-ta" and SERVFAIL for the invalid name.
 
    nonV:  A non-DNSSEC-Validating resolver will respond with an A or
       AAAA record response for "kskroll-sentinel-is-ta", an A record
@@ -476,9 +481,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    A "Vnew" type says that the nominated key is trusted by the resolver
    and has been loaded into its local trusted key stash.  A "Vold" type
    says that the nominated key is not yet trusted by the resolver in its
-   own right.  A "Vleg" type does not give the user any information
-   about the trust anchors, and a "nonV" type indicates that the
-   resolver does not perform DNSSEC validation.
+   own right.  A "Vleg" type does not give any information about the
+   trust anchors, and a "nonV" type indicates that the resolver does not
+   perform DNSSEC validation.
 
 5.  Sentinel Test Result Considerations
 
@@ -496,11 +501,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    tests will result in the client reporting that it has a non-
    validating DNS environment ("nonV"), which is effectively the case.
 
-   If all of the client resolvers are DNSSEC-validating resolvers, but
-   some do not support this trusted key mechanism, then the result will
-   be indeterminate with respect to trusted key status ("Vleg").
-   Simlarly, if all the client's resolvers support this mechanism, but
-
 
 
 Huston, et al.          Expires September 1, 2018               [Page 9]
@@ -508,6 +508,10 @@ Huston, et al.          Expires September 1, 2018               [Page 9]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
+   If all of the client resolvers are DNSSEC-validating resolvers, but
+   some do not support this trusted key mechanism, then the result will
+   be indeterminate with respect to trusted key status ("Vleg").
+   Simlarly, if all the client's resolvers support this mechanism, but
    some have loaded the key into the trusted key stash and some have
    not, then the result is indeterminate ("Vleg").
 
@@ -544,18 +548,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 6.  Security Considerations
 
-   This document describes a mechanism to allow users to determine the
-   trust state of root zone key signing keys in the DNS resolution
-   system that they use.
+   This document describes a mechanism to allow users and third parties
+   to determine the trust state of root zone key signing keys in the DNS
+   resolution system that they use.
 
    The mechanism does not require resolvers to set otherwise
    unauthenticated responses to be marked as authenticated, and does not
    alter the security properties of DNSSEC with respect to the
    interpretation of the authenticity of responses that are so marked.
-
-   The mechanism does not require any further significant processing of
-   DNS responses, and queries of the form described in this document do
-
 
 
 
@@ -564,15 +564,26 @@ Huston, et al.          Expires September 1, 2018              [Page 10]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
+   The mechanism does not require any further significant processing of
+   DNS responses, and queries of the form described in this document do
    not impose any additional load that could be exploited in an attack
    over the the normal DNSSEC validation processing load.
 
-7.  IANA Considerations
+7.  Privacy Considerations
+
+   The mechansim in this document enables third parties (with either
+   good or bad intentions) to learn something about the security
+   configuration of recursive name servers.  That is, someone who can
+   cause an Internet user to open a web page can then determine whether
+   the resolver that that user has configured might fail during a root
+   key rollover.
+
+8.  IANA Considerations
 
    [Note to IANA, to be removed prior to publication: there are no IANA
    considerations stated in this version of the document.]
 
-8.  Acknowledgements
+9.  Acknowledgements
 
    This document has borrowed extensively from [RFC8145] for the
    introductory text, and the authors would like to acknowledge and
@@ -591,7 +602,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    The authors would like to especially call out Paul Hoffman for
    providing comments in the form of a pull request.
 
-9.  Change Log
+10.  Change Log
 
    Note that this document is being worked on in GitHub - see Abstract.
    The below is mainly large changes, and is not authoritative.
@@ -600,6 +611,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
    o  Integrated / published comments from Paul in GitHub PR #2 -
       https://github.com/APNIC-Labs/draft-kskroll-sentinel/pull/2
+
+
+
+
+Huston, et al.          Expires September 1, 2018              [Page 11]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
+
 
    o  Made the keytab be decimal, not hex (thread / consensus in
       https://mailarchive.ietf.org/arch/msg/dnsop/
@@ -612,13 +631,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    o  Clarified that many things can cause SERVFAIL.
 
    o  Made examples FQDN.
-
-
-
-Huston, et al.          Expires September 1, 2018              [Page 11]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
-
 
    o  Fixed a number of typos.
 
@@ -637,21 +649,32 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
    o  Clarification that this is for the root.
 
-   o  Changed the label template from _is-ta-<tag> to kskroll-sentinel-
-      is-ta-<tag-index>.  This is because BIND (at least) will not allow
-      records which start with an underscore to have address records
-      (CNAMEs, yes, A/AAAA no).  Some browsers / operating systems also
-      will not fetch resources from names which start with an
-      underscore.
+   o  Changed the label template from _is-ta-<key-tag> to kskroll-
+      sentinel-is-ta-<key-tag>.  This is because BIND (at least) will
+      not allow records which start with an underscore to have address
+      records (CNAMEs, yes, A/AAAA no).  Some browsers / operating
+      systems also will not fetch resources from names which start with
+      an underscore.
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements", RFC
-              4033, DOI 10.17487/RFC4033, March 2005, <https://www.rfc-
-              editor.org/info/rfc4033>.
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, DOI 10.17487/RFC4033, March 2005,
+              <https://www.rfc-editor.org/info/rfc4033>.
+
+
+
+
+
+
+
+Huston, et al.          Expires September 1, 2018              [Page 12]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
+
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
@@ -667,26 +690,17 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
               Trust Anchors", STD 74, RFC 5011, DOI 10.17487/RFC5011,
               September 2007, <https://www.rfc-editor.org/info/rfc5011>.
 
-
-
-
-
-Huston, et al.          Expires September 1, 2018              [Page 12]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
-
-
    [RFC6840]  Weiler, S., Ed. and D. Blacka, Ed., "Clarifications and
               Implementation Notes for DNS Security (DNSSEC)", RFC 6840,
-              DOI 10.17487/RFC6840, February 2013, <https://www.rfc-
-              editor.org/info/rfc6840>.
+              DOI 10.17487/RFC6840, February 2013,
+              <https://www.rfc-editor.org/info/rfc6840>.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [RFC8145]  Wessels, D., Kumari, W., and P. Hoffman, "Signaling Trust
-              Anchor Knowledge in DNS Security Extensions (DNSSEC)", RFC
-              8145, DOI 10.17487/RFC8145, April 2017, <https://www.rfc-
-              editor.org/info/rfc8145>.
+              Anchor Knowledge in DNS Security Extensions (DNSSEC)",
+              RFC 8145, DOI 10.17487/RFC8145, April 2017,
+              <https://www.rfc-editor.org/info/rfc8145>.
 
 Authors' Addresses
 
@@ -705,20 +719,6 @@ Authors' Addresses
    Warren Kumari
 
    Email: warren@kumari.net
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
