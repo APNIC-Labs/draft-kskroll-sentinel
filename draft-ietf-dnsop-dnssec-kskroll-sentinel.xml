@@ -66,9 +66,9 @@
       will be removed before publication. ]</t>
 
       <t>[ NOTE: This version uses the labels
-      "kskroll-sentinel-is-ta-&lt;tag-index&gt;",
-      "kskroll-sentinel-not-ta-&lt;tag-index&gt;"; older versions of this
-      document used "_is-ta-&lt;tag-index&gt;", "_not-ta-&lt;tag-index&gt;".
+      "kskroll-sentinel-is-ta-&lt;key-tag&gt;",
+      "kskroll-sentinel-not-ta-&lt;key-tag&gt;"; older versions of this
+      document used "_is-ta-&lt;key-tag&gt;", "_not-ta-&lt;key-tag&gt;".
       ]</t>
     </abstract>
   </front>
@@ -246,11 +246,11 @@
       response validation specification <xref target="RFC4035"/>.</t>
 
       <t>This sentinel mechanism makes use of two special labels. The
-      "kskroll-sentinel-is-ta-&lt;tag-index&gt;" label is used in a
-      query where the response can answer whether this the key tag of a
+      "kskroll-sentinel-is-ta-&lt;key-tag&gt;" label is used in a
+      query where the response can answer whether this the Key Tag of a
       trust anchor which the validating DNS resolver is currently trusting.
-      The "kskroll-sentinel-not-ta-&lt;tag-index&gt;" label is used in
-      a query where the response can answer whether this the key tag
+      The "kskroll-sentinel-not-ta-&lt;key-tag&gt;" label is used in
+      a query where the response can answer whether this the Key Tag
       of a trust anchor that is NOT in currently trusting.</t>
       
       <t>The use of
@@ -266,27 +266,27 @@
       <t>If the outcome of the DNSSEC validation process on the response
       indicates that the response is authentic, and if the left-most label of
       the original query name matches the template
-      "kskroll-sentinel-is-ta-&lt;tag-index&gt;.", then the following rule
+      "kskroll-sentinel-is-ta-&lt;key-tag&gt;.", then the following rule
       should be applied to the response: If the resolver has placed a root
-      zone KSK with tag index value matching the value specified
+      zone KSK with Key Tag value matching the value specified
       in the query into the local resolver's store of trusted keys, then the
       resolver should return a response indicating that the response contains
       authenticated data according to section 5.8 of <xref target="RFC6840"/>.
       Otherwise, the resolver MUST return RCODE 2 (server failure). Note that
-      the &lt;tag-index&gt; is specified in the DNS label using hexadecimal
+      the &lt;key-tag&gt; is specified in the DNS label using hexadecimal
       notation.</t>
 
       <t>If the outcome of the DNSSEC validation process applied to the
       response indicates that the response is authentic, and if the left-most
       label of the original query name matches the template
-      "kskroll-sentinel-not-ta-&lt;tag-index&gt;.", then the following rule
+      "kskroll-sentinel-not-ta-&lt;key-tag&gt;.", then the following rule
       should be applied to the response: If the resolver has not placed a root
-      zone KSK with tag index value matching the value specified
+      zone KSK with Key Tag value matching the value specified
       in the query into the local resolver's store of trusted keys, then the
       resolver should return a response indicating that the response contains
       authenticated data according to section 5.8 of <xref target="RFC6840"/>.
       Otherwise, the resolver MUST return RCODE 2 (server failure). Note that
-      the &lt;tag-index&gt; is specified in the DNS label using hexadecimal
+      the &lt;key-tag&gt; is specified in the DNS label using hexadecimal
       notation.</t>
 
       <t>In all other cases the resolver MUST NOT alter the outcome of the DNS
@@ -324,14 +324,14 @@
 
       <t><list style="symbols">
           <t>A query name containing the left-most label
-          "kskroll-sentinel-is-ta-&lt;tag-index&gt;.". This corresponds to a a
+          "kskroll-sentinel-is-ta-&lt;key-tag&gt;.". This corresponds to a a
           validly-signed RRset in the zone, so that responses associated with
           queried names in this zone can be authenticated by a
           DNSSEC-validating resolver. Any validly-signed DNS zone can be used
           for this test.</t>
 
           <t>A query name containing the left-most label
-          "kskroll-sentinel-not-ta-&lt;tag-index&gt;.". This is also a
+          "kskroll-sentinel-not-ta-&lt;key-tag&gt;.". This is also a
           validly-signed name. Any validly-signed DNS zone can be used for
           this test.</t>
 
@@ -516,7 +516,7 @@
           <t>Had accidentally said that Charlie was using a non-validating
           resolver in example.</t>
 
-          <t>[ TODO(WK): Doc says keytags are hex, is this really what the WG
+          <t>[ TODO(WK): Doc says key-tag values are hex, is this really what the WG
           wants? ] </t>
 
           <t>And active key is one that can be used *now* (not e.g
@@ -529,8 +529,8 @@
 
           <t>Clarification that this is for the root.</t>
 
-          <t>Changed the label template from _is-ta-&lt;tag&gt; to
-          kskroll-sentinel-is-ta-&lt;tag-index&gt;. This is because BIND (at
+          <t>Changed the label template from _is-ta-&lt;key-tag&gt; to
+          kskroll-sentinel-is-ta-&lt;key-tag&gt;. This is because BIND (at
           least) will not allow records which start with an underscore to have
           address records (CNAMEs, yes, A/AAAA no). Some browsers / operating
           systems also will not fetch resources from names which start with an
