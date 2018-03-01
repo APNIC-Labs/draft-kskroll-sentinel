@@ -36,11 +36,11 @@ Abstract
    available here.  The authors (gratefully) accept pull requests.  Text
    in square brackets will be removed before publication. ]
 
-   [ NOTE: This version uses the labels "kskroll-sentinel-is-ta-<tag-
-   index>", "kskroll-sentinel-not-ta-<tag-index>"; older versions of
-   this document used "_is-ta-<tag-index>", "_not-ta-<tag-index>".  Also
-   note that the format of the tag-index is now decimal.  Apolgies to
-   those who have began implmenting.]
+   [ NOTE: This version uses the labels "kskroll-sentinel-is-ta-<key-
+   tag>", "kskroll-sentinel-not-ta-<key-tag>"; older versions of this
+   document used "_is-ta-<key-tag>", "_not-ta-<key-tag>".  Also note
+   that the format of the tag-index is now decimal.  Apolgies to those
+   who have began implmenting.]
 
 Status of This Memo
 
@@ -50,7 +50,7 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
 
 
@@ -74,7 +74,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -138,10 +138,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
    document are to be interpreted as described in RFC 2119.
 
-   Note that example.com, AAAA records and the IPv6 documentation prefix
-   (2001:db8::/32) are only examples - A records (or CNAMES), other IPs,
-   other domains work just as well.
-
 2.  Use Case
 
    [Ed note: This is currently towards the front of the document; we
@@ -157,13 +153,17 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    like to roll / replace the key with a new one.  She publishes the new
    KSK, but would like to be able to predict / measure what the impact
    will be before removing/revoking the old key.  The current KSK has a
-   key ID of 1111, the new KSK has a key ID of 2222.  Users want to
+   key ID of 11112, the new KSK has a key ID of 02323.  Users want to
    verify that their resolver will not break after Alice rolls the root
    KSK key (that is, starts signing with just the KSK whose key ID is
-   2222).
+   02323).
 
    Bob, Charlie, Dave, Ed are all users.  They use the DNS recursive
    resolvers supplied by their ISPs.  They would like to confirm that
+   their ISPs have picked up the new KSK.  Bob's ISP does not perform
+   validation.  Charlie's ISP does validate, but the resolvers have not
+   yet been upgraded to support this mechanism.  Dave and Ed's resolvers
+   have been upgraded to support this mechanism; Dave's resolver has the
 
 
 
@@ -172,11 +172,7 @@ Huston, et al.          Expires September 1, 2018               [Page 3]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
-   their ISPs have picked up the new KSK.  Bob's ISP does not perform
-   validation.  Charlie's ISP does validate, but the resolvers have not
-   yet been upgraded to support this mechanism.  Dave and Ed's resolvers
-   have been upgraded to support this mechanism; Dave's resolver has the
-   new KSK, Ed's resolver hasn't managed to install the 2222 KSK in its
+   new KSK, Ed's resolver hasn't managed to install the 02323 KSK in its
    trust store yet.
 
    Geoff is a researcher, and would like to both provide a means for
@@ -189,9 +185,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
       invalid.example.com.  IN AAAA 2001:db8::1
 
-      kskroll-sentinel-is-ta-2222.example.com.  IN AAAA 2001:db8::1
+      kskroll-sentinel-is-ta-02323.example.com.  IN AAAA 2001:db8::1
 
-      kskroll-sentinel-not-ta-2222.example.com.  IN AAAA 2001:db8::1
+      kskroll-sentinel-not-ta-02323.example.com.  IN AAAA 2001:db8::1
+
+   Note that the use of "example.com" names and the addresses here are
+   examples.  In a real deployment, the domain names need to be under
+   control of the researcher, and the addresses much be real, reachable
+   addresses.
 
    Geoff then DNSSEC signs the example.com zone, and intentionally makes
    the invalid.example.com record invalid/bogus (for example, by editing
@@ -200,12 +201,12 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    resource (for example, a 1x1 GIF, 1x1.gif) for all of these names.
    The webserver also serves a webpage (www.example.com) which contains
    links to these 3 resources (http://invalid.example.com/1x1.gif,
-   http://kskroll-sentinel-is-ta-2222.example.com/1x1.gif,
-   http://kskroll-sentinel-not-ta-2222.example.com/1x1.gif).
+   http://kskroll-sentinel-is-ta-02323.example.com/1x1.gif,
+   http://kskroll-sentinel-not-ta-02323.example.com/1x1.gif).
 
    Geoff then asks Bob, Charlie, Dave and Ed to browse to
    www.example.com.  Using the methods described in this document, the
-   users can figure out what their fate will be when the 1111 KSK is
+   users can figure out what their fate will be when the 11112 KSK is
    removed.
 
    Bob is not using a validating resolver.  This means that he will be
@@ -219,7 +220,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    invalid.example.com record is bogus, and none of his resolvers will
    resolve it).  He is able to fetch both of the other resources - from
    this he knows (see the logic below) that he is using legacy,
-   validating resolvers.  The KSK sentinel method cannot provided him
 
 
 
@@ -228,54 +228,54 @@ Huston, et al.          Expires September 1, 2018               [Page 4]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
+   validating resolvers.  The KSK sentinel method cannot provided him
    with a definitive answer to the question of what root trust anchors
    this resolver is using.
 
    Dave's resolvers implement the sentinel method, and have picked up
    the new KSK.  For the same reason as Charlie, he cannot fetch the
    "invalid" resource.  His resolver resolves the kskroll-sentinel-is-
-   ta-2222.example.com name normally (it contacts the example.com
+   ta-02323.example.com name normally (it contacts the example.com
    authoritative servers, etc); as it supports the sentinel mechanism,
    just before Dave's recursive server send the reply to Dave's stub, it
    performs the KSK Sentinel check (see below).  The QNAME starts with
    "kskroll-sentinel-is-ta-", and the recursive resolver does indeed
-   have a key with the Key ID of 2222 in its root trust store.  This
+   have a key with the Key ID of 02323 in its root trust store.  This
    means that that this part of the KSK Sentinel check passes (it is
-   true that 2222 is in the trust anchor store), and the recursive
-   resolver replies normally (with the answer provided by the
+   true that Key ID 02323 is in the trust anchor store), and the
+   recursive resolver replies normally (with the answer provided by the
    authoritative server).  Dave's recursive resolver then resolves the
-   kskroll-sentinel-not-ta-2222.example.com name.  Once again, it
+   kskroll-sentinel-not-ta-02323.example.com name.  Once again, it
    performs the normal resolution process, but because it implements KSK
    Sentinel (and the QNAME starts with "kskroll-sentinel-not-ta-"), just
    before sending the reply, it performs the KSK Sentinel check.  As it
-   has 2222 in it's trust anchor store, the answer to "is this *not* a
+   has 02323 in it's trust anchor store, the answer to "is this *not* a
    trust anchor" is false, and so the recursive resolver does not reply
    with the answer from the authoritative server - instead, it replies
    with a SERVFAIL (note that replying with SERVFAIL instead of the
    original answer is the only mechanism that KSK Sentinel uses).  This
    means that Dave cannot fetch "invalid", he can fetch "kskroll-
-   sentinel-is-ta-2222", but he cannot fetch "kskroll-sentinel-not-ta-
-   2222".  From this, Dave knows that he is behind an upgraded,
-   validating resolver, which has successfully installed the new, 2222
+   sentinel-is-ta-02323", but he cannot fetch "kskroll-sentinel-not-ta-
+   02323".  From this, Dave knows that he is behind an upgraded,
+   validating resolver, which has successfully installed the new, 02323
    KSK.
 
    Just like Charlie and Dave, Ed cannot fetch the "invalid" record.
    This tells him that his resolvers are validating.  When his
    (upgraded) resolver performs the KSK Sentinel check for "kskroll-
-   sentinel-is-ta-2222", it does *not* have the (new, 2222) KSK in it's
-   trust anchor store.  This means check fails, and Ed's recursive
+   sentinel-is-ta-02323", it does *not* have the (new, 02323) KSK in
+   it's trust anchor store.  This means check fails, and Ed's recursive
    resolver converts the (valid) answer into a SERVFAIL error response.
    It performs the same check for kskroll-sentinel-not-ta-
-   2222.example.com; as it does not have the 2222 KSK, it is true that
+   02323.example.com; as it does not have the 02323 KSK, it is true that
    this is not a trust anchor for it, and so it replies normally.  This
    means that Ed cannot fetch the "invalid" resource, he also cannot
-   fetch the "kskroll-sentinel-is-ta-2222" resource, but he can fetch
-   the "kskroll-sentinel-not-ta-2222" resource.  This tells Ed that his
+   fetch the "kskroll-sentinel-is-ta-02323" resource, but he can fetch
+   the "kskroll-sentinel-not-ta-02323" resource.  This tells Ed that his
    resolvers have not installed the new KSK.
 
    Geoff would like to do a large scale test and provide the information
    back to Alice.  He uses some mechanism such as causing users to go to
-   a web page to cause a large number of users to attempt to resolve the
 
 
 
@@ -284,6 +284,7 @@ Huston, et al.          Expires September 1, 2018               [Page 5]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
+   a web page to cause a large number of users to attempt to resolve the
    three resources, and then analyzes the results of the tests to
    determine what percentage of users will be affected by the KSK
    rollover event.
@@ -310,12 +311,12 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    response validation specification [RFC4035].
 
    This sentinel mechanism makes use of two special labels.  The
-   "kskroll-sentinel-is-ta-<tag-index>" label is used in a query where
-   the response can answer whether this is the key tag of a trust anchor
-   which the validating DNS resolver is currently trusting.  The
-   "kskroll-sentinel-not-ta-<tag-index>" label is used in a query where
-   the response can answer whether this is the key tag of a trust anchor
-   which the validating DNS resolver is NOT currently trusting.
+   "kskroll-sentinel-is-ta-<key-tag>" label is used in a query where the
+   response can answer whether this the Key Tag of a trust anchor which
+   the validating DNS resolver is currently trusting.  The "kskroll-
+   sentinel-not-ta-<key-tag>" label is used in a query where the
+   response can answer whether this the Key Tag of a trust anchor that
+   is NOT in currently trusting.
 
    The use of the positive question and its inverse allows for queries
    to detect whether resolvers support this sentinel mechanism.  Note
@@ -329,9 +330,8 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    If the outcome of the DNSSEC validation process on the response
    indicates that the response is authentic, and if the left-most label
    of the original query name matches the template "kskroll-sentinel-is-
-   ta-<tag-index>.", then the following rule should be applied to the
-   response: If the resolver has placed a root zone KSK with tag index
-   value matching the value specified in the query into the local
+   ta-<key-tag>.", then the following rule should be applied to the
+   response: If the resolver has placed a root zone KSK with Key Tag
 
 
 
@@ -340,24 +340,25 @@ Huston, et al.          Expires September 1, 2018               [Page 6]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
+   value matching the value specified in the query into the local
    resolver's store of trusted keys, then the resolver should return a
    response indicating that the response contains authenticated data
    according to section 5.8 of [RFC6840].  Otherwise, the resolver MUST
    return RCODE 2 (server failure).  Note that the <tag-index> is
    specified in the DNS label using decimal notation (as described in
-   [RFC4034], section 5.3), zero padded to 5 digits.
+   [RFC4034], section 5.3), zero-padded to five digits.
 
    If the outcome of the DNSSEC validation process applied to the
    response indicates that the response is authentic, and if the left-
    most label of the original query name matches the template "kskroll-
-   sentinel-not-ta-<tag-index>.", then the following rule should be
+   sentinel-not-ta-<key-tag>.", then the following rule should be
    applied to the response: If the resolver has not placed a root zone
-   KSK with tag index value matching the value specified in the query
-   into the local resolver's store of trusted keys, then the resolver
-   should return a response indicating that the response contains
-   authenticated data according to section 5.8 of [RFC6840].  Otherwise,
-   the resolver MUST return RCODE 2 (server failure).  Note that the
-   <tag-index> is specified in the DNS label using decimal notation.
+   KSK with Key Tag value matching the value specified in the query into
+   the local resolver's store of trusted keys, then the resolver should
+   return a response indicating that the response contains authenticated
+   data according to section 5.8 of [RFC6840].  Otherwise, the resolver
+   MUST return RCODE 2 (server failure).  Note that the <key-tag> is
+   specified in the DNS label using decimal notation.
 
    In all other cases the resolver MUST NOT alter the outcome of the DNS
    response validation process.
@@ -390,7 +391,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
 
-
 Huston, et al.          Expires September 1, 2018               [Page 7]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
@@ -399,14 +399,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    The sentinel detection process uses a test with three query names:
 
    o  A query name containing the left-most label "kskroll-sentinel-is-
-      ta-<tag-index>.".  This corresponds to a a validly-signed RRset in
+      ta-<key-tag>.".  This corresponds to a a validly-signed RRset in
       the zone, so that responses associated with queried names in this
       zone can be authenticated by a DNSSEC-validating resolver.  Any
       validly-signed DNS zone can be used for this test.
 
    o  A query name containing the left-most label "kskroll-sentinel-not-
-      ta-<tag-index>.".  This is also a validly-signed name.  Any
-      validly-signed DNS zone can be used for this test.
+      ta-<key-tag>.".  This is also a validly-signed name.  Any validly-
+      signed DNS zone can be used for this test.
 
    o  A query name that is signed with a DNSSEC signature that cannot be
       validated (such as if the corresponding RRset is not signed with a
@@ -637,21 +637,21 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
    o  Clarification that this is for the root.
 
-   o  Changed the label template from _is-ta-<tag> to kskroll-sentinel-
-      is-ta-<tag-index>.  This is because BIND (at least) will not allow
-      records which start with an underscore to have address records
-      (CNAMEs, yes, A/AAAA no).  Some browsers / operating systems also
-      will not fetch resources from names which start with an
-      underscore.
+   o  Changed the label template from _is-ta-<key-tag> to kskroll-
+      sentinel-is-ta-<key-tag>.  This is because BIND (at least) will
+      not allow records which start with an underscore to have address
+      records (CNAMEs, yes, A/AAAA no).  Some browsers / operating
+      systems also will not fetch resources from names which start with
+      an underscore.
 
 10.  References
 
 10.1.  Normative References
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements", RFC
-              4033, DOI 10.17487/RFC4033, March 2005, <https://www.rfc-
-              editor.org/info/rfc4033>.
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, DOI 10.17487/RFC4033, March 2005,
+              <https://www.rfc-editor.org/info/rfc4033>.
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
@@ -678,15 +678,15 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
    [RFC6840]  Weiler, S., Ed. and D. Blacka, Ed., "Clarifications and
               Implementation Notes for DNS Security (DNSSEC)", RFC 6840,
-              DOI 10.17487/RFC6840, February 2013, <https://www.rfc-
-              editor.org/info/rfc6840>.
+              DOI 10.17487/RFC6840, February 2013,
+              <https://www.rfc-editor.org/info/rfc6840>.
 
 10.2.  Informative References
 
    [RFC8145]  Wessels, D., Kumari, W., and P. Hoffman, "Signaling Trust
-              Anchor Knowledge in DNS Security Extensions (DNSSEC)", RFC
-              8145, DOI 10.17487/RFC8145, April 2017, <https://www.rfc-
-              editor.org/info/rfc8145>.
+              Anchor Knowledge in DNS Security Extensions (DNSSEC)",
+              RFC 8145, DOI 10.17487/RFC8145, April 2017,
+              <https://www.rfc-editor.org/info/rfc8145>.
 
 Authors' Addresses
 
