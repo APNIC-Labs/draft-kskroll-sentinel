@@ -92,6 +92,17 @@
       key store. In particular, this response mechanism can be used to
       determine whether a certain root zone KSK is ready to be used as a
       trusted key within the context of a key roll by this resolver.</t>
+      
+      <t>There are two primary use cases for this mechanism:
+        <list style="symbols">
+          <t>Users want to know whether the resolvers they use are ready
+          for an upcoming root KSK rollover</t>
+          
+          <t>Researchers want to perform Internet-wide studies about the percentage
+          of users who will be ready for an upcoming root KSK rollover</t>
+          
+        </list>
+      The mechanism described in this document meets both of those use cases.
 
       <t>This new mechanism is OPTIONAL to implement and use, although for
       reasons of supporting broad-based measurement techniques, it is strongly
@@ -107,7 +118,7 @@
       </section>
     </section>
 
-    <section title="Use Case">
+    <section title="Protocol Walkthrough Example">
       <t>[Ed note: This is currently towards the front of the document; we
       will make it an appendix at publication time, but until then it is worth
       having up front, as it makes the rest of the document much easier to
