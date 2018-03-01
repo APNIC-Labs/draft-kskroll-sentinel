@@ -51,7 +51,7 @@
       signatures. These digital signatures can be verified by building a chain
       of trust starting from a trust anchor and proceeding down to a
       particular node in the DNS. This document specifies a mechanism that
-      will allow an end user to determine the trusted key state for the root
+      will allow an end user and third parties to determine the trusted key state for the root
       key of the resolvers that handle that user's DNS queries. Note that this
       method is only applicable for determing which keys are in the trust
       store for the root key.</t>
@@ -69,7 +69,7 @@
       "kskroll-sentinel-is-ta-&lt;key-tag&gt;",
       "kskroll-sentinel-not-ta-&lt;key-tag&gt;"; older versions of this
       document used "_is-ta-&lt;key-tag&gt;", "_not-ta-&lt;key-tag&gt;".
-      Also note that the format of the tag-index is now decimal. Apolgies to
+      Also note that the format of the tag-index is now zero-filled decimal. Apolgies to
       those who have began implmenting.]</t>
     </abstract>
   </front>
@@ -324,7 +324,7 @@
       <t>This proposed test that uses the sentinel detection mechanism
       described in this document is based on the use of three DNS names that
       have three distinct DNS resolution behaviours. The test is intended to
-      allow a user to determine the state of their DNS resolution system, and,
+      allow a user or a third party to determine the state of their DNS resolution system, and,
       in particular, whether or not they are using validating DNS resolvers
       that use a particular trust anchor for the root zone.</t>
 
@@ -414,7 +414,7 @@
       <t>A "Vnew" type says that the nominated key is trusted by the resolver
       and has been loaded into its local trusted key stash. A "Vold" type says
       that the nominated key is not yet trusted by the resolver in its own
-      right. A "Vleg" type does not give the user any information about the
+      right. A "Vleg" type does not give any information about the
       trust anchors, and a "nonV" type indicates that the resolver does not
       perform DNSSEC validation.</t>
     </section>
@@ -472,7 +472,7 @@
     </section>
 
     <section title="Security Considerations">
-      <t>This document describes a mechanism to allow users to determine the
+      <t>This document describes a mechanism to allow users and third parties to determine the
       trust state of root zone key signing keys in the DNS resolution system
       that they use.</t>
 
@@ -485,6 +485,13 @@
       DNS responses, and queries of the form described in this document do not
       impose any additional load that could be exploited in an attack over the
       the normal DNSSEC validation processing load.</t>
+    </section>
+
+    <section title="Privacy Considerations">
+      <t>The mechansim in this document enables third parties (with either good or bad intentions)
+      to learn something about the security configuration of recursive name servers. That is,
+      someone who can cause an Internet user to open a web page can then determine whether the
+      resolver that that user has configured might fail during a root key rollover.</t>
     </section>
 
     <section title="IANA Considerations">
