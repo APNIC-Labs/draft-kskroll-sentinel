@@ -508,9 +508,9 @@
       <t>The mechansim in this document enables third parties (with either
       good or bad intentions) to learn something about the security
       configuration of recursive name servers. That is, someone who can cause
-      an Internet user to open a web page can then determine whether the
-      resolver that that user has configured might fail during a root key
-      rollover.</t>
+      an Internet user to make specific DNS queries (e.g. via web-based
+      advertisements or javascript in web pages), can then determine which
+      trust anchors are configured in the user's resolver.</t>
     </section>
 
     <section title="IANA Considerations">
