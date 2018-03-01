@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-03"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-04"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Sentinel for Detecting
@@ -540,6 +540,20 @@
     <section title="Change Log">
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
+
+      <t>From -03 to -04:<list style="symbols">
+          <t>Addressed GitHub pull requests #4, #5, #6, #7 #8.</t>
+
+          <t>Added Duane's privacy concerns </t>
+
+          <t>Makes the use cases clearer </t>
+
+          <t>Fixed some A/AAAA stuff </t>
+
+          <t>Changed the example numbers</t>
+
+          <t> Made it clear that names and addresses must be real</t>
+        </list></t>
 
       <t>From -02 to -03:<list style="symbols">
           <t>Integrated / published comments from Paul in GitHub PR #2 -

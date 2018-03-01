@@ -13,7 +13,7 @@ Expires: September 1, 2018                                     W. Kumari
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
-                  draft-ietf-dnsop-kskroll-sentinel-03
+                  draft-ietf-dnsop-kskroll-sentinel-04
 
 Abstract
 
@@ -98,7 +98,7 @@ Table of Contents
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  13
      11.2.  Informative References . . . . . . . . . . . . . . . . .  13
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 1.  Introduction
 
@@ -628,6 +628,20 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    Note that this document is being worked on in GitHub - see Abstract.
    The below is mainly large changes, and is not authoritative.
 
+   From -03 to -04:
+
+   o  Addressed GitHub pull requests #4, #5, #6, #7 #8.
+
+   o  Added Duane's privacy concerns
+
+   o  Makes the use cases clearer
+
+   o  Fixed some A/AAAA stuff
+
+   o  Changed the example numbers
+
+   o  Made it clear that names and addresses must be real
+
    From -02 to -03:
 
    o  Integrated / published comments from Paul in GitHub PR #2 -
@@ -655,6 +669,13 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
    o  And active key is one that can be used *now* (not e.g AddPend)
 
+
+
+Huston, et al.          Expires September 1, 2018              [Page 12]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
+
+
    From -00 to 01:
 
    o  Added a conversational description of how the system is intended
@@ -668,13 +689,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
       records (CNAMEs, yes, A/AAAA no).  Some browsers / operating
       systems also will not fetch resources from names which start with
       an underscore.
-
-
-
-Huston, et al.          Expires September 1, 2018              [Page 12]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
-
 
 11.  References
 
@@ -711,6 +725,13 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
               8145, DOI 10.17487/RFC8145, April 2017, <https://www.rfc-
               editor.org/info/rfc8145>.
 
+
+
+Huston, et al.          Expires September 1, 2018              [Page 13]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
+
+
 Authors' Addresses
 
    Geoff Huston
@@ -725,30 +746,9 @@ Authors' Addresses
    URI:   http://www.apnic.net
 
 
-
-
-Huston, et al.          Expires September 1, 2018              [Page 13]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
-
-
    Warren Kumari
 
    Email: warren@kumari.net
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
