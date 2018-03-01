@@ -97,7 +97,7 @@ Table of Contents
    10. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  12
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  13
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  13
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  14
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 1.  Introduction
@@ -172,9 +172,9 @@ Huston, et al.          Expires September 1, 2018               [Page 3]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
-   key ID of 11112, the new KSK has a key ID of 02323.  Users want to
+   Key Tag of 11112, the new KSK has a Key Tag of 02323.  Users want to
    verify that their resolver will not break after Alice rolls the root
-   KSK key (that is, starts signing with just the KSK whose key ID is
+   KSK key (that is, starts signing with just the KSK whose Key Tag is
    02323).
 
    Bob, Charlie, Dave, Ed are all users.  They use the DNS recursive
@@ -251,9 +251,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    just before Dave's recursive server send the reply to Dave's stub, it
    performs the KSK Sentinel check (see below).  The QNAME starts with
    "kskroll-sentinel-is-ta-", and the recursive resolver does indeed
-   have a key with the Key ID of 02323 in its root trust store.  This
+   have a key with the Key Tag of 02323 in its root trust store.  This
    means that that this part of the KSK Sentinel check passes (it is
-   true that Key ID 02323 is in the trust anchor store), and the
+   true that Key Tag 02323 is in the trust anchor store), and the
    recursive resolver replies normally (with the answer provided by the
    authoritative server).  Dave's recursive resolver then resolves the
    kskroll-sentinel-not-ta-02323.example.com name.  Once again, it
@@ -331,7 +331,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
    The use of the positive question and its inverse allows for queries
    to detect whether resolvers support this sentinel mechanism.  Note
-   that the test is "Is there an active key with this KeyID in the
+   that the test is "Is there an active key with this Key Tag in the
 
 
 
@@ -341,8 +341,8 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
    resolver's current trust store for the DNS root?", not "Is there any
-   key with this KeyID in the trust store", nor "Was a key with this
-   KeyID used to validate this query?".  An active key is one which
+   key with this Key Tag in the trust store", nor "Was a key with this
+   Key Tag used to validate this query?".  An active key is one which
    could currently be used for validation (that is, a key that is not in
    either the AddPend or Revoked state as described in [RFC5011]).
 
@@ -588,9 +588,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    The mechansim in this document enables third parties (with either
    good or bad intentions) to learn something about the security
    configuration of recursive name servers.  That is, someone who can
-   cause an Internet user to open a web page can then determine whether
-   the resolver that that user has configured might fail during a root
-   key rollover.
+   cause an Internet user to make specific DNS queries (e.g. via web-
+   based advertisements or javascript in web pages), can then determine
+   which trust anchors are configured in the user's resolver.
 
 8.  IANA Considerations
 
@@ -620,13 +620,17 @@ Huston, et al.          Expires September 1, 2018              [Page 11]
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
 
-   The authors would like to especially call out Paul Hoffman for
-   providing comments in the form of a pull request.
+   The authors would like to especially call out Paul Hoffman and Duane
+   Wessels for providing comments in the form of a pull request.
 
 10.  Change Log
 
    Note that this document is being worked on in GitHub - see Abstract.
    The below is mainly large changes, and is not authoritative.
+
+   From -04 to -05:
+
+      Incorporated Duane's #9
 
    From -03 to -04:
 
@@ -647,7 +651,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    o  Integrated / published comments from Paul in GitHub PR #2 -
       https://github.com/APNIC-Labs/draft-kskroll-sentinel/pull/2
 
-   o  Made the keytab be decimal, not hex (thread / consensus in
+   o  Made the keytag be decimal, not hex (thread / consensus in
       https://mailarchive.ietf.org/arch/msg/dnsop/
       Kg7AtDhFRNw31He8n0_bMr9hBuE )
 
@@ -664,10 +668,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
    o  Had accidentally said that Charlie was using a non-validating
       resolver in example.
 
-   o  [ TODO(WK): Doc says keytags are hex, is this really what the WG
-      wants? ]
-
-   o  And active key is one that can be used *now* (not e.g AddPend)
 
 
 
@@ -675,6 +675,11 @@ Huston, et al.          Expires September 1, 2018              [Page 12]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
+
+   o  [ TODO(WK): Doc says keytags are hex, is this really what the WG
+      wants? ]
+
+   o  And active key is one that can be used *now* (not e.g AddPend)
 
    From -00 to 01:
 
@@ -718,12 +723,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
               DOI 10.17487/RFC6840, February 2013, <https://www.rfc-
               editor.org/info/rfc6840>.
 
-11.2.  Informative References
 
-   [RFC8145]  Wessels, D., Kumari, W., and P. Hoffman, "Signaling Trust
-              Anchor Knowledge in DNS Security Extensions (DNSSEC)", RFC
-              8145, DOI 10.17487/RFC8145, April 2017, <https://www.rfc-
-              editor.org/info/rfc8145>.
 
 
 
@@ -731,6 +731,13 @@ Huston, et al.          Expires September 1, 2018              [Page 13]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel         February 2018
 
+
+11.2.  Informative References
+
+   [RFC8145]  Wessels, D., Kumari, W., and P. Hoffman, "Signaling Trust
+              Anchor Knowledge in DNS Security Extensions (DNSSEC)", RFC
+              8145, DOI 10.17487/RFC8145, April 2017, <https://www.rfc-
+              editor.org/info/rfc8145>.
 
 Authors' Addresses
 
@@ -749,13 +756,6 @@ Authors' Addresses
    Warren Kumari
 
    Email: warren@kumari.net
-
-
-
-
-
-
-
 
 
 

@@ -76,8 +76,6 @@
 
   <middle>
     <section anchor="intro" title="Introduction">
-       
-
       <t>The DNS Security Extensions (DNSSEC) <xref target="RFC4033"/>, <xref
       target="RFC4034"/> and <xref target="RFC4035"/> were developed to
       provide origin authentication and integrity protection for DNS data by
@@ -88,8 +86,6 @@
       Tag field whose value is equal to the Key Tag of the DNSKEY RR that
       validates the signature.</t>
 
-       
-
       <t>This document specifies how validating resolvers can respond to
       certain queries in a manner that allows a querier to deduce whether a
       particular key for the root has been loaded into that resolver's trusted
@@ -97,22 +93,16 @@
       determine whether a certain root zone KSK is ready to be used as a
       trusted key within the context of a key roll by this resolver.</t>
 
-       
-
       <t>There are two primary use cases for this mechanism:</t>
 
-       
-
-      <t>
-        <list style="symbols">
+      <t><list style="symbols">
           <t>Users want to know whether the resolvers they use are ready for
           an upcoming root KSK rollover</t>
 
           <t>Researchers want to perform Internet-wide studies about the
           percentage of users who will be ready for an upcoming root KSK
           rollover</t>
-        </list>
-      </t>
+        </list></t>
 
       <t>The mechanism described in this document meets both of these use
       cases. This new mechanism is OPTIONAL to implement and use, although for
@@ -121,15 +111,11 @@
       this mechanism by default, allowing for local configuration directives
       to disable this mechanism if desired.</t>
 
-       
-
       <section title="Terminology">
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
         document are to be interpreted as described in RFC 2119.</t>
       </section>
-
-       
     </section>
 
     <section title="Protocol Walkthrough Example">
@@ -145,8 +131,8 @@
       <t>Alice is in charge of the DNS root KSK (Key Signing Key), and would
       like to roll / replace the key with a new one. She publishes the new
       KSK, but would like to be able to predict / measure what the impact will
-      be before removing/revoking the old key. The current KSK has a Key Tag of
-      11112, the new KSK has a Key Tag of 02323. Users want to verify that
+      be before removing/revoking the old key. The current KSK has a Key Tag
+      of 11112, the new KSK has a Key Tag of 02323. Users want to verify that
       their resolver will not break after Alice rolls the root KSK key (that
       is, starts signing with just the KSK whose Key Tag is 02323).</t>
 
@@ -533,26 +519,30 @@
       Sivaraman, Petr Spacek, Andrew Sullivan, Paul Vixie, Duane Wessels and
       Paul Wouters for their helpful feedback.</t>
 
-      <t>The authors would like to especially call out Paul Hoffman for
-      providing comments in the form of a pull request.</t>
+      <t>The authors would like to especially call out Paul Hoffman and Duane
+      Wessels for providing comments in the form of a pull request.</t>
     </section>
 
     <section title="Change Log">
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
 
+      <t>From -04 to -05: <list>
+          <t>Incorporated Duane's #9</t>
+        </list></t>
+
       <t>From -03 to -04:<list style="symbols">
           <t>Addressed GitHub pull requests #4, #5, #6, #7 #8.</t>
 
-          <t>Added Duane's privacy concerns </t>
+          <t>Added Duane's privacy concerns</t>
 
-          <t>Makes the use cases clearer </t>
+          <t>Makes the use cases clearer</t>
 
-          <t>Fixed some A/AAAA stuff </t>
+          <t>Fixed some A/AAAA stuff</t>
 
           <t>Changed the example numbers</t>
 
-          <t> Made it clear that names and addresses must be real</t>
+          <t>Made it clear that names and addresses must be real</t>
         </list></t>
 
       <t>From -02 to -03:<list style="symbols">
