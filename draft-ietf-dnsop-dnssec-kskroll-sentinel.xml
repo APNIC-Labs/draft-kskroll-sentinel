@@ -92,6 +92,17 @@
       key store. In particular, this response mechanism can be used to
       determine whether a certain root zone KSK is ready to be used as a
       trusted key within the context of a key roll by this resolver.</t>
+      
+      <t>There are two primary use cases for this mechanism:
+        <list style="symbols">
+          <t>Users want to know whether the resolvers they use are ready
+          for an upcoming root KSK rollover</t>
+          
+          <t>Researchers want to perform Internet-wide studies about the percentage
+          of users who will be ready for an upcoming root KSK rollover</t>
+          
+        </list>
+      The mechanism described in this document meets both of those use cases.
 
       <t>This new mechanism is OPTIONAL to implement and use, although for
       reasons of supporting broad-based measurement techniques, it is strongly
@@ -107,7 +118,7 @@
       </section>
     </section>
 
-    <section title="Use Case">
+    <section title="Protocol Walkthrough Example">
       <t>[Ed note: This is currently towards the front of the document; we
       will make it an appendix at publication time, but until then it is worth
       having up front, as it makes the rest of the document much easier to
@@ -121,9 +132,9 @@
       like to roll / replace the key with a new one. She publishes the new
       KSK, but would like to be able to predict / measure what the impact will
       be before removing/revoking the old key. The current KSK has a key ID of
-      1111, the new KSK has a key ID of 2222. Users want to verify that their
+      11112, the new KSK has a key ID of 02323. Users want to verify that their
       resolver will not break after Alice rolls the root KSK key (that is,
-      starts signing with just the KSK whose key ID is 2222).</t>
+      starts signing with just the KSK whose key ID is 02323).</t>
 
       <t>Bob, Charlie, Dave, Ed are all users. They use the DNS recursive
       resolvers supplied by their ISPs. They would like to confirm that their
@@ -131,7 +142,7 @@
       Charlie's ISP does validate, but the resolvers have not yet been
       upgraded to support this mechanism. Dave and Ed's resolvers have been
       upgraded to support this mechanism; Dave's resolver has the new KSK,
-      Ed's resolver hasn't managed to install the 2222 KSK in its trust store
+      Ed's resolver hasn't managed to install the 02323 KSK in its trust store
       yet.</t>
 
       <t>Geoff is a researcher, and would like to both provide a means for
@@ -140,13 +151,13 @@
       will be (and report this back to Alice).</t>
 
       <t>Geoff sets an authoritative DNS server for example.com, and also a
-      webserver (www.example.com). He adds 3 AAAA records to example.com:
+      webserver (www.example.com). He adds three address records to example.com:
         <list>
           <t>invalid.example.com. IN AAAA 2001:db8::1</t>
 
-          <t>kskroll-sentinel-is-ta-2222.example.com. IN AAAA 2001:db8::1</t>
+          <t>kskroll-sentinel-is-ta-02323.example.com. IN AAAA 2001:db8::1</t>
 
-          <t>kskroll-sentinel-not-ta-2222.example.com. IN AAAA 2001:db8::1</t>
+          <t>kskroll-sentinel-not-ta-02323.example.com. IN AAAA 2001:db8::1</t>
         </list></t>
 
       <t>Note that the use of "example.com" names and the addresses here are examples.
@@ -160,12 +171,12 @@
       (for example, a 1x1 GIF, 1x1.gif) for all of these names. The webserver
       also serves a webpage (www.example.com) which contains links to these 3
       resources (http://invalid.example.com/1x1.gif,
-      http://kskroll-sentinel-is-ta-2222.example.com/1x1.gif,
-      http://kskroll-sentinel-not-ta-2222.example.com/1x1.gif).</t>
+      http://kskroll-sentinel-is-ta-02323.example.com/1x1.gif,
+      http://kskroll-sentinel-not-ta-02323.example.com/1x1.gif).</t>
 
       <t>Geoff then asks Bob, Charlie, Dave and Ed to browse to
       www.example.com. Using the methods described in this document, the users
-      can figure out what their fate will be when the 1111 KSK is removed.</t>
+      can figure out what their fate will be when the 11112 KSK is removed.</t>
 
       <t>Bob is not using a validating resolver. This means that he will be
       able to resolve invalid.example.com (and fetch the 1x1 GIF) - this tells
@@ -183,42 +194,42 @@
       <t>Dave's resolvers implement the sentinel method, and have picked up
       the new KSK. For the same reason as Charlie, he cannot fetch the
       "invalid" resource. His resolver resolves the
-      kskroll-sentinel-is-ta-2222.example.com name normally (it contacts the
+      kskroll-sentinel-is-ta-02323.example.com name normally (it contacts the
       example.com authoritative servers, etc); as it supports the sentinel
       mechanism, just before Dave's recursive server send the reply to Dave's
       stub, it performs the KSK Sentinel check (see below). The QNAME starts
       with "kskroll-sentinel-is-ta-", and the recursive resolver does indeed
-      have a key with the Key ID of 2222 in its root trust store. This means
+      have a key with the Key ID of 02323 in its root trust store. This means
       that that this part of the KSK Sentinel check passes (it is true that
-      2222 is in the trust anchor store), and the recursive resolver replies
+      Key ID 02323 is in the trust anchor store), and the recursive resolver replies
       normally (with the answer provided by the authoritative server). Dave's
       recursive resolver then resolves the
-      kskroll-sentinel-not-ta-2222.example.com name. Once again, it performs
+      kskroll-sentinel-not-ta-02323.example.com name. Once again, it performs
       the normal resolution process, but because it implements KSK Sentinel
       (and the QNAME starts with "kskroll-sentinel-not-ta-"), just before
-      sending the reply, it performs the KSK Sentinel check. As it has 2222 in
+      sending the reply, it performs the KSK Sentinel check. As it has 02323 in
       it's trust anchor store, the answer to "is this *not* a trust anchor" is
       false, and so the recursive resolver does not reply with the answer from
       the authoritative server - instead, it replies with a SERVFAIL (note
       that replying with SERVFAIL instead of the original answer is the only
       mechanism that KSK Sentinel uses). This means that Dave cannot fetch
-      "invalid", he can fetch "kskroll-sentinel-is-ta-2222", but he cannot
-      fetch "kskroll-sentinel-not-ta-2222". From this, Dave knows that he is
+      "invalid", he can fetch "kskroll-sentinel-is-ta-02323", but he cannot
+      fetch "kskroll-sentinel-not-ta-02323". From this, Dave knows that he is
       behind an upgraded, validating resolver, which has successfully
-      installed the new, 2222 KSK.</t>
+      installed the new, 02323 KSK.</t>
 
       <t>Just like Charlie and Dave, Ed cannot fetch the "invalid" record.
       This tells him that his resolvers are validating. When his (upgraded)
       resolver performs the KSK Sentinel check for
-      "kskroll-sentinel-is-ta-2222", it does *not* have the (new, 2222) KSK in
+      "kskroll-sentinel-is-ta-02323", it does *not* have the (new, 02323) KSK in
       it's trust anchor store. This means check fails, and Ed's recursive
       resolver converts the (valid) answer into a SERVFAIL error response. It
-      performs the same check for kskroll-sentinel-not-ta-2222.example.com; as
-      it does not have the 2222 KSK, it is true that this is not a trust
+      performs the same check for kskroll-sentinel-not-ta-02323.example.com; as
+      it does not have the 02323 KSK, it is true that this is not a trust
       anchor for it, and so it replies normally. This means that Ed cannot
       fetch the "invalid" resource, he also cannot fetch the
-      "kskroll-sentinel-is-ta-2222" resource, but he can fetch the
-      "kskroll-sentinel-not-ta-2222" resource. This tells Ed that his
+      "kskroll-sentinel-is-ta-02323" resource, but he can fetch the
+      "kskroll-sentinel-not-ta-02323" resource. This tells Ed that his
       resolvers have not installed the new KSK.</t>
 
       <t>Geoff would like to do a large scale test and provide the information
@@ -277,8 +288,8 @@
       authenticated data according to section 5.8 of <xref target="RFC6840"/>.
       Otherwise, the resolver MUST return RCODE 2 (server failure). Note that
       the &lt;tag-index&gt; is specified in the DNS label using decimal
-      notation (as described in <xref target="RFC4034"/>, section 5.3), zero
-      padded to 5 digits.</t>
+      notation (as described in <xref target="RFC4034"/>, section 5.3), zero-padded
+      to five digits.</t>
 
       <t>If the outcome of the DNSSEC validation process applied to the
       response indicates that the response is authentic, and if the left-most
@@ -297,7 +308,7 @@
       response validation process.</t>
 
       <t>This mechanism is to be applied only by resolvers that are performing
-      DNSSEC validation, and applies only to responses to an A or AAAA query
+      DNSSEC validation, and applies only to responses to queries for A or AAAA records
       (Query Type value 1 or 28) where the resolver has authenticated the
       response according to the DNSSEC validation process and where the query
       name contains either of the labels described in this section as its
@@ -371,12 +382,12 @@
 
           <t hangText="Vleg:">A DNSSEC-Validating resolver that does not
           implement this mechanism will respond with an A or AAAA RRset
-          response for "kskroll-sentinel-is-ta", an A record response for
+          response for "kskroll-sentinel-is-ta", an A or AAAA RRset response for
           "kskroll-sentinel-not-ta" and SERVFAIL for the invalid name.</t>
 
           <t hangText="nonV:">A non-DNSSEC-Validating resolver will respond
           with an A or AAAA record response for "kskroll-sentinel-is-ta", an A
-          record response for "kskroll-sentinel-not-ta" and an A record
+          record response for "kskroll-sentinel-not-ta" and an A or AAAA RRset
           response for the invalid name.</t>
         </list></t>
 
