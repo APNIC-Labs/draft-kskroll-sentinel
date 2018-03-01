@@ -145,10 +145,10 @@
       <t>Alice is in charge of the DNS root KSK (Key Signing Key), and would
       like to roll / replace the key with a new one. She publishes the new
       KSK, but would like to be able to predict / measure what the impact will
-      be before removing/revoking the old key. The current KSK has a key ID of
-      11112, the new KSK has a key ID of 02323. Users want to verify that
+      be before removing/revoking the old key. The current KSK has a Key Tag of
+      11112, the new KSK has a Key Tag of 02323. Users want to verify that
       their resolver will not break after Alice rolls the root KSK key (that
-      is, starts signing with just the KSK whose key ID is 02323).</t>
+      is, starts signing with just the KSK whose Key Tag is 02323).</t>
 
       <t>Bob, Charlie, Dave, Ed are all users. They use the DNS recursive
       resolvers supplied by their ISPs. They would like to confirm that their
@@ -216,9 +216,9 @@
       mechanism, just before Dave's recursive server send the reply to Dave's
       stub, it performs the KSK Sentinel check (see below). The QNAME starts
       with "kskroll-sentinel-is-ta-", and the recursive resolver does indeed
-      have a key with the Key ID of 02323 in its root trust store. This means
+      have a key with the Key Tag of 02323 in its root trust store. This means
       that that this part of the KSK Sentinel check passes (it is true that
-      Key ID 02323 is in the trust anchor store), and the recursive resolver
+      Key Tag 02323 is in the trust anchor store), and the recursive resolver
       replies normally (with the answer provided by the authoritative server).
       Dave's recursive resolver then resolves the
       kskroll-sentinel-not-ta-02323.example.com name. Once again, it performs
@@ -286,9 +286,9 @@
 
       <t>The use of the positive question and its inverse allows for queries
       to detect whether resolvers support this sentinel mechanism. Note that
-      the test is "Is there an active key with this KeyID in the resolver's
+      the test is "Is there an active key with this Key Tag in the resolver's
       current trust store for the DNS root?", not "Is there any key with this
-      KeyID in the trust store", nor "Was a key with this KeyID used to
+      Key Tag in the trust store", nor "Was a key with this Key Tag used to
       validate this query?". An active key is one which could currently be
       used for validation (that is, a key that is not in either the AddPend or
       Revoked state as described in <xref target="RFC5011"/>).</t>
@@ -559,7 +559,7 @@
           <t>Integrated / published comments from Paul in GitHub PR #2 -
           https://github.com/APNIC-Labs/draft-kskroll-sentinel/pull/2</t>
 
-          <t>Made the keytab be decimal, not hex (thread / consensus in
+          <t>Made the keytag be decimal, not hex (thread / consensus in
           https://mailarchive.ietf.org/arch/msg/dnsop/Kg7AtDhFRNw31He8n0_bMr9hBuE
           )</t>
         </list></t>
