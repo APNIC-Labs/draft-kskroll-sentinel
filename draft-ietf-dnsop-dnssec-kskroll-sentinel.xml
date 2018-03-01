@@ -51,10 +51,10 @@
       signatures. These digital signatures can be verified by building a chain
       of trust starting from a trust anchor and proceeding down to a
       particular node in the DNS. This document specifies a mechanism that
-      will allow an end user and third parties to determine the trusted key state for the root
-      key of the resolvers that handle that user's DNS queries. Note that this
-      method is only applicable for determing which keys are in the trust
-      store for the root key.</t>
+      will allow an end user and third parties to determine the trusted key
+      state for the root key of the resolvers that handle that user's DNS
+      queries. Note that this method is only applicable for determing which
+      keys are in the trust store for the root key.</t>
 
       <t>There is an example / toy implementation of this at
       http://www.ksk-test.net .</t>
@@ -68,14 +68,16 @@
       <t>[ NOTE: This version uses the labels
       "kskroll-sentinel-is-ta-&lt;key-tag&gt;",
       "kskroll-sentinel-not-ta-&lt;key-tag&gt;"; older versions of this
-      document used "_is-ta-&lt;key-tag&gt;", "_not-ta-&lt;key-tag&gt;".
-      Also note that the format of the tag-index is now zero-filled decimal. Apolgies to
-      those who have began implmenting.]</t>
+      document used "_is-ta-&lt;key-tag&gt;", "_not-ta-&lt;key-tag&gt;". Also
+      note that the format of the tag-index is now zero-filled decimal.
+      Apolgies to those who have began implmenting.]</t>
     </abstract>
   </front>
 
   <middle>
     <section anchor="intro" title="Introduction">
+       
+
       <t>The DNS Security Extensions (DNSSEC) <xref target="RFC4033"/>, <xref
       target="RFC4034"/> and <xref target="RFC4035"/> were developed to
       provide origin authentication and integrity protection for DNS data by
@@ -86,36 +88,48 @@
       Tag field whose value is equal to the Key Tag of the DNSKEY RR that
       validates the signature.</t>
 
+       
+
       <t>This document specifies how validating resolvers can respond to
       certain queries in a manner that allows a querier to deduce whether a
       particular key for the root has been loaded into that resolver's trusted
       key store. In particular, this response mechanism can be used to
       determine whether a certain root zone KSK is ready to be used as a
       trusted key within the context of a key roll by this resolver.</t>
-      
-      <t>There are two primary use cases for this mechanism:
-        <list style="symbols">
-          <t>Users want to know whether the resolvers they use are ready
-          for an upcoming root KSK rollover</t>
-          
-          <t>Researchers want to perform Internet-wide studies about the percentage
-          of users who will be ready for an upcoming root KSK rollover</t>
-          
-        </list>
-      The mechanism described in this document meets both of those use cases.
 
-      <t>This new mechanism is OPTIONAL to implement and use, although for
+       
+
+      <t>There are two primary use cases for this mechanism:</t>
+
+       
+
+      <t>
+        <list style="symbols">
+          <t>Users want to know whether the resolvers they use are ready for
+          an upcoming root KSK rollover</t>
+
+          <t>Researchers want to perform Internet-wide studies about the
+          percentage of users who will be ready for an upcoming root KSK
+          rollover</t>
+        </list>
+      </t>
+
+      <t>The mechanism described in this document meets both of these use
+      cases. This new mechanism is OPTIONAL to implement and use, although for
       reasons of supporting broad-based measurement techniques, it is strongly
       preferred that configurations of DNSSEC-validating resolvers enabled
       this mechanism by default, allowing for local configuration directives
       to disable this mechanism if desired.</t>
 
+       
+
       <section title="Terminology">
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
         document are to be interpreted as described in RFC 2119.</t>
-
       </section>
+
+       
     </section>
 
     <section title="Protocol Walkthrough Example">
@@ -132,9 +146,9 @@
       like to roll / replace the key with a new one. She publishes the new
       KSK, but would like to be able to predict / measure what the impact will
       be before removing/revoking the old key. The current KSK has a key ID of
-      11112, the new KSK has a key ID of 02323. Users want to verify that their
-      resolver will not break after Alice rolls the root KSK key (that is,
-      starts signing with just the KSK whose key ID is 02323).</t>
+      11112, the new KSK has a key ID of 02323. Users want to verify that
+      their resolver will not break after Alice rolls the root KSK key (that
+      is, starts signing with just the KSK whose key ID is 02323).</t>
 
       <t>Bob, Charlie, Dave, Ed are all users. They use the DNS recursive
       resolvers supplied by their ISPs. They would like to confirm that their
@@ -151,19 +165,21 @@
       will be (and report this back to Alice).</t>
 
       <t>Geoff sets an authoritative DNS server for example.com, and also a
-      webserver (www.example.com). He adds three address records to example.com:
-        <list>
+      webserver (www.example.com). He adds three address records to
+      example.com: <list>
           <t>invalid.example.com. IN AAAA 2001:db8::1</t>
 
           <t>kskroll-sentinel-is-ta-02323.example.com. IN AAAA 2001:db8::1</t>
 
-          <t>kskroll-sentinel-not-ta-02323.example.com. IN AAAA 2001:db8::1</t>
+          <t>kskroll-sentinel-not-ta-02323.example.com. IN AAAA
+          2001:db8::1</t>
         </list></t>
 
-      <t>Note that the use of "example.com" names and the addresses here are examples.
-      In a real deployment, the domain names need to be under control
-      of the researcher, and the addresses much be real, reachable addresses.</t>
-      
+      <t>Note that the use of "example.com" names and the addresses here are
+      examples. In a real deployment, the domain names need to be under
+      control of the researcher, and the addresses much be real, reachable
+      addresses.</t>
+
       <t>Geoff then DNSSEC signs the example.com zone, and intentionally makes
       the invalid.example.com record invalid/bogus (for example, by editing
       the signed zone and entering garbage for the signature). Geoff also
@@ -176,7 +192,8 @@
 
       <t>Geoff then asks Bob, Charlie, Dave and Ed to browse to
       www.example.com. Using the methods described in this document, the users
-      can figure out what their fate will be when the 11112 KSK is removed.</t>
+      can figure out what their fate will be when the 11112 KSK is
+      removed.</t>
 
       <t>Bob is not using a validating resolver. This means that he will be
       able to resolve invalid.example.com (and fetch the 1x1 GIF) - this tells
@@ -201,31 +218,31 @@
       with "kskroll-sentinel-is-ta-", and the recursive resolver does indeed
       have a key with the Key ID of 02323 in its root trust store. This means
       that that this part of the KSK Sentinel check passes (it is true that
-      Key ID 02323 is in the trust anchor store), and the recursive resolver replies
-      normally (with the answer provided by the authoritative server). Dave's
-      recursive resolver then resolves the
+      Key ID 02323 is in the trust anchor store), and the recursive resolver
+      replies normally (with the answer provided by the authoritative server).
+      Dave's recursive resolver then resolves the
       kskroll-sentinel-not-ta-02323.example.com name. Once again, it performs
       the normal resolution process, but because it implements KSK Sentinel
       (and the QNAME starts with "kskroll-sentinel-not-ta-"), just before
-      sending the reply, it performs the KSK Sentinel check. As it has 02323 in
-      it's trust anchor store, the answer to "is this *not* a trust anchor" is
-      false, and so the recursive resolver does not reply with the answer from
-      the authoritative server - instead, it replies with a SERVFAIL (note
-      that replying with SERVFAIL instead of the original answer is the only
-      mechanism that KSK Sentinel uses). This means that Dave cannot fetch
-      "invalid", he can fetch "kskroll-sentinel-is-ta-02323", but he cannot
-      fetch "kskroll-sentinel-not-ta-02323". From this, Dave knows that he is
-      behind an upgraded, validating resolver, which has successfully
+      sending the reply, it performs the KSK Sentinel check. As it has 02323
+      in it's trust anchor store, the answer to "is this *not* a trust anchor"
+      is false, and so the recursive resolver does not reply with the answer
+      from the authoritative server - instead, it replies with a SERVFAIL
+      (note that replying with SERVFAIL instead of the original answer is the
+      only mechanism that KSK Sentinel uses). This means that Dave cannot
+      fetch "invalid", he can fetch "kskroll-sentinel-is-ta-02323", but he
+      cannot fetch "kskroll-sentinel-not-ta-02323". From this, Dave knows that
+      he is behind an upgraded, validating resolver, which has successfully
       installed the new, 02323 KSK.</t>
 
       <t>Just like Charlie and Dave, Ed cannot fetch the "invalid" record.
       This tells him that his resolvers are validating. When his (upgraded)
       resolver performs the KSK Sentinel check for
-      "kskroll-sentinel-is-ta-02323", it does *not* have the (new, 02323) KSK in
-      it's trust anchor store. This means check fails, and Ed's recursive
+      "kskroll-sentinel-is-ta-02323", it does *not* have the (new, 02323) KSK
+      in it's trust anchor store. This means check fails, and Ed's recursive
       resolver converts the (valid) answer into a SERVFAIL error response. It
-      performs the same check for kskroll-sentinel-not-ta-02323.example.com; as
-      it does not have the 02323 KSK, it is true that this is not a trust
+      performs the same check for kskroll-sentinel-not-ta-02323.example.com;
+      as it does not have the 02323 KSK, it is true that this is not a trust
       anchor for it, and so it replies normally. This means that Ed cannot
       fetch the "invalid" resource, he also cannot fetch the
       "kskroll-sentinel-is-ta-02323" resource, but he can fetch the
@@ -260,22 +277,21 @@
       response validation specification <xref target="RFC4035"/>.</t>
 
       <t>This sentinel mechanism makes use of two special labels. The
-      "kskroll-sentinel-is-ta-&lt;key-tag&gt;" label is used in a
-      query where the response can answer whether this the Key Tag of a
-      trust anchor which the validating DNS resolver is currently trusting.
-      The "kskroll-sentinel-not-ta-&lt;key-tag&gt;" label is used in
-      a query where the response can answer whether this the Key Tag
-      of a trust anchor that is NOT in currently trusting.</t>
-      
-      <t>The use of
-      the positive question and its inverse allows for queries to detect
-      whether resolvers support this sentinel mechanism. Note that the test is
-      "Is there an active key with this KeyID in the resolver's current trust
-      store for the DNS root?", not "Is there any key with this KeyID in the
-      trust store", nor "Was a key with this KeyID used to validate this
-      query?". An active key is one which could currently be used for
-      validation (that is, a key that is not in either the AddPend or Revoked state as described in <xref
-      target="RFC5011"/>).</t>
+      "kskroll-sentinel-is-ta-&lt;key-tag&gt;" label is used in a query where
+      the response can answer whether this the Key Tag of a trust anchor which
+      the validating DNS resolver is currently trusting. The
+      "kskroll-sentinel-not-ta-&lt;key-tag&gt;" label is used in a query where
+      the response can answer whether this the Key Tag of a trust anchor that
+      is NOT in currently trusting.</t>
+
+      <t>The use of the positive question and its inverse allows for queries
+      to detect whether resolvers support this sentinel mechanism. Note that
+      the test is "Is there an active key with this KeyID in the resolver's
+      current trust store for the DNS root?", not "Is there any key with this
+      KeyID in the trust store", nor "Was a key with this KeyID used to
+      validate this query?". An active key is one which could currently be
+      used for validation (that is, a key that is not in either the AddPend or
+      Revoked state as described in <xref target="RFC5011"/>).</t>
 
       <t>If the outcome of the DNSSEC validation process on the response
       indicates that the response is authentic, and if the left-most label of
@@ -288,8 +304,8 @@
       authenticated data according to section 5.8 of <xref target="RFC6840"/>.
       Otherwise, the resolver MUST return RCODE 2 (server failure). Note that
       the &lt;tag-index&gt; is specified in the DNS label using decimal
-      notation (as described in <xref target="RFC4034"/>, section 5.3), zero-padded
-      to five digits.</t>
+      notation (as described in <xref target="RFC4034"/>, section 5.3),
+      zero-padded to five digits.</t>
 
       <t>If the outcome of the DNSSEC validation process applied to the
       response indicates that the response is authentic, and if the left-most
@@ -308,25 +324,26 @@
       response validation process.</t>
 
       <t>This mechanism is to be applied only by resolvers that are performing
-      DNSSEC validation, and applies only to responses to queries for A or AAAA records
-      (Query Type value 1 or 28) where the resolver has authenticated the
-      response according to the DNSSEC validation process and where the query
-      name contains either of the labels described in this section as its
-      left-most label. In this case, the resolver is to perform an additional
-      test following the conventional validation function, as described in
-      this section. The result of this additional test determines whether the
-      resolver will alter its response that would have indicated that the
-      RRset is authentic to a response that indicates DNSSEC validation
-      failure via the use of RCODE 2.</t>
+      DNSSEC validation, and applies only to responses to queries for A or
+      AAAA records (Query Type value 1 or 28) where the resolver has
+      authenticated the response according to the DNSSEC validation process
+      and where the query name contains either of the labels described in this
+      section as its left-most label. In this case, the resolver is to perform
+      an additional test following the conventional validation function, as
+      described in this section. The result of this additional test determines
+      whether the resolver will alter its response that would have indicated
+      that the RRset is authentic to a response that indicates DNSSEC
+      validation failure via the use of RCODE 2.</t>
     </section>
 
     <section title="Processing Sentinel Results">
       <t>This proposed test that uses the sentinel detection mechanism
       described in this document is based on the use of three DNS names that
       have three distinct DNS resolution behaviours. The test is intended to
-      allow a user or a third party to determine the state of their DNS resolution system, and,
-      in particular, whether or not they are using validating DNS resolvers
-      that use a particular trust anchor for the root zone.</t>
+      allow a user or a third party to determine the state of their DNS
+      resolution system, and, in particular, whether or not they are using
+      validating DNS resolvers that use a particular trust anchor for the root
+      zone.</t>
 
       <t>The critical aspect of the DNS names used in this mechanism is that
       they contain the specified label for either the positive and negative
@@ -382,8 +399,8 @@
 
           <t hangText="Vleg:">A DNSSEC-Validating resolver that does not
           implement this mechanism will respond with an A or AAAA RRset
-          response for "kskroll-sentinel-is-ta", an A or AAAA RRset response for
-          "kskroll-sentinel-not-ta" and SERVFAIL for the invalid name.</t>
+          response for "kskroll-sentinel-is-ta", an A or AAAA RRset response
+          for "kskroll-sentinel-not-ta" and SERVFAIL for the invalid name.</t>
 
           <t hangText="nonV:">A non-DNSSEC-Validating resolver will respond
           with an A or AAAA record response for "kskroll-sentinel-is-ta", an A
@@ -414,9 +431,9 @@
       <t>A "Vnew" type says that the nominated key is trusted by the resolver
       and has been loaded into its local trusted key stash. A "Vold" type says
       that the nominated key is not yet trusted by the resolver in its own
-      right. A "Vleg" type does not give any information about the
-      trust anchors, and a "nonV" type indicates that the resolver does not
-      perform DNSSEC validation.</t>
+      right. A "Vleg" type does not give any information about the trust
+      anchors, and a "nonV" type indicates that the resolver does not perform
+      DNSSEC validation.</t>
     </section>
 
     <section title="Sentinel Test Result Considerations">
@@ -472,9 +489,9 @@
     </section>
 
     <section title="Security Considerations">
-      <t>This document describes a mechanism to allow users and third parties to determine the
-      trust state of root zone key signing keys in the DNS resolution system
-      that they use.</t>
+      <t>This document describes a mechanism to allow users and third parties
+      to determine the trust state of root zone key signing keys in the DNS
+      resolution system that they use.</t>
 
       <t>The mechanism does not require resolvers to set otherwise
       unauthenticated responses to be marked as authenticated, and does not
@@ -488,10 +505,12 @@
     </section>
 
     <section title="Privacy Considerations">
-      <t>The mechansim in this document enables third parties (with either good or bad intentions)
-      to learn something about the security configuration of recursive name servers. That is,
-      someone who can cause an Internet user to open a web page can then determine whether the
-      resolver that that user has configured might fail during a root key rollover.</t>
+      <t>The mechansim in this document enables third parties (with either
+      good or bad intentions) to learn something about the security
+      configuration of recursive name servers. That is, someone who can cause
+      an Internet user to open a web page can then determine whether the
+      resolver that that user has configured might fail during a root key
+      rollover.</t>
     </section>
 
     <section title="IANA Considerations">
