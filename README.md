@@ -50,7 +50,7 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
 
 
@@ -74,7 +74,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -320,8 +320,8 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
 3.  Sentinel Mechanism in Resolvers
 
-   DNSSEC-Validating resolvers that implement this mechanism MUST be
-   performing validation of responses in accordance with the DNSSEC
+   DNSSEC-Validating resolvers that implement this mechanism MUST
+   perform validation of responses in accordance with the DNSSEC
    response validation specification [RFC4035].
 
    This sentinel mechanism makes use of two special labels:
@@ -330,8 +330,8 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
    o  kskroll-sentinel-not-ta-<key-tag>
 
-
-
+   Note that the <key-tag> is specified in the DNS label as unsigned
+   decimal integer (as described in [RFC4034], section 5.3), but zero-
 
 
 
@@ -340,54 +340,54 @@ Huston, et al.          Expires September 6, 2018               [Page 6]
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
 
-   Note that the <key-tag> is specified in the DNS label as unsigned
-   decimal integer (as described in [RFC4034], section 5.3), but zero-
-   padded to five digits (i.e: 42 would be represented as 00042).
+   padded to five digits (for example, a Key Tag 42 would be represented
+   in the label as 00042).
 
-   These labels trigger special processing in the resolver as specified
-   bellow.  The labels containing "is-ta" and "not-ta" are used to
-   answer questions "Is (or is not, respectivaly) this the key tag a
-   trust anchor which the validating DNS resolver is currently
-   trusting?"  Processing of both labels has the very same preconditions
-   for both labels and differs only in last step.
-
-   The use of the positive question and its inverse allows for queries
-   to detect whether resolvers support this sentinel mechanism.
+   These labels trigger special processing in the resolver when
+   responses from authoritative servers are received.  Labels containing
+   "kskroll-sentinel-is-ta-<key-tag>" is used to answer the question "Is
+   this the Key Tag a trust anchor which the validating DNS resolver is
+   currently trusting?"  Labels containing "kskroll-sentinel-not-ta-
+   <key-tag>" is used to answer the question "Is this the Key Tag *not*
+   a trust anchor which the validating DNS resolver is currently
+   trusting?"
 
 3.1.  Preconditions
 
    All of the following conditions must be met to trigger special
    processing inside resolver code:
 
-   a.  DNS response for particular query is DNSSEC validated and result
-       of validation is SECURE.
+   o  The DNS response is DNSSEC validated and result of validation is
+      "Secure"
 
-   b.  QTYPE is A or AAAA (Query Type value 1 or 28)
+   o  The QTYPE is either A or AAAA (Query Type value 1 or 28)
 
-   c.  The OPCODE is QUERY
+   o  The OPCODE is QUERY
 
-   d.  The leftmost label of the QNAME is either "kskroll-sentinel-is-
-       ta-<tag-index>" or "kskroll-sentinel-not-ta-<tag-index>"
+   o  The leftmost label of the QNAME is either "kskroll-sentinel-is-ta-
+      <key-tag>" or "kskroll-sentinel-not-ta-<key-tag>"
 
-   If all preconditions are not met, the resolver MUST NOT alter the DNS
-   response.
+   If any one of the preconditions is not met, the resolver MUST NOT
+   alter the DNS response based on the mechanism in this document.
 
 3.2.  Special processing
 
-   Responses which fullfill all preconditions in section 3.1 are subject
-   of special processing, depending on leftmost label of the QNAME.
+   Responses which fullfill all of the preconditions in Section 3.1
+   require special processing, depending on leftmost label in the QNAME.
 
    First, the resolver determines if the numerical value of <key-tag> is
-   equal to any of the key tags of an active Root Zone Key Signing Key
-   which is currently trusted by the local resolver and is stored in its
-   store of trusted keys.  An active key is one which could currently be
-   used for validation (that is, a key that is not in either the AddPend
-   or Revoked state as described in [RFC5011]).
+   equal to any of the Key Tags of an active root zone KSK which is
+   currently trusted by the local resolver and is stored in its store of
+   trusted keys.  An active key is one which could currently be used for
+   validation (that is, a key that is not in either the AddPend or
+   Revoked state as described in [RFC5011]).
 
-   As second step, the resolver alters response depending on meaning of
-   the label and presence of key with given keytag among trusted keys.
-   Two labels and two possible states of the keytag generate four
-   possible combinations summarized in the table:
+   Second, the resolver alters the response being sent to the original
+   query based on both the left-most label and the presence of a key
+   with given Key Tag in the trust anchor store.  Two labels and two
+   possible states of the keytag generate four possible combinations
+   summarized in the table:
+
 
 
 
@@ -396,11 +396,10 @@ Huston, et al.          Expires September 6, 2018               [Page 7]
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
 
-                              Keytag trusted
-   label type |       yes               |       no
-   --------------------------------------------------------------
-   is-ta      | return original answer  | return SERVFAIL
-   not-ta     | return SERVFAIL         | return original answer
+               |   Key Tag is trusted    |   Key Tag is not trusted
+    ------------------------------------------------------------------
+    is-ta      | return original answer  | return SERVFAIL
+    not-ta     | return SERVFAIL         | return original answer
 
 4.  Processing Sentinel Results
 
@@ -444,6 +443,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
    into four distinct behavior types, for which we will use the labels:
    "Vnew", "Vold", "Vleg", and "nonV".  These labels correspond to
    resolver behaviour types as follows:
+
 
 
 
@@ -709,9 +709,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 11.1.  Normative References
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements", RFC
-              4033, DOI 10.17487/RFC4033, March 2005, <https://www.rfc-
-              editor.org/info/rfc4033>.
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, DOI 10.17487/RFC4033, March 2005,
+              <https://www.rfc-editor.org/info/rfc4033>.
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
@@ -736,17 +736,12 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
               Trust Anchors", STD 74, RFC 5011, DOI 10.17487/RFC5011,
               September 2007, <https://www.rfc-editor.org/info/rfc5011>.
 
-   [RFC6840]  Weiler, S., Ed. and D. Blacka, Ed., "Clarifications and
-              Implementation Notes for DNS Security (DNSSEC)", RFC 6840,
-              DOI 10.17487/RFC6840, February 2013, <https://www.rfc-
-              editor.org/info/rfc6840>.
-
 11.2.  Informative References
 
    [RFC8145]  Wessels, D., Kumari, W., and P. Hoffman, "Signaling Trust
-              Anchor Knowledge in DNS Security Extensions (DNSSEC)", RFC
-              8145, DOI 10.17487/RFC8145, April 2017, <https://www.rfc-
-              editor.org/info/rfc8145>.
+              Anchor Knowledge in DNS Security Extensions (DNSSEC)",
+              RFC 8145, DOI 10.17487/RFC8145, April 2017,
+              <https://www.rfc-editor.org/info/rfc8145>.
 
 Authors' Addresses
 
@@ -765,6 +760,11 @@ Authors' Addresses
    Warren Kumari
 
    Email: warren@kumari.net
+
+
+
+
+
 
 
 
