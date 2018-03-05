@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-04"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-05"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Sentinel for Detecting
@@ -39,7 +39,7 @@
       </address>
     </author>
 
-    <date day="28" month="February" year="2018"/>
+    <date day="5" month="March" year="2018"/>
 
     <area>Internet</area>
 
@@ -262,64 +262,72 @@
       performing validation of responses in accordance with the DNSSEC
       response validation specification <xref target="RFC4035"/>.</t>
 
-      <t>This sentinel mechanism makes use of two special labels. The
-      "kskroll-sentinel-is-ta-&lt;key-tag&gt;" label is used in a query where
-      the response can answer whether this the Key Tag of a trust anchor which
-      the validating DNS resolver is currently trusting. The
-      "kskroll-sentinel-not-ta-&lt;key-tag&gt;" label is used in a query where
-      the response can answer whether this the Key Tag of a trust anchor that
-      is NOT in currently trusting.</t>
+      <t>This sentinel mechanism makes use of two special labels:<list
+          style="symbols">
+          <t>kskroll-sentinel-is-ta-&lt;key-tag&gt;</t>
+
+          <t>kskroll-sentinel-not-ta-&lt;key-tag&gt;</t>
+        </list> Note that the &lt;key-tag&gt; is specified in the DNS label as
+      unsigned decimal integer (as described in <xref target="RFC4034"/>,
+      section 5.3), but zero-padded to five digits (i.e: 42 would be
+      represented as 00042).</t>
+
+      <t>These labels trigger special processing in the resolver as specified
+      bellow. The labels containing "is-ta" and "not-ta" are used to answer
+      questions "Is (or is not, respectivaly) this the key tag a trust anchor
+      which the validating DNS resolver is currently trusting?" Processing of
+      both labels has the very same preconditions for both labels and differs
+      only in last step. </t>
 
       <t>The use of the positive question and its inverse allows for queries
-      to detect whether resolvers support this sentinel mechanism. Note that
-      the test is "Is there an active key with this Key Tag in the resolver's
-      current trust store for the DNS root?", not "Is there any key with this
-      Key Tag in the trust store", nor "Was a key with this Key Tag used to
-      validate this query?". An active key is one which could currently be
-      used for validation (that is, a key that is not in either the AddPend or
-      Revoked state as described in <xref target="RFC5011"/>).</t>
+      to detect whether resolvers support this sentinel mechanism. </t>
 
-      <t>If the outcome of the DNSSEC validation process on the response
-      indicates that the response is authentic, and if the left-most label of
-      the original query name matches the template
-      "kskroll-sentinel-is-ta-&lt;key-tag&gt;.", then the following rule
-      should be applied to the response: If the resolver has placed a root
-      zone KSK with Key Tag value matching the value specified in the query
-      into the local resolver's store of trusted keys, then the resolver
-      should return a response indicating that the response contains
-      authenticated data according to section 5.8 of <xref target="RFC6840"/>.
-      Otherwise, the resolver MUST return RCODE 2 (server failure). Note that
-      the &lt;tag-index&gt; is specified in the DNS label using decimal
-      notation (as described in <xref target="RFC4034"/>, section 5.3),
-      zero-padded to five digits.</t>
+      <section title="Preconditions">
+        <t>All of the following conditions must be met to trigger special
+        processing inside resolver code: <list style="letters">
+            <t>DNS response for particular query is DNSSEC validated and
+            result of validation is SECURE.</t>
 
-      <t>If the outcome of the DNSSEC validation process applied to the
-      response indicates that the response is authentic, and if the left-most
-      label of the original query name matches the template
-      "kskroll-sentinel-not-ta-&lt;key-tag&gt;.", then the following rule
-      should be applied to the response: If the resolver has not placed a root
-      zone KSK with Key Tag value matching the value specified in the query
-      into the local resolver's store of trusted keys, then the resolver
-      should return a response indicating that the response contains
-      authenticated data according to section 5.8 of <xref target="RFC6840"/>.
-      Otherwise, the resolver MUST return RCODE 2 (server failure). Note that
-      the &lt;key-tag&gt; is specified in the DNS label using decimal
-      notation.</t>
+            <t>QTYPE is A or AAAA (Query Type value 1 or 28)</t>
 
-      <t>In all other cases the resolver MUST NOT alter the outcome of the DNS
-      response validation process.</t>
+            <t>The OPCODE is QUERY</t>
 
-      <t>This mechanism is to be applied only by resolvers that are performing
-      DNSSEC validation, and applies only to responses to queries for A or
-      AAAA records (Query Type value 1 or 28) where the resolver has
-      authenticated the response according to the DNSSEC validation process
-      and where the query name contains either of the labels described in this
-      section as its left-most label. In this case, the resolver is to perform
-      an additional test following the conventional validation function, as
-      described in this section. The result of this additional test determines
-      whether the resolver will alter its response that would have indicated
-      that the RRset is authentic to a response that indicates DNSSEC
-      validation failure via the use of RCODE 2.</t>
+            <t>The leftmost label of the QNAME is either
+            "kskroll-sentinel-is-ta-&lt;tag-index&gt;" or
+            "kskroll-sentinel-not-ta-&lt;tag-index&gt;"</t>
+          </list></t>
+
+        <t>If all preconditions are not met, the resolver MUST NOT alter the
+        DNS response.</t>
+      </section>
+
+      <section title="Special processing">
+        <t>Responses which fullfill all preconditions in section 3.1 are
+        subject of special processing, depending on leftmost label of the
+        QNAME. </t>
+
+        <t>First, the resolver determines if the numerical value of
+        &lt;key-tag&gt; is equal to any of the key tags of an active Root Zone
+        Key Signing Key which is currently trusted by the local resolver and
+        is stored in its store of trusted keys. An active key is one which
+        could currently be used for validation (that is, a key that is not in
+        either the AddPend or Revoked state as described in <xref
+        target="RFC5011"/>).</t>
+
+        <t>As second step, the resolver alters response depending on meaning
+        of the label and presence of key with given keytag among trusted keys.
+        Two labels and two possible states of the keytag generate four
+        possible combinations summarized in the table: </t>
+
+        <t><figure>
+            <artwork><![CDATA[                           Keytag trusted
+label type |       yes               |       no
+--------------------------------------------------------------
+is-ta      | return original answer  | return SERVFAIL
+not-ta     | return SERVFAIL         | return original answer
+]]></artwork>
+          </figure></t>
+      </section>
     </section>
 
     <section title="Processing Sentinel Results">
@@ -340,14 +348,14 @@
 
       <t><list style="symbols">
           <t>A query name containing the left-most label
-          "kskroll-sentinel-is-ta-&lt;key-tag&gt;.". This corresponds to a a
+          "kskroll-sentinel-is-ta-&lt;key-tag&gt;". This corresponds to a a
           validly-signed RRset in the zone, so that responses associated with
           queried names in this zone can be authenticated by a
           DNSSEC-validating resolver. Any validly-signed DNS zone can be used
           for this test.</t>
 
           <t>A query name containing the left-most label
-          "kskroll-sentinel-not-ta-&lt;key-tag&gt;.". This is also a
+          "kskroll-sentinel-not-ta-&lt;key-tag&gt;". This is also a
           validly-signed name. Any validly-signed DNS zone can be used for
           this test.</t>
 
@@ -520,15 +528,23 @@
       Paul Wouters for their helpful feedback.</t>
 
       <t>The authors would like to especially call out Paul Hoffman and Duane
-      Wessels for providing comments in the form of a pull request.</t>
+      Wessels for providing comments in the form of a pull request. Petr
+      Specek implmented early versions of this technique into the Knot
+      resolver, identified a number of places where it wasn't clear, and
+      provided very helpful text to address this.</t>
     </section>
 
     <section title="Change Log">
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
 
-      <t>From -04 to -05: <list>
-          <t>Incorporated Duane's #9</t>
+      <t>From -04 to -05: <list style="symbols">
+          <t>Incorporated Duane's #10</t>
+
+          <t>Integrated Petr Spacek's Issue -
+          https://github.com/APNIC-Labs/draft-kskroll-sentinel/issues/9 (note
+          that commit-log incorrectly referred to Duane's PR as number 9, it
+          is actually 10).</t>
         </list></t>
 
       <t>From -03 to -04:<list style="symbols">
