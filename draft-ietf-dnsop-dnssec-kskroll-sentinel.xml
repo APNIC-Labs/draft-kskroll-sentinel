@@ -258,8 +258,8 @@
     </section>
 
     <section title="Sentinel Mechanism in Resolvers">
-      <t>DNSSEC-Validating resolvers that implement this mechanism MUST be
-      performing validation of responses in accordance with the DNSSEC
+      <t>DNSSEC-Validating resolvers that implement this mechanism MUST
+      perform validation of responses in accordance with the DNSSEC
       response validation specification <xref target="RFC4035"/>.</t>
 
       <t>This sentinel mechanism makes use of two special labels:<list
@@ -269,62 +269,63 @@
           <t>kskroll-sentinel-not-ta-&lt;key-tag&gt;</t>
         </list> Note that the &lt;key-tag&gt; is specified in the DNS label as
       unsigned decimal integer (as described in <xref target="RFC4034"/>,
-      section 5.3), but zero-padded to five digits (i.e: 42 would be
-      represented as 00042).</t>
+      section 5.3), but zero-padded to five digits (for example, a Key Tag 42 would be
+      represented in the label as 00042).</t>
 
-      <t>These labels trigger special processing in the resolver as specified
-      bellow. The labels containing "is-ta" and "not-ta" are used to answer
-      questions "Is (or is not, respectivaly) this the key tag a trust anchor
-      which the validating DNS resolver is currently trusting?" Processing of
-      both labels has the very same preconditions for both labels and differs
-      only in last step. </t>
+      <t>These labels trigger special processing in the resolver when responses
+      from authoritative servers are received.
+      Labels containing "kskroll-sentinel-is-ta-&lt;key-tag&gt;" is used to answer the
+      question "Is this the Key Tag a trust anchor
+      which the validating DNS resolver is currently trusting?" 
+      Labels containing "kskroll-sentinel-not-ta-&lt;key-tag&gt;" is used to answer the
+      question "Is this the Key Tag *not* a trust anchor
+      which the validating DNS resolver is currently trusting?"
+     </t>
 
-      <t>The use of the positive question and its inverse allows for queries
-      to detect whether resolvers support this sentinel mechanism. </t>
-
-      <section title="Preconditions">
+      <section anchor="precond" title="Preconditions">
         <t>All of the following conditions must be met to trigger special
-        processing inside resolver code: <list style="letters">
-            <t>DNS response for particular query is DNSSEC validated and
-            result of validation is SECURE.</t>
+        processing inside resolver code: <list style="symbols">
+            <t>The DNS response is DNSSEC validated and
+            result of validation is "Secure"</t>
 
-            <t>QTYPE is A or AAAA (Query Type value 1 or 28)</t>
+            <t>The QTYPE is either A or AAAA (Query Type value 1 or 28)</t>
 
             <t>The OPCODE is QUERY</t>
 
             <t>The leftmost label of the QNAME is either
-            "kskroll-sentinel-is-ta-&lt;tag-index&gt;" or
-            "kskroll-sentinel-not-ta-&lt;tag-index&gt;"</t>
+            "kskroll-sentinel-is-ta-&lt;key-tag&gt;" or
+            "kskroll-sentinel-not-ta-&lt;key-tag&gt;"</t>
           </list></t>
 
-        <t>If all preconditions are not met, the resolver MUST NOT alter the
-        DNS response.</t>
+        <t>If any one of the preconditions is not met, the resolver MUST NOT alter the
+        DNS response based on the mechanism in this document.</t>
       </section>
 
       <section title="Special processing">
-        <t>Responses which fullfill all preconditions in section 3.1 are
-        subject of special processing, depending on leftmost label of the
+        <t>Responses which fullfill all of the preconditions in <xref target="precond"/>
+        require special processing, depending on leftmost label in the
         QNAME. </t>
 
         <t>First, the resolver determines if the numerical value of
-        &lt;key-tag&gt; is equal to any of the key tags of an active Root Zone
-        Key Signing Key which is currently trusted by the local resolver and
+        &lt;key-tag&gt; is equal to any of the Key Tags of an active root zone
+        KSK which is currently trusted by the local resolver and
         is stored in its store of trusted keys. An active key is one which
         could currently be used for validation (that is, a key that is not in
         either the AddPend or Revoked state as described in <xref
         target="RFC5011"/>).</t>
 
-        <t>As second step, the resolver alters response depending on meaning
-        of the label and presence of key with given keytag among trusted keys.
+        <t>Second, the resolver alters the response being sent to the original query
+        based on both the left-most label and the presence of a key with given Key Tag
+        in the trust anchor store.
         Two labels and two possible states of the keytag generate four
         possible combinations summarized in the table: </t>
 
         <t><figure>
-            <artwork><![CDATA[                           Keytag trusted
-label type |       yes               |       no
---------------------------------------------------------------
-is-ta      | return original answer  | return SERVFAIL
-not-ta     | return SERVFAIL         | return original answer
+            <artwork><![CDATA[
+            |   Key Tag is trusted    |   Key Tag is not trusted
+ ------------------------------------------------------------------
+ is-ta      | return original answer  | return SERVFAIL
+ not-ta     | return SERVFAIL         | return original answer
 ]]></artwork>
           </figure></t>
       </section>
@@ -612,8 +613,6 @@ not-ta     | return SERVFAIL         | return original answer
       <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.4034.xml'?>
 
       <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.4035.xml'?>
-
-      <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.6840.xml'?>
 
       <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.5011.xml'?>
     </references>
