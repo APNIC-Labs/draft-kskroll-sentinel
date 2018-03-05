@@ -13,7 +13,7 @@ Expires: September 6, 2018                                     W. Kumari
 
 
             A Sentinel for Detecting Trusted Keys in DNSSEC
-                  draft-ietf-dnsop-kskroll-sentinel-05
+                  draft-ietf-dnsop-kskroll-sentinel-06
 
 Abstract
 
@@ -50,7 +50,7 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at https://datatracker.ietf.org/drafts/current/.
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
 
 
 
@@ -74,7 +74,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
+   (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -634,6 +634,12 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
    Note that this document is being worked on in GitHub - see Abstract.
    The below is mainly large changes, and is not authoritative.
 
+   From -05 to -06:
+
+      Paul improved my merging of Petr's text to make it more readable.
+      Minor change, but this is just before the cut-off, so I wanted it
+      maximally readable.
+
    From -04 to -05:
 
    o  Incorporated Duane's #10
@@ -661,13 +667,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
    o  Integrated / published comments from Paul in GitHub PR #2 -
       https://github.com/APNIC-Labs/draft-kskroll-sentinel/pull/2
 
-   o  Made the keytag be decimal, not hex (thread / consensus in
-      https://mailarchive.ietf.org/arch/msg/dnsop/
-      Kg7AtDhFRNw31He8n0_bMr9hBuE )
 
-   From -01 to 02:
-
-   o  Removed Address Record definition.
 
 
 
@@ -675,6 +675,14 @@ Huston, et al.          Expires September 6, 2018              [Page 12]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
+
+   o  Made the keytag be decimal, not hex (thread / consensus in
+      https://mailarchive.ietf.org/arch/msg/dnsop/
+      Kg7AtDhFRNw31He8n0_bMr9hBuE )
+
+   From -01 to 02:
+
+   o  Removed Address Record definition.
 
    o  Clarified that many things can cause SERVFAIL.
 
@@ -709,9 +717,20 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 11.1.  Normative References
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements",
-              RFC 4033, DOI 10.17487/RFC4033, March 2005,
-              <https://www.rfc-editor.org/info/rfc4033>.
+              Rose, "DNS Security Introduction and Requirements", RFC
+              4033, DOI 10.17487/RFC4033, March 2005, <https://www.rfc-
+              editor.org/info/rfc4033>.
+
+
+
+
+
+
+
+Huston, et al.          Expires September 6, 2018              [Page 13]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
+
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
@@ -723,15 +742,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
               Extensions", RFC 4035, DOI 10.17487/RFC4035, March 2005,
               <https://www.rfc-editor.org/info/rfc4035>.
 
-
-
-
-
-Huston, et al.          Expires September 6, 2018              [Page 13]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
-
-
    [RFC5011]  StJohns, M., "Automated Updates of DNS Security (DNSSEC)
               Trust Anchors", STD 74, RFC 5011, DOI 10.17487/RFC5011,
               September 2007, <https://www.rfc-editor.org/info/rfc5011>.
@@ -739,9 +749,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 11.2.  Informative References
 
    [RFC8145]  Wessels, D., Kumari, W., and P. Hoffman, "Signaling Trust
-              Anchor Knowledge in DNS Security Extensions (DNSSEC)",
-              RFC 8145, DOI 10.17487/RFC8145, April 2017,
-              <https://www.rfc-editor.org/info/rfc8145>.
+              Anchor Knowledge in DNS Security Extensions (DNSSEC)", RFC
+              8145, DOI 10.17487/RFC8145, April 2017, <https://www.rfc-
+              editor.org/info/rfc8145>.
 
 Authors' Addresses
 
@@ -760,16 +770,6 @@ Authors' Addresses
    Warren Kumari
 
    Email: warren@kumari.net
-
-
-
-
-
-
-
-
-
-
 
 
 
