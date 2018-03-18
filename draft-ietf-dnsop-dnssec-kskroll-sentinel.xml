@@ -327,6 +327,11 @@
  not-ta     | return SERVFAIL         | return original answer
 ]]></artwork>
           </figure></t>
+
+      <t>Instruction "return SERVFAIL" means that the resolver MUST set
+      RCODE=SERVFAIL (value 2) and MUST empty the ANSWER section
+      of the DNS response, ignoring all other documents which specify content
+      of the ANSWER section.</t>
       </section>
     </section>
 
