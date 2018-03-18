@@ -485,6 +485,10 @@
       ("Vleg"), or a case of mixed signals (SERVFAIL in all three responses),
       which is similarly an indeterminate response with respect to the trusted
       key state.</t>
+
+      <t>Please note that SERVFAIL might be cached according to
+      <xref target="RFC2308"/> section 7 for up to 5 minutes
+      and a positive answer for up to its TTL.</t>
     </section>
 
     <section title="Security Considerations">
@@ -618,6 +622,8 @@
 
   <back>
     <references title="Normative References">
+      <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.2308.xml'?>
+
       <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.4033.xml'?>
 
       <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.4034.xml'?>
