@@ -163,7 +163,7 @@
 
       <t>Note that the use of "example.com" names and the addresses here are
       examples. In a real deployment, the domain names need to be under
-      control of the researcher, and the addresses much be real, reachable
+      control of the researcher, and the addresses must be real, reachable
       addresses.</t>
 
       <t>Geoff then DNSSEC signs the example.com zone, and intentionally makes
@@ -321,7 +321,7 @@
 
         <t><figure>
             <artwork><![CDATA[
-            |   Key Tag is trusted    |   Key Tag is not trusted
+ Label      |   Key Tag is trusted    |   Key Tag is not trusted
  ------------------------------------------------------------------
  is-ta      | return original answer  | return SERVFAIL
  not-ta     | return SERVFAIL         | return original answer
@@ -461,9 +461,9 @@
       multiple forwarders, then the above considerations will apply.</t>
 
       <t>If the validating resolver has a forwarding configuration, and uses
-      the CD flag on all forwarded queries, then this resolver is acting in a
+      the CD bit on all forwarded queries, then this resolver is acting in a
       manner that is identical to a standalone resolver. The same
-      consideration applies if any one one of the forwarder targets is a
+      consideration applies if any one of the forwarder targets is a
       non-validating resolver. Similarly, if all the forwarder targets do not
       apply this trusted key mechanism, the same considerations apply.</t>
 
@@ -529,7 +529,7 @@
 
       <t>The authors would like to especially call out Paul Hoffman and Duane
       Wessels for providing comments in the form of a pull request. Petr
-      Specek implmented early versions of this technique into the Knot
+      Spacek implemented early versions of this technique into the Knot
       resolver, identified a number of places where it wasn't clear, and
       provided very helpful text to address this.</t>
     </section>
