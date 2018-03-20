@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-06"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-07"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Sentinel for Detecting
@@ -39,7 +39,7 @@
       </address>
     </author>
 
-    <date day="5" month="March" year="2018"/>
+    <date day="20" month="March" year="2018"/>
 
     <area>Internet</area>
 
@@ -111,17 +111,17 @@
       this mechanism by default, allowing for local configuration directives
       to disable this mechanism if desired.</t>
 
-      <t>The sentinel test described in this document determines whether
-      a user's browser or operating system looking up the special names that
-      are used in this protocol would be able to validate using the root KSK
+      <t>The sentinel test described in this document determines whether a
+      user's browser or operating system looking up the special names that are
+      used in this protocol would be able to validate using the root KSK
       indicated by the special names. The protocol uses the DNS SERVFAIL
       response code (RCODE 2) for this purpose because that is the response
-      code that is returned by resolvers when DNSSEC validation fails.
-      If a browser or operating system has multiple resolvers configured,
-      and those resolvers have different properties (for example, one
-      performs DNSSEC validation and one does not), the sentinel mechanism
-      might search among the different resolvers, or might not, depending
-      on how the browser or operating system is configured.</t>
+      code that is returned by resolvers when DNSSEC validation fails. If a
+      browser or operating system has multiple resolvers configured, and those
+      resolvers have different properties (for example, one performs DNSSEC
+      validation and one does not), the sentinel mechanism might search among
+      the different resolvers, or might not, depending on how the browser or
+      operating system is configured.</t>
 
       <section title="Terminology">
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -340,10 +340,10 @@
 ]]></artwork>
           </figure></t>
 
-      <t>Instruction "return SERVFAIL" means that the resolver MUST set
-      RCODE=SERVFAIL (value 2) and MUST empty the ANSWER section
-      of the DNS response, ignoring all other documents which specify content
-      of the ANSWER section.</t>
+        <t>Instruction "return SERVFAIL" means that the resolver MUST set
+        RCODE=SERVFAIL (value 2) and MUST empty the ANSWER section of the DNS
+        response, ignoring all other documents which specify content of the
+        ANSWER section.</t>
       </section>
     </section>
 
@@ -352,9 +352,9 @@
       described in this document is based on the use of three DNS names that
       have three distinct DNS resolution behaviours. The test is intended to
       allow a user or a third party to determine the state of their DNS
-      resolution system, and, in particular, whether or not they are using
-      one or more validating DNS resolvers that use a particular trust anchor for the root
-      zone.</t>
+      resolution system, and, in particular, whether or not they are using one
+      or more validating DNS resolvers that use a particular trust anchor for
+      the root zone.</t>
 
       <t>The critical aspect of the DNS names used in this mechanism is that
       they contain the specified label for either the positive and negative
@@ -384,9 +384,9 @@
       <t>The responses received from queries to resolve each of these names
       would allow us to infer a trust key state of the resolution environment.
       The techniques describes in this document rely on (DNSSEC validating)
-      resolvers responding with SERVFAIL to valid answers. Note that
-      a slew of other issues can also cause SERVFAIL responses, and so the
-      sentinel processing may sometimes result in incorrect conclusions.</t>
+      resolvers responding with SERVFAIL to valid answers. Note that a slew of
+      other issues can also cause SERVFAIL responses, and so the sentinel
+      processing may sometimes result in incorrect conclusions.</t>
 
       <t>To describe this process of classification, we can classify resolvers
       into four distinct behavior types, for which we will use the labels:
@@ -453,13 +453,14 @@
       that directly queried authoritative name servers, including the root
       servers.</t>
 
-      <t>There is also the common case where the end client's browser or operating system is configured to
-      use multiple resolvers. In these cases, a SERVFAIL response from one
-      resolver may cause the end client to repeat the query against one of
-      the other configured resolvers. If the client's browser or operating system
-      does not try the additional resolvers, the sentinel test will
-      effectively only be for the first resolver.</t>
-      
+      <t>There is also the common case where the end client's browser or
+      operating system is configured to use multiple resolvers. In these
+      cases, a SERVFAIL response from one resolver may cause the end client to
+      repeat the query against one of the other configured resolvers. If the
+      client's browser or operating system does not try the additional
+      resolvers, the sentinel test will effectively only be for the first
+      resolver.</t>
+
       <t>If any of the client's resolvers are non-validating resolvers, the
       tests will result in the client reporting that it has a non-validating
       DNS environment ("nonV"), which is effectively the case.</t>
@@ -500,9 +501,9 @@
       which is similarly an indeterminate response with respect to the trusted
       key state.</t>
 
-      <t>Please note that SERVFAIL might be cached according to
-      <xref target="RFC2308"/> section 7 for up to 5 minutes
-      and a positive answer for up to its TTL.</t>
+      <t>Please note that SERVFAIL might be cached according to <xref
+      target="RFC2308"/> section 7 for up to 5 minutes and a positive answer
+      for up to its TTL.</t>
     </section>
 
     <section title="Security Considerations">
@@ -558,10 +559,20 @@
     </section>
 
     <section title="Change Log">
+      <t>RFC Editor: Please remove this section! </t>
+
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
 
-      <t>From -05 to -06:<list>
+      <t>From -07 to -06<list style="symbols">
+          <t>Addressed GitHub PR #14: Clarifications regarding caching and
+          SERVFAIL responses</t>
+
+          <t>Addressed GitHub PR #12, #13: Clarify situation with multiple
+          resolvers, Fix editorial nits.</t>
+        </list></t>
+
+      <t>From -05 to -06:<list style="symbols">
           <t>Paul improved my merging of Petr's text to make it more readable.
           Minor change, but this is just before the cut-off, so I wanted it
           maximally readable.</t>
