@@ -111,6 +111,18 @@
       this mechanism by default, allowing for local configuration directives
       to disable this mechanism if desired.</t>
 
+      <t>The sentinel test described in this document determines whether
+      a user's browser or operating system looking up the special names that
+      are used in this protocol would be able to validate using the root KSK
+      indicated by the special names. The protocol uses the DNS SERVFAIL
+      response code (RCODE 2) for this purpose because that is the response
+      code that is returned by resolvers when DNSSEC validation fails.
+      If a browser or operating system has multiple resolvers configured,
+      and those resolvers have different properties (for example, one
+      performs DNSSEC validation and one does not), the sentinel mechanism
+      might search among the different resolvers, or might not, depending
+      on how the browser or operating system is configured.</t>
+
       <section title="Terminology">
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
@@ -336,7 +348,7 @@
       have three distinct DNS resolution behaviours. The test is intended to
       allow a user or a third party to determine the state of their DNS
       resolution system, and, in particular, whether or not they are using
-      validating DNS resolvers that use a particular trust anchor for the root
+      one or more validating DNS resolvers that use a particular trust anchor for the root
       zone.</t>
 
       <t>The critical aspect of the DNS names used in this mechanism is that
@@ -367,7 +379,7 @@
       <t>The responses received from queries to resolve each of these names
       would allow us to infer a trust key state of the resolution environment.
       The techniques describes in this document rely on (DNSSEC validating)
-      resolvers responding with SERVFAIL (RCODE 2) to valid answers. Note that
+      resolvers responding with SERVFAIL to valid answers. Note that
       a slew of other issues can also cause SERVFAIL responses, and so the
       sentinel processing may sometimes result in incorrect conclusions.</t>
 
@@ -436,11 +448,13 @@
       that directly queried authoritative name servers, including the root
       servers.</t>
 
-      <t>There is also the common case where the end client is configured to
-      use multiple resolvers. In these cases the SERVFAIL responses from one
-      resolver will prompt the end client to repeat the query against one of
-      the other configured resolvers.</t>
-
+      <t>There is also the common case where the end client's browser or operating system is configured to
+      use multiple resolvers. In these cases, a SERVFAIL response from one
+      resolver may cause the end client to repeat the query against one of
+      the other configured resolvers. If the client's browser or operating system
+      does not try the additional resolvers, the sentinel test will
+      effectively only be for the first resolver.</t>
+      
       <t>If any of the client's resolvers are non-validating resolvers, the
       tests will result in the client reporting that it has a non-validating
       DNS environment ("nonV"), which is effectively the case.</t>
