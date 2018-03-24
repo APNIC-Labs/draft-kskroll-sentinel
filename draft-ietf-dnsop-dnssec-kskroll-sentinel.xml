@@ -5,11 +5,11 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-07"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-08"
      ipr="trust200902">
   <front>
-    <title abbrev="DNSSEC Trusted Key Sentinel">A Sentinel for Detecting
-    Trusted Keys in DNSSEC</title>
+    <title abbrev="DNSSEC Trusted Key Sentinel">A Root Key Trust Anchor
+    Sentinel for DNSSEC</title>
 
     <author fullname="Geoff Huston" initials="G." surname="Huston">
       <organization abbrev="APNIC"/>
@@ -39,7 +39,7 @@
       </address>
     </author>
 
-    <date day="20" month="March" year="2018"/>
+    <date day="24" month="March" year="2018"/>
 
     <area>Internet</area>
 
@@ -167,9 +167,10 @@
       example.com: <list>
           <t>invalid.example.com. IN AAAA 2001:db8::1</t>
 
-          <t>kskroll-sentinel-is-ta-02323.example.com. IN AAAA 2001:db8::1</t>
+          <t>root-key-sentinel-is-ta-02323.example.com. IN AAAA
+          2001:db8::1</t>
 
-          <t>kskroll-sentinel-not-ta-02323.example.com. IN AAAA
+          <t>root-key-sentinel-not-ta-02323.example.com. IN AAAA
           2001:db8::1</t>
         </list></t>
 
@@ -185,8 +186,8 @@
       (for example, a 1x1 GIF, 1x1.gif) for all of these names. The webserver
       also serves a webpage (www.example.com) which contains links to these 3
       resources (http://invalid.example.com/1x1.gif,
-      http://kskroll-sentinel-is-ta-02323.example.com/1x1.gif,
-      http://kskroll-sentinel-not-ta-02323.example.com/1x1.gif).</t>
+      http://root-key-sentinel-is-ta-02323.example.com/1x1.gif,
+      http://root-key-sentinel-not-ta-02323.example.com/1x1.gif).</t>
 
       <t>Geoff then asks Bob, Charlie, Dave and Ed to browse to
       www.example.com. Using the methods described in this document, the users
@@ -209,42 +210,42 @@
       <t>Dave's resolvers implement the sentinel method, and have picked up
       the new KSK. For the same reason as Charlie, he cannot fetch the
       "invalid" resource. His resolver resolves the
-      kskroll-sentinel-is-ta-02323.example.com name normally (it contacts the
+      root-key-sentinel-is-ta-02323.example.com name normally (it contacts the
       example.com authoritative servers, etc); as it supports the sentinel
       mechanism, just before Dave's recursive server send the reply to Dave's
       stub, it performs the KSK Sentinel check (see below). The QNAME starts
-      with "kskroll-sentinel-is-ta-", and the recursive resolver does indeed
+      with "root-key-sentinel-is-ta-", and the recursive resolver does indeed
       have a key with the Key Tag of 02323 in its root trust store. This means
       that that this part of the KSK Sentinel check passes (it is true that
       Key Tag 02323 is in the trust anchor store), and the recursive resolver
       replies normally (with the answer provided by the authoritative server).
       Dave's recursive resolver then resolves the
-      kskroll-sentinel-not-ta-02323.example.com name. Once again, it performs
+      root-key-sentinel-not-ta-02323.example.com name. Once again, it performs
       the normal resolution process, but because it implements KSK Sentinel
-      (and the QNAME starts with "kskroll-sentinel-not-ta-"), just before
+      (and the QNAME starts with "root-key-sentinel-not-ta-"), just before
       sending the reply, it performs the KSK Sentinel check. As it has 02323
       in it's trust anchor store, the answer to "is this *not* a trust anchor"
       is false, and so the recursive resolver does not reply with the answer
       from the authoritative server - instead, it replies with a SERVFAIL
       (note that replying with SERVFAIL instead of the original answer is the
       only mechanism that KSK Sentinel uses). This means that Dave cannot
-      fetch "invalid", he can fetch "kskroll-sentinel-is-ta-02323", but he
-      cannot fetch "kskroll-sentinel-not-ta-02323". From this, Dave knows that
-      he is behind an upgraded, validating resolver, which has successfully
-      installed the new, 02323 KSK.</t>
+      fetch "invalid", he can fetch "root-key-sentinel-is-ta-02323", but he
+      cannot fetch "root-key-sentinel-not-ta-02323". From this, Dave knows
+      that he is behind an upgraded, validating resolver, which has
+      successfully installed the new, 02323 KSK.</t>
 
       <t>Just like Charlie and Dave, Ed cannot fetch the "invalid" record.
       This tells him that his resolvers are validating. When his (upgraded)
       resolver performs the KSK Sentinel check for
-      "kskroll-sentinel-is-ta-02323", it does *not* have the (new, 02323) KSK
+      "root-key-sentinel-is-ta-02323", it does *not* have the (new, 02323) KSK
       in it's trust anchor store. This means check fails, and Ed's recursive
       resolver converts the (valid) answer into a SERVFAIL error response. It
-      performs the same check for kskroll-sentinel-not-ta-02323.example.com;
+      performs the same check for root-key-sentinel-not-ta-02323.example.com;
       as it does not have the 02323 KSK, it is true that this is not a trust
       anchor for it, and so it replies normally. This means that Ed cannot
       fetch the "invalid" resource, he also cannot fetch the
-      "kskroll-sentinel-is-ta-02323" resource, but he can fetch the
-      "kskroll-sentinel-not-ta-02323" resource. This tells Ed that his
+      "root-key-sentinel-is-ta-02323" resource, but he can fetch the
+      "root-key-sentinel-not-ta-02323" resource. This tells Ed that his
       resolvers have not installed the new KSK.</t>
 
       <t>Geoff would like to do a large scale test and provide the information
@@ -276,9 +277,9 @@
 
       <t>This sentinel mechanism makes use of two special labels:<list
           style="symbols">
-          <t>kskroll-sentinel-is-ta-&lt;key-tag&gt;</t>
+          <t>root-key-sentinel-is-ta-&lt;key-tag&gt;</t>
 
-          <t>kskroll-sentinel-not-ta-&lt;key-tag&gt;</t>
+          <t>root-key-sentinel-not-ta-&lt;key-tag&gt;</t>
         </list> Note that the &lt;key-tag&gt; is specified in the DNS label as
       unsigned decimal integer (as described in <xref target="RFC4034"/>,
       section 5.3), but zero-padded to five digits (for example, a Key Tag 42
@@ -286,12 +287,12 @@
 
       <t>These labels trigger special processing in the resolver when
       responses from authoritative servers are received. Labels containing
-      "kskroll-sentinel-is-ta-&lt;key-tag&gt;" is used to answer the question
+      "root-key-sentinel-is-ta-&lt;key-tag&gt;" is used to answer the question
       "Is this the Key Tag a trust anchor which the validating DNS resolver is
       currently trusting?" Labels containing
-      "kskroll-sentinel-not-ta-&lt;key-tag&gt;" is used to answer the question
-      "Is this the Key Tag *not* a trust anchor which the validating DNS
-      resolver is currently trusting?"</t>
+      "root-key-sentinel-not-ta-&lt;key-tag&gt;" is used to answer the
+      question "Is this the Key Tag *not* a trust anchor which the validating
+      DNS resolver is currently trusting?"</t>
 
       <section anchor="precond" title="Preconditions">
         <t>All of the following conditions must be met to trigger special
@@ -304,8 +305,8 @@
             <t>The OPCODE is QUERY</t>
 
             <t>The leftmost label of the QNAME is either
-            "kskroll-sentinel-is-ta-&lt;key-tag&gt;" or
-            "kskroll-sentinel-not-ta-&lt;key-tag&gt;"</t>
+            "root-key-sentinel-is-ta-&lt;key-tag&gt;" or
+            "root-key-sentinel-not-ta-&lt;key-tag&gt;"</t>
           </list></t>
 
         <t>If any one of the preconditions is not met, the resolver MUST NOT
@@ -365,14 +366,14 @@
 
       <t><list style="symbols">
           <t>A query name containing the left-most label
-          "kskroll-sentinel-is-ta-&lt;key-tag&gt;". This corresponds to a a
+          "root-key-sentinel-is-ta-&lt;key-tag&gt;". This corresponds to a a
           validly-signed RRset in the zone, so that responses associated with
           queried names in this zone can be authenticated by a
           DNSSEC-validating resolver. Any validly-signed DNS zone can be used
           for this test.</t>
 
           <t>A query name containing the left-most label
-          "kskroll-sentinel-not-ta-&lt;key-tag&gt;". This is also a
+          "root-key-sentinel-not-ta-&lt;key-tag&gt;". This is also a
           validly-signed name. Any validly-signed DNS zone can be used for
           this test.</t>
 
@@ -397,26 +398,27 @@
           <t hangText="Vnew:">A DNSSEC-Validating resolver that is configured
           to implement this mechanism has loaded the nominated key into its
           local trusted key store will respond with an A or AAAA RRset
-          response for "kskroll-sentinel-is-ta" queries, SERVFAIL for
-          "kskroll-sentinel-not-ta" queries and SERVFAIL for the invalidly
+          response for "root-key-sentinel-is-ta" queries, SERVFAIL for
+          "root-key-sentinel-not-ta" queries and SERVFAIL for the invalidly
           signed name queries.</t>
 
           <t hangText="Vold:">A DNSSEC-Validating resolver that is configured
           to implement this mechanism that has not loaded the nominated key
           into its local trusted key store will respond with an SERVFAIL for
-          "kskroll-sentinel-is-ta" queries, an A or AAAA RRset response for
-          "kskroll-sentinel-not-ta" queries and SERVFAIL for the invalidly
+          "root-key-sentinel-is-ta" queries, an A or AAAA RRset response for
+          "root-key-sentinel-not-ta" queries and SERVFAIL for the invalidly
           signed name queries.</t>
 
           <t hangText="Vleg:">A DNSSEC-Validating resolver that does not
           implement this mechanism will respond with an A or AAAA RRset
-          response for "kskroll-sentinel-is-ta", an A or AAAA RRset response
-          for "kskroll-sentinel-not-ta" and SERVFAIL for the invalid name.</t>
+          response for "root-key-sentinel-is-ta", an A or AAAA RRset response
+          for "root-key-sentinel-not-ta" and SERVFAIL for the invalid
+          name.</t>
 
           <t hangText="nonV:">A non-DNSSEC-Validating resolver will respond
-          with an A or AAAA record response for "kskroll-sentinel-is-ta", an A
-          record response for "kskroll-sentinel-not-ta" and an A or AAAA RRset
-          response for the invalid name.</t>
+          with an A or AAAA record response for "root-key-sentinel-is-ta", an
+          A record response for "root-key-sentinel-not-ta" and an A or AAAA
+          RRset response for the invalid name.</t>
         </list></t>
 
       <t>Given the clear delineation amongst these three cases, if a client
@@ -559,12 +561,20 @@
     </section>
 
     <section title="Change Log">
-      <t>RFC Editor: Please remove this section! </t>
+      <t>RFC Editor: Please remove this section!</t>
 
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
 
-      <t>From -07 to -06<list style="symbols">
+      <t>From -08 to -07:<list style="symbols">
+          <t>Changed title from "A Sentinel for Detecting Trusted Keys in
+          DNSSEC" to "A Root Key Trust Anchor Sentinel for DNSSEC".</t>
+
+          <t>Changed magic string from "kskroll-sentinel-" to
+          "root-key-sentinel-" -- this time for sure, Rocky!</t>
+        </list></t>
+
+      <t>From -07 to -06:<list style="symbols">
           <t>Addressed GitHub PR #14: Clarifications regarding caching and
           SERVFAIL responses</t>
 
