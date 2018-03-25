@@ -36,11 +36,12 @@ Abstract
    available here.  The authors (gratefully) accept pull requests.  Text
    in square brackets will be removed before publication. ]
 
-   [ NOTE: This version uses the labels "kskroll-sentinel-is-ta-<key-
-   tag>", "kskroll-sentinel-not-ta-<key-tag>"; older versions of this
-   document used "_is-ta-<key-tag>", "_not-ta-<key-tag>".  Also note
-   that the format of the tag-index is now zero-filled decimal.
-   Apolgies to those who have began implmenting.]
+   [ NOTE: This version uses the labels "root-key-sentinel-is-ta-", and
+   "root-key-sentinel-not-ta-".; older versions of this document used
+   "kskroll-sentinel-is-ta-<key-tag>", "kskroll-sentinel-not-ta-<key-
+   tag>", and before that, "_is-ta-<key-tag>", "_not-ta-<key-tag>".
+   Also note that the format of the tag-index is now zero-filled
+   decimal.  Apolgies to those who have began implmenting.]
 
 Status of This Memo
 
@@ -51,7 +52,6 @@ Status of This Memo
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
    Drafts is at http://datatracker.ietf.org/drafts/current/.
-
 
 
 
