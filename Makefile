@@ -87,8 +87,9 @@ commit: $(draft).txt README.md
 	@echo \`\`\` >> README.md
 	@cat $(draft).txt >> README.md
 	@echo \`\`\` >> README.md
-	read -p "Commit message: " msg; \
-	git commit -a -m "$$msg";
+#	read -p "Commit message: " msg; \
+#	git commit -a -m "$$msg";
+	git commit -a;
 	@git push
 
 tag:
