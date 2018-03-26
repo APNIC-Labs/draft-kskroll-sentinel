@@ -124,6 +124,12 @@
       the different resolvers, or might not, depending on how the browser or
       operating system is configured.</t>
 
+      <t>Note that the sentinel mechanism described here measures a very
+      different (and likely more useful) metric than <xref target="RFC8145"/>.
+      RFC 8145 relies on resolvers reporting the list of keys that they have
+      to root servers. That reflects on how many resolvers will be impacted by
+      a KSK roll, but not what the user impact of the KSK roll will be.</t>
+
       <section title="Terminology">
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
@@ -264,11 +270,6 @@
       names (for example, using the common "dig" command) and checking which
       result in a SERVFAIL.</t>
 
-      <t>Note that the sentinel mechanism described here measures a very
-      different (and likely more useful) metric than <xref target="RFC8145"/>.
-      RFC 8145 relies on resolvers reporting the list of keys that they have
-      to root servers. That reflects on how many resolvers will be impacted by
-      a KSK roll, but not what the user impact of the KSK roll will be.</t>
     </section>
 
     <section title="Sentinel Mechanism in Resolvers">
@@ -298,7 +299,7 @@
       <section anchor="precond" title="Preconditions">
         <t>All of the following conditions must be met to trigger special
         processing inside resolver code: <list style="symbols">
-            <t>The DNS response is DNSSEC validated and result of validation
+            <t>The DNS response is DNSSEC validated, regardless of whether DNSSSEC validation was requested, and result of validation
             is "Secure"</t>
 
             <t>The QTYPE is either A or AAAA (Query Type value 1 or 28)</t>
