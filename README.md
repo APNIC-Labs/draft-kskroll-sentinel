@@ -85,7 +85,7 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-     1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
+     1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   4
    2.  Protocol Walkthrough Example  . . . . . . . . . . . . . . . .   4
    3.  Sentinel Mechanism in Resolvers . . . . . . . . . . . . . . .   7
      3.1.  Preconditions . . . . . . . . . . . . . . . . . . . . . .   7
@@ -98,7 +98,7 @@ Table of Contents
    9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  12
    10. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  12
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  14
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  15
      11.2.  Informative References . . . . . . . . . . . . . . . . .  15
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
@@ -158,11 +158,11 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
    might not, depending on how the browser or operating system is
    configured.
 
-1.1.  Terminology
-
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in RFC 2119.
+   Note that the sentinel mechanism described here measures a very
+   different (and likely more useful) metric than [RFC8145].  RFC 8145
+   relies on resolvers reporting the list of keys that they have to root
+   servers.  That reflects on how many resolvers will be impacted by a
+   KSK roll, but not what the user impact of the KSK roll will be.
 
 
 
@@ -171,6 +171,12 @@ Huston, et al.         Expires September 25, 2018               [Page 3]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
+
+1.1.  Terminology
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in RFC 2119.
 
 2.  Protocol Walkthrough Example
 
@@ -214,12 +220,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
       root-key-sentinel-is-ta-02323.example.com.  IN AAAA 2001:db8::1
 
-      root-key-sentinel-not-ta-02323.example.com.  IN AAAA 2001:db8::1
-
-   Note that the use of "example.com" names and the addresses here are
-   examples.  In a real deployment, the domain names need to be under
-   control of the researcher, and the addresses must be real, reachable
-   addresses.
 
 
 
@@ -227,6 +227,13 @@ Huston, et al.         Expires September 25, 2018               [Page 4]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
+
+      root-key-sentinel-not-ta-02323.example.com.  IN AAAA 2001:db8::1
+
+   Note that the use of "example.com" names and the addresses here are
+   examples.  In a real deployment, the domain names need to be under
+   control of the researcher, and the addresses must be real, reachable
+   addresses.
 
    Geoff then DNSSEC signs the example.com zone, and intentionally makes
    the invalid.example.com record invalid/bogus (for example, by editing
@@ -269,13 +276,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
    have a key with the Key Tag of 02323 in its root trust store.  This
    means that that this part of the KSK Sentinel check passes (it is
    true that Key Tag 02323 is in the trust anchor store), and the
-   recursive resolver replies normally (with the answer provided by the
-   authoritative server).  Dave's recursive resolver then resolves the
-   root-key-sentinel-not-ta-02323.example.com name.  Once again, it
-   performs the normal resolution process, but because it implements KSK
-   Sentinel (and the QNAME starts with "root-key-sentinel-not-ta-"),
-   just before sending the reply, it performs the KSK Sentinel check.
-   As it has 02323 in it's trust anchor store, the answer to "is this
 
 
 
@@ -284,6 +284,13 @@ Huston, et al.         Expires September 25, 2018               [Page 5]
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
 
+   recursive resolver replies normally (with the answer provided by the
+   authoritative server).  Dave's recursive resolver then resolves the
+   root-key-sentinel-not-ta-02323.example.com name.  Once again, it
+   performs the normal resolution process, but because it implements KSK
+   Sentinel (and the QNAME starts with "root-key-sentinel-not-ta-"),
+   just before sending the reply, it performs the KSK Sentinel check.
+   As it has 02323 in it's trust anchor store, the answer to "is this
    *not* a trust anchor" is false, and so the recursive resolver does
    not reply with the answer from the authoritative server - instead, it
    replies with a SERVFAIL (note that replying with SERVFAIL instead of
@@ -323,13 +330,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
    mechanism does not rely on the web: it can equally be used by trying
    to resolve the names (for example, using the common "dig" command)
    and checking which result in a SERVFAIL.
-
-   Note that the sentinel mechanism described here measures a very
-   different (and likely more useful) metric than [RFC8145].  RFC 8145
-   relies on resolvers reporting the list of keys that they have to root
-   servers.  That reflects on how many resolvers will be impacted by a
-   KSK roll, but not what the user impact of the KSK roll will be.
-
 
 
 
@@ -371,20 +371,20 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
    All of the following conditions must be met to trigger special
    processing inside resolver code:
 
-   o  The DNS response is DNSSEC validated and result of validation is
+   o  The DNS response is DNSSEC validated, regardless of whether
+      DNSSSEC validation was requested, and result of validation is
       "Secure"
 
    o  The QTYPE is either A or AAAA (Query Type value 1 or 28)
 
    o  The OPCODE is QUERY
 
-   o  The leftmost label of the QNAME is either "root-key-sentinel-is-
-      ta-<key-tag>" or "root-key-sentinel-not-ta-<key-tag>"
+   o  The leftmost label of the original QNAME (the name sent in the
+      Question Section in the orignal query) is either "root-key-
+      sentinel-is-ta-<key-tag>" or "root-key-sentinel-not-ta-<key-tag>"
 
    If any one of the preconditions is not met, the resolver MUST NOT
    alter the DNS response based on the mechanism in this document.
-
-
 
 
 
@@ -666,7 +666,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
    Note that this document is being worked on in GitHub - see Abstract.
    The below is mainly large changes, and is not authoritative.
 
-   From -08 to -07:
+   From -08 to -09:
 
 
 
@@ -675,6 +675,14 @@ Huston, et al.         Expires September 25, 2018              [Page 12]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
+
+   o  Incorporated Paul Hoffman's PR # 15 (Two issues from the
+      Hackathon) - https://github.com/APNIC-Labs/draft-kskroll-sentinel/
+      pull/15
+
+   o  Clarifies that the match is on the *original* QNAME.
+
+   From -08 to -07:
 
    o  Changed title from "A Sentinel for Detecting Trusted Keys in
       DNSSEC" to "A Root Key Trust Anchor Sentinel for DNSSEC".
@@ -716,14 +724,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
    o  Changed the example numbers
 
-   o  Made it clear that names and addresses must be real
-
-   From -02 to -03:
-
-   o  Integrated / published comments from Paul in GitHub PR #2 -
-      https://github.com/APNIC-Labs/draft-kskroll-sentinel/pull/2
-
-
 
 
 
@@ -731,6 +731,13 @@ Huston, et al.         Expires September 25, 2018              [Page 13]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
+
+   o  Made it clear that names and addresses must be real
+
+   From -02 to -03:
+
+   o  Integrated / published comments from Paul in GitHub PR #2 -
+      https://github.com/APNIC-Labs/draft-kskroll-sentinel/pull/2
 
    o  Made the keytag be decimal, not hex (thread / consensus in
       https://mailarchive.ietf.org/arch/msg/dnsop/
@@ -770,6 +777,17 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
 11.  References
 
+
+
+
+
+
+
+Huston, et al.         Expires September 25, 2018              [Page 14]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
+
+
 11.1.  Normative References
 
    [RFC2308]  Andrews, M., "Negative Caching of DNS Queries (DNS
@@ -780,13 +798,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
               Rose, "DNS Security Introduction and Requirements", RFC
               4033, DOI 10.17487/RFC4033, March 2005, <https://www.rfc-
               editor.org/info/rfc4033>.
-
-
-
-Huston, et al.         Expires September 25, 2018              [Page 14]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
-
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
@@ -823,6 +834,16 @@ Authors' Addresses
    URI:   http://www.apnic.net
 
 
+
+
+
+
+
+Huston, et al.         Expires September 25, 2018              [Page 15]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
+
+
    Warren Kumari
 
    Email: warren@kumari.net
@@ -839,5 +860,40 @@ Authors' Addresses
 
 
 
-Huston, et al.         Expires September 25, 2018              [Page 15]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Huston, et al.         Expires September 25, 2018              [Page 16]
 ```

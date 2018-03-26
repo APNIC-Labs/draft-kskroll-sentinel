@@ -269,7 +269,6 @@
       not rely on the web: it can equally be used by trying to resolve the
       names (for example, using the common "dig" command) and checking which
       result in a SERVFAIL.</t>
-
     </section>
 
     <section title="Sentinel Mechanism in Resolvers">
@@ -299,14 +298,16 @@
       <section anchor="precond" title="Preconditions">
         <t>All of the following conditions must be met to trigger special
         processing inside resolver code: <list style="symbols">
-            <t>The DNS response is DNSSEC validated, regardless of whether DNSSSEC validation was requested, and result of validation
-            is "Secure"</t>
+            <t>The DNS response is DNSSEC validated, regardless of whether
+            DNSSSEC validation was requested, and result of validation is
+            "Secure"</t>
 
             <t>The QTYPE is either A or AAAA (Query Type value 1 or 28)</t>
 
             <t>The OPCODE is QUERY</t>
 
-            <t>The leftmost label of the QNAME is either
+            <t>The leftmost label of the original QNAME (the name sent in the
+            Question Section in the orignal query) is either
             "root-key-sentinel-is-ta-&lt;key-tag&gt;" or
             "root-key-sentinel-not-ta-&lt;key-tag&gt;"</t>
           </list></t>
@@ -567,6 +568,14 @@
 
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
+
+      <t>From -08 to -09:<list style="symbols">
+          <t>Incorporated Paul Hoffman's PR # 15 (Two issues from the
+          Hackathon) -
+          https://github.com/APNIC-Labs/draft-kskroll-sentinel/pull/15</t>
+
+          <t>Clarifies that the match is on the *original* QNAME.</t>
+        </list></t>
 
       <t>From -08 to -07:<list style="symbols">
           <t>Changed title from "A Sentinel for Detecting Trusted Keys in
