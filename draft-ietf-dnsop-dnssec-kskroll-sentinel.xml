@@ -300,14 +300,15 @@
       <section anchor="precond" title="Preconditions">
         <t>All of the following conditions must be met to trigger special
         processing inside resolver code: <list style="symbols">
-            <t>The DNS response is DNSSEC validated, and the result of
-            validation is "Secure"</t>
+            <t>The DNS response is DNSSEC validated</t>
+
+            <t>the result of validation is "Secure"</t>
+
+            <t>the AD bit is to be set in the response</t>
 
             <t>The QTYPE is either A or AAAA (Query Type value 1 or 28)</t>
 
             <t>The OPCODE is QUERY</t>
-
-            <t>CD bit in the query is not set</t>
 
             <t>The leftmost label of the original QNAME (the name sent in the
             Question Section in the orignal query) is either
