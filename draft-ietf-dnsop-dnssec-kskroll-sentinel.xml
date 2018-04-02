@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-09"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-10"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Root Key Trust Anchor
@@ -574,7 +574,8 @@
       The below is mainly large changes, and is not authoritative.</t>
 
       <t>From -09 to -10:<list style="symbols">
-          <t>Clarified the precondition of the CD bit not set in queries.</t>
+          <t>Clarified the precondition list to specify that the resolver had performed
+          DNSSEC-validation by setting the AD bit in the response</t>
 
           <t>Clarified the language referring to the operation of RFC8145 signalling.</t>
         </list></t>

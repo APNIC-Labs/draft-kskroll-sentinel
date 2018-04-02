@@ -13,7 +13,7 @@ Expires: September 27, 2018                                    W. Kumari
 
 
               A Root Key Trust Anchor Sentinel for DNSSEC
-                  draft-ietf-dnsop-kskroll-sentinel-09
+                  draft-ietf-dnsop-kskroll-sentinel-10
 
 Abstract
 
@@ -51,7 +51,7 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
 
 
@@ -74,7 +74,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -97,7 +97,7 @@ Table of Contents
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
    9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  12
    10. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  15
      11.2.  Informative References . . . . . . . . . . . . . . . . .  15
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
@@ -160,10 +160,10 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
    Note that the sentinel mechanism described here measures a very
    different (and likely more useful) metric than [RFC8145].  RFC 8145
-   relies on resolvers reporting the list of keys that they have to root
-   servers.  That reflects on how many resolvers will be impacted by a
-   KSK roll, but not what the user impact of the KSK roll will be.
-
+   relies on resolvers reporting towards the root servers a list of
+   locally cached trust anchors for the root zone.  Those reports can be
+   used to infer how many resolvers may be impacted by a KSK roll, but
+   not what the user impact of the KSK roll will be.
 
 
 
@@ -371,9 +371,11 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
    All of the following conditions must be met to trigger special
    processing inside resolver code:
 
-   o  The DNS response is DNSSEC validated, regardless of whether
-      DNSSSEC validation was requested, and result of validation is
-      "Secure"
+   o  The DNS response is DNSSEC validated
+
+   o  the result of validation is "Secure"
+
+   o  the AD bit is to be set in the response
 
    o  The QTYPE is either A or AAAA (Query Type value 1 or 28)
 
@@ -385,8 +387,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
    If any one of the preconditions is not met, the resolver MUST NOT
    alter the DNS response based on the mechanism in this document.
-
-
 
 
 
@@ -666,7 +666,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
    Note that this document is being worked on in GitHub - see Abstract.
    The below is mainly large changes, and is not authoritative.
 
-   From -08 to -09:
+   From -09 to -10:
 
 
 
@@ -675,6 +675,14 @@ Huston, et al.         Expires September 27, 2018              [Page 12]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
+
+   o  Clarified the precondition list to specify that the resolver had
+      performed DNSSEC-validation by setting the AD bit in the response
+
+   o  Clarified the language referring to the operation of RFC8145
+      signalling.
+
+   From -08 to -09:
 
    o  Incorporated Paul Hoffman's PR # 15 (Two issues from the
       Hackathon) - https://github.com/APNIC-Labs/draft-kskroll-sentinel/
@@ -716,14 +724,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
    o  Addressed GitHub pull requests #4, #5, #6, #7 #8.
 
-   o  Added Duane's privacy concerns
-
-   o  Makes the use cases clearer
-
-   o  Fixed some A/AAAA stuff
-
-   o  Changed the example numbers
-
 
 
 
@@ -731,6 +731,14 @@ Huston, et al.         Expires September 27, 2018              [Page 13]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
+
+   o  Added Duane's privacy concerns
+
+   o  Makes the use cases clearer
+
+   o  Fixed some A/AAAA stuff
+
+   o  Changed the example numbers
 
    o  Made it clear that names and addresses must be real
 
@@ -772,14 +780,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
       sentinel-is-ta-<key-tag>.  This is because BIND (at least) will
       not allow records which start with an underscore to have address
       records (CNAMEs, yes, A/AAAA no).  Some browsers / operating
-      systems also will not fetch resources from names which start with
-      an underscore.
-
-11.  References
-
-
-
-
 
 
 
@@ -788,6 +788,11 @@ Huston, et al.         Expires September 27, 2018              [Page 14]
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
 
+      systems also will not fetch resources from names which start with
+      an underscore.
+
+11.  References
+
 11.1.  Normative References
 
    [RFC2308]  Andrews, M., "Negative Caching of DNS Queries (DNS
@@ -795,9 +800,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
               <https://www.rfc-editor.org/info/rfc2308>.
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements", RFC
-              4033, DOI 10.17487/RFC4033, March 2005, <https://www.rfc-
-              editor.org/info/rfc4033>.
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, DOI 10.17487/RFC4033, March 2005,
+              <https://www.rfc-editor.org/info/rfc4033>.
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
@@ -816,9 +821,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 11.2.  Informative References
 
    [RFC8145]  Wessels, D., Kumari, W., and P. Hoffman, "Signaling Trust
-              Anchor Knowledge in DNS Security Extensions (DNSSEC)", RFC
-              8145, DOI 10.17487/RFC8145, April 2017, <https://www.rfc-
-              editor.org/info/rfc8145>.
+              Anchor Knowledge in DNS Security Extensions (DNSSEC)",
+              RFC 8145, DOI 10.17487/RFC8145, April 2017,
+              <https://www.rfc-editor.org/info/rfc8145>.
 
 Authors' Addresses
 
@@ -827,11 +832,6 @@ Authors' Addresses
    Email: gih@apnic.net
    URI:   http://www.apnic.net
 
-
-   Joao Silva Damas
-
-   Email: joao@apnic.net
-   URI:   http://www.apnic.net
 
 
 
@@ -844,15 +844,15 @@ Huston, et al.         Expires September 27, 2018              [Page 15]
 Internet-Draft         DNSSEC Trusted Key Sentinel            March 2018
 
 
+   Joao Silva Damas
+
+   Email: joao@apnic.net
+   URI:   http://www.apnic.net
+
+
    Warren Kumari
 
    Email: warren@kumari.net
-
-
-
-
-
-
 
 
 
