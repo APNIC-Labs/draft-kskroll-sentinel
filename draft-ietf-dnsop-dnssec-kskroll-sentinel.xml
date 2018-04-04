@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-10"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-11"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Root Key Trust Anchor
