@@ -13,7 +13,7 @@ Expires: October 5, 2018                                       W. Kumari
 
 
               A Root Key Trust Anchor Sentinel for DNSSEC
-                  draft-ietf-dnsop-kskroll-sentinel-10
+                  draft-ietf-dnsop-kskroll-sentinel-11
 
 Abstract
 
@@ -100,7 +100,7 @@ Table of Contents
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  15
      11.2.  Informative References . . . . . . . . . . . . . . . . .  15
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -371,18 +371,18 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
    All of the following conditions must be met to trigger special
    processing inside resolver code:
 
-   o  The DNS response is DNSSEC validated
+   o  The DNS response is DNSSEC validated.
 
-   o  the result of validation is "Secure"
+   o  The result of validation is "Secure".
 
-   o  the AD bit is to be set in the response
+   o  The Checking Disabled (CD) bit in the query is not set.
 
    o  The QTYPE is either A or AAAA (Query Type value 1 or 28)
 
    o  The OPCODE is QUERY
 
    o  The leftmost label of the original QNAME (the name sent in the
-      Question Section in the orignal query) is either "root-key-
+      Question Section in the original query) is either "root-key-
       sentinel-is-ta-<key-tag>" or "root-key-sentinel-not-ta-<key-tag>"
 
    If any one of the preconditions is not met, the resolver MUST NOT
@@ -666,7 +666,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
    Note that this document is being worked on in GitHub - see Abstract.
    The below is mainly large changes, and is not authoritative.
 
-   From -09 to -10:
+   From -10 to -11:
 
 
 
@@ -675,6 +675,13 @@ Huston, et al.           Expires October 5, 2018               [Page 12]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
 
+
+   o  Clarified the preconditions for this mechanism as per Working
+      Group mailing list discussion.
+
+   o  Corrected minor typo.
+
+   From -09 to -10:
 
    o  Clarified the precondition list to specify that the resolver had
       performed DNSSEC-validation by setting the AD bit in the response
@@ -716,13 +723,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
 
    o  Incorporated Duane's #10
 
-   o  Integrated Petr Spacek's Issue - https://github.com/APNIC-Labs/
-      draft-kskroll-sentinel/issues/9 (note that commit-log incorrectly
-      referred to Duane's PR as number 9, it is actually 10).
-
-   From -03 to -04:
-
-   o  Addressed GitHub pull requests #4, #5, #6, #7 #8.
 
 
 
@@ -731,6 +731,14 @@ Huston, et al.           Expires October 5, 2018               [Page 13]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
 
+
+   o  Integrated Petr Spacek's Issue - https://github.com/APNIC-Labs/
+      draft-kskroll-sentinel/issues/9 (note that commit-log incorrectly
+      referred to Duane's PR as number 9, it is actually 10).
+
+   From -03 to -04:
+
+   o  Addressed GitHub pull requests #4, #5, #6, #7 #8.
 
    o  Added Duane's privacy concerns
 
@@ -771,6 +779,15 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
 
    From -00 to 01:
 
+
+
+
+
+Huston, et al.           Expires October 5, 2018               [Page 14]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
+
+
    o  Added a conversational description of how the system is intended
       to work.
 
@@ -780,14 +797,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
       sentinel-is-ta-<key-tag>.  This is because BIND (at least) will
       not allow records which start with an underscore to have address
       records (CNAMEs, yes, A/AAAA no).  Some browsers / operating
-
-
-
-Huston, et al.           Expires October 5, 2018               [Page 14]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
-
-
       systems also will not fetch resources from names which start with
       an underscore.
 
@@ -825,15 +834,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
               RFC 8145, DOI 10.17487/RFC8145, April 2017,
               <https://www.rfc-editor.org/info/rfc8145>.
 
-Authors' Addresses
-
-   Geoff Huston
-
-   Email: gih@apnic.net
-   URI:   http://www.apnic.net
-
-
-
 
 
 
@@ -842,6 +842,14 @@ Authors' Addresses
 Huston, et al.           Expires October 5, 2018               [Page 15]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
+
+
+Authors' Addresses
+
+   Geoff Huston
+
+   Email: gih@apnic.net
+   URI:   http://www.apnic.net
 
 
    Joao Silva Damas
@@ -853,14 +861,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel            April 2018
    Warren Kumari
 
    Email: warren@kumari.net
-
-
-
-
-
-
-
-
 
 
 
