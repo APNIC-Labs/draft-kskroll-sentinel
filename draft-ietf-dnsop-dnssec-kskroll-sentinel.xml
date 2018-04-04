@@ -300,18 +300,18 @@
       <section anchor="precond" title="Preconditions">
         <t>All of the following conditions must be met to trigger special
         processing inside resolver code: <list style="symbols">
-            <t>The DNS response is DNSSEC validated</t>
+            <t>The DNS response is DNSSEC validated.</t>
 
-            <t>the result of validation is "Secure"</t>
+            <t>The result of validation is "Secure".</t>
 
-            <t>the AD bit is to be set in the response</t>
+            <t>The Checking Disabled (CD) bit in the query is not set.</t>
 
             <t>The QTYPE is either A or AAAA (Query Type value 1 or 28)</t>
 
             <t>The OPCODE is QUERY</t>
 
             <t>The leftmost label of the original QNAME (the name sent in the
-            Question Section in the orignal query) is either
+            Question Section in the original query) is either
             "root-key-sentinel-is-ta-&lt;key-tag&gt;" or
             "root-key-sentinel-not-ta-&lt;key-tag&gt;"</t>
           </list></t>
@@ -572,6 +572,13 @@
 
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
+
+      <t>From -10 to -11:<list style="symbols">
+          <t>Clarified the preconditions for this mechanism as per Working
+          Group mailing list discussion.</t>
+
+          <t>Corrected minor typo.</t>
+        </list></t>
 
       <t>From -09 to -10:<list style="symbols">
           <t>Clarified the precondition list to specify that the resolver had performed
