@@ -158,10 +158,10 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       <t>These labels trigger special processing in the resolver when
       responses from authoritative servers are received. Labels containing
       "root-key-sentinel-is-ta-&lt;key-tag&gt;" is used to answer the question
-      "Is this the Key Tag of a Key which the validating DNS resolver is
+      "Is this the Key Tag of a key which the validating DNS resolver is
       currently trusting as a trust anchor?" Labels containing
       "root-key-sentinel-not-ta-&lt;key-tag&gt;" is used to answer the
-      question "Is this the Key Tag of a Key which the validating
+      question "Is this the Key Tag of a key which the validating
       DNS resolver is *not* currently trusting as a trust anchor?"</t>
 
       <section anchor="precond" title="Preconditions">
@@ -173,14 +173,14 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
 
             <t>The Checking Disabled (CD) bit in the query is not set.</t>
 
-            <t>The QTYPE is either A or AAAA (Query Type value 1 or 28)</t>
+            <t>The QTYPE is either A or AAAA (Query Type value 1 or 28).</t>
 
-            <t>The OPCODE is QUERY</t>
+            <t>The OPCODE is QUERY.</t>
 
             <t>The leftmost label of the original QNAME (the name sent in the
             Question Section in the original query) is either
             "root-key-sentinel-is-ta-&lt;key-tag&gt;" or
-            "root-key-sentinel-not-ta-&lt;key-tag&gt;"</t>
+            "root-key-sentinel-not-ta-&lt;key-tag&gt;".</t>
           </list></t>
 
         <t>If any one of the preconditions is not met, the resolver MUST NOT
@@ -196,19 +196,19 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
         &lt;key-tag&gt; is equal to any of the Key Tag values of an active root zone
         KSK which is currently trusted by the local resolver and is stored in
         its store of trusted keys. An active root zone KSK is one which could currently
-        be used for validation (that is, a Key that is not in either the
+        be used for validation (that is, a key that is not in either the
         AddPend or Revoked state as described in <xref
         target="RFC5011"/>).</t>
 
         <t>Second, the resolver alters the response being sent to the original
-        query based on both the left-most label and the presence of a Key with
+        query based on both the left-most label and the presence of a key with
         given Key Tag in the trust anchor store. Two labels and two possible
-        states of the corresponding Key generate four possible combinations summarized in
+        states of the corresponding key generate four possible combinations summarized in
         the table:</t>
 
         <t><figure>
             <artwork><![CDATA[
- Label      |   Key is trusted        |   Key is not trusted
+ Label      | Key is trusted          | Key is not trusted
  ------------------------------------------------------------------
  is-ta      | return original answer  | return SERVFAIL
  not-ta     | return SERVFAIL         | return original answer
@@ -216,8 +216,8 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
           </figure></t>
 
         <t>Instruction "return SERVFAIL" means that the resolver MUST set
-        RCODE=SERVFAIL (value 2) and MUST empty the ANSWER section of the DNS
-        response, ignoring all other documents which specify content of the
+        RCODE=SERVFAIL (value 2) and the ANSWER section of the DNS
+        response MUST be empty, ignoring all other documents which specify content of the
         ANSWER section.</t>
       </section>
     </section>
@@ -258,7 +258,7 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
           record).</t> </list></t>
 
       <t>The responses received from queries to resolve each of these names
-      would allow us to infer a trust key state of the resolution environment.
+      can be evaluated to infer a trust key state of the resolution environment.
       The techniques describes in this document rely on (DNSSEC validating)
       resolvers responding with SERVFAIL to valid answers. Note that a slew of
       other issues can also cause SERVFAIL responses, and so the sentinel
@@ -296,6 +296,10 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
           RRset response for the invalid name.</t>
         </list></t>
 
+      <t>Please note that SERVFAIL might be cached according to <xref
+      target="RFC2308"/> section 7 for up to 5 minutes and a positive answer
+      for up to its TTL.</t>
+
       <t>Given the clear delineation amongst these three cases, if a client
       directs these three queries to a simple resolver, the variation in
       response to the three queries should allow the client to determine the
@@ -316,19 +320,23 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
   ]]></artwork>
         </figure></t>
 
-      <t>A "Vnew" type says that the nominated key is trusted by the resolver
-      and has been loaded into its local trusted key stash. A "Vold" type says
-      that the nominated key is not yet trusted by the resolver in its own
-      right. A "Vleg" type does not give any information about the trust
-      anchors, and a "nonV" type indicates that the resolver does not perform
-      DNSSEC validation.</t>
-    </section>
+      <t><list style="hanging">
+          <t hangText="Vnew:">The nominated key is trusted by the resolver.</t>
+
+          <t hangText="Vold:">The nominated key is not yet trusted by the
+          resolver in its own right.</t>
+          
+          <t hangText="Vleg:">This type does not give any information about
+          the trust anchors.</t>
+          
+          <t hangText="nonV:">The resolver does not perform DNSSEC validation.</t>
+        </list></t>
+   </section>
 
     <section title="Sentinel Test Result Considerations">
       <t>The description in the previous section describes a simple situation
       where the test queries were being passed to a single recursive resolver
-      that directly queried authoritative name servers, including the root
-      servers.</t>
+      that directly queried authoritative name servers.</t>
 
       <t>There is also the common case where the end client's browser or
       operating system is configured to use multiple resolvers. In these
@@ -345,16 +353,16 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       <t>If all of the client resolvers are DNSSEC-validating resolvers, but
       some do not support this trusted key mechanism, then the result will be
       indeterminate with respect to trusted key status ("Vleg"). Similarly, if
-      all the client's resolvers support this mechanism, but some have loaded
-      the key into the trusted key stash and some have not, then the result is
+      all the client's resolvers support this mechanism, but some trust
+      the key and some have not, then the result is
       indeterminate ("Vleg").</t>
 
       <t>There is also the common case of a recursive resolver using a
       forwarder.</t>
 
-      <t>If the resolver is non-validating, and it has a single forwarder
-      clause, then the resolver will presumably mirror the capabilities of the
-      forwarder target resolver. If this non-validating resolver it has
+      <t>If the resolver is non-validating, and it has a single forwarder,
+      then the resolver will presumably mirror the capabilities of the
+      forwarder target resolver. If this non-validating resolver has
       multiple forwarders, then the above considerations will apply.</t>
 
       <t>If the validating resolver has a forwarding configuration, and uses
@@ -364,7 +372,7 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       non-validating resolver. Similarly, if all the forwarder targets do not
       apply this trusted key mechanism, the same considerations apply.</t>
 
-      <t>A more complex case is where all of the following conditions all
+      <t>A more complex case is where all of the following conditions
       hold: <list style="symbols">
           <t>Both the validating resolver and the forwarder target resolver
           support this trusted key sentinel mechanism</t>
@@ -377,10 +385,6 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       ("Vleg"), or a case of mixed signals (SERVFAIL in all three responses),
       which is similarly an indeterminate response with respect to the trusted
       key state.</t>
-
-      <t>Please note that SERVFAIL might be cached according to <xref
-      target="RFC2308"/> section 7 for up to 5 minutes and a positive answer
-      for up to its TTL.</t>
     </section>
 
     <section title="Security Considerations">
