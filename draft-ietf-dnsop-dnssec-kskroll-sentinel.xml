@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-12"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-13"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Root Key Trust Anchor
@@ -59,9 +59,8 @@
       <t>[ This document is being collaborated on in Github at:
       https://github.com/APNIC-Labs/draft-kskroll-sentinel. The most recent
       version of the document, open issues, etc should all be available here.
-      The authors (gratefully) accept pull requests. Text in square brackets
-      will be removed before publication. ]</t>
-
+      The authors (gratefully) accept pull requests. RFC Editor, please remove
+      text in square brackets before publication. ]</t>
     </abstract>
   </front>
 
@@ -73,17 +72,19 @@
       using digital signatures. DNSSEC uses Key Tags to efficiently match
       signatures to the keys from which they are generated. The Key Tag is a
       16-bit value computed from the RDATA portion of a DNSKEY RR using a
-      formula found in "Key Tag Calculation" (Appendix B of "Resource Records for the DNS Security Extensions" <xref 
-target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs contain a Key
-      Tag field whose value is equal to the Key Tag of the DNSKEY RR that
-      validates the signature.</t>
+      formula found in "Key Tag Calculation" (Appendix B of "Resource Records
+      for the DNS Security Extensions" <xref target="RFC4034"/>), a formula
+      similar to a ones-complement checksum. RRSIG RRs contain a Key Tag field
+      whose value is equal to the Key Tag of the DNSKEY RR that validates the
+      signature.</t>
 
       <t>This document specifies how validating resolvers can respond to
       certain queries in a manner that allows a querier to deduce whether a
       particular key for the root has been loaded into that resolver's trusted
       key store. In particular, this response mechanism can be used to
       determine whether a certain root zone KSK is ready to be used as a
-      trusted key, within the context of a planned root zone KSK key roll, by this resolver.</t>
+      trusted key, within the context of a planned root zone KSK key roll, by
+      this resolver.</t>
 
       <t>There are two primary use cases for this mechanism:</t>
 
@@ -115,13 +116,12 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       the different resolvers, or might not, depending on how the browser or
       operating system is configured.</t>
 
-      <t>Note that the sentinel mechanism described here measures a
-      very different (and likely more useful) metric than <xref
-      target="RFC8145"/>. RFC 8145 relies on resolvers reporting
-      towards the root servers a list of locally cached trust anchors
-      for the root zone. Those reports can be used to infer how many
-      resolvers may be impacted by a KSK roll, but not what the user
-      impact of the KSK roll will be.</t>
+      <t>Note that the sentinel mechanism described here measures a very
+      different (and likely more useful) metric than <xref target="RFC8145"/>.
+      RFC 8145 relies on resolvers reporting towards the root servers a list
+      of locally cached trust anchors for the root zone. Those reports can be
+      used to infer how many resolvers may be impacted by a KSK roll, but not
+      what the user impact of the KSK roll will be.</t>
 
       <section title="Terminology">
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -142,8 +142,8 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
           <t>root-key-sentinel-not-ta-&lt;key-tag&gt;</t>
         </list> Note that the &lt;key-tag&gt; is specified in the DNS label as
       unsigned decimal integer (as described in <xref target="RFC4034"/>,
-      section 5.3), but zero-padded to five digits (for example, a Key Tag value of 42
-      would be represented in the label as 00042).</t>
+      section 5.3), but zero-padded to five digits (for example, a Key Tag
+      value of 42 would be represented in the label as 00042).</t>
 
       <t>These labels trigger special processing in the resolver when
       responses from authoritative servers are received. Labels containing
@@ -151,8 +151,8 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       "Is this the Key Tag of a key which the validating DNS resolver is
       currently trusting as a trust anchor?" Labels containing
       "root-key-sentinel-not-ta-&lt;key-tag&gt;" is used to answer the
-      question "Is this the Key Tag of a key which the validating
-      DNS resolver is *not* currently trusting as a trust anchor?"</t>
+      question "Is this the Key Tag of a key which the validating DNS resolver
+      is *not* currently trusting as a trust anchor?"</t>
 
       <section anchor="precond" title="Preconditions">
         <t>All of the following conditions must be met to trigger special
@@ -183,18 +183,18 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
         label in the QNAME.</t>
 
         <t>First, the resolver determines if the numerical value of
-        &lt;key-tag&gt; is equal to any of the Key Tag values of an active root zone
-        KSK which is currently trusted by the local resolver and is stored in
-        its store of trusted keys. An active root zone KSK is one which could currently
-        be used for validation (that is, a key that is not in either the
-        AddPend or Revoked state as described in <xref
+        &lt;key-tag&gt; is equal to any of the Key Tag values of an active
+        root zone KSK which is currently trusted by the local resolver and is
+        stored in its store of trusted keys. An active root zone KSK is one
+        which could currently be used for validation (that is, a key that is
+        not in either the AddPend or Revoked state as described in <xref
         target="RFC5011"/>).</t>
 
         <t>Second, the resolver alters the response being sent to the original
         query based on both the left-most label and the presence of a key with
         given Key Tag in the trust anchor store. Two labels and two possible
-        states of the corresponding key generate four possible combinations summarized in
-        the table:</t>
+        states of the corresponding key generate four possible combinations
+        summarized in the table:</t>
 
         <t><figure>
             <artwork><![CDATA[
@@ -206,9 +206,9 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
           </figure></t>
 
         <t>Instruction "return SERVFAIL" means that the resolver MUST set
-        RCODE=SERVFAIL (value 2) and the ANSWER section of the DNS
-        response MUST be empty, ignoring all other documents which specify content of the
-        ANSWER section.</t>
+        RCODE=SERVFAIL (value 2) and the ANSWER section of the DNS response
+        MUST be empty, ignoring all other documents which specify content of
+        the ANSWER section.</t>
       </section>
     </section>
 
@@ -241,18 +241,19 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
           validly-signed name. Any validly-signed DNS zone can be used for
           this test.</t>
 
-          <t>A query name that is signed with a DNSSEC signature that
-          cannot be validated (described as a "bogus" RRset in
-          Section 5 of <xref target="RFC4033"/>, when, for example,
-          an RRset is not signed with a valid RRSIG
-          record).</t> </list></t>
+          <t>A query name that is signed with a DNSSEC signature that cannot
+          be validated (described as a "bogus" RRset in Section 5 of <xref
+          target="RFC4033"/>, when, for example, an RRset is not signed with a
+          valid RRSIG record).</t>
+        </list></t>
 
       <t>The responses received from queries to resolve each of these names
-      can be evaluated to infer a trust key state of the resolution environment.
-      The techniques describes in this document rely on (DNSSEC validating)
-      resolvers responding with SERVFAIL to valid answers. Note that a slew of
-      other issues can also cause SERVFAIL responses, and so the sentinel
-      processing may sometimes result in incorrect conclusions.</t>
+      can be evaluated to infer a trust key state of the resolution
+      environment. The techniques describes in this document rely on (DNSSEC
+      validating) resolvers responding with SERVFAIL to valid answers. Note
+      that a slew of other issues can also cause SERVFAIL responses, and so
+      the sentinel processing may sometimes result in incorrect
+      conclusions.</t>
 
       <t>To describe this process of classification, we can classify resolvers
       into four distinct behavior types, for which we will use the labels:
@@ -311,17 +312,19 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
         </figure></t>
 
       <t><list style="hanging">
-          <t hangText="Vnew:">The nominated key is trusted by the resolver.</t>
+          <t hangText="Vnew:">The nominated key is trusted by the
+          resolver.</t>
 
           <t hangText="Vold:">The nominated key is not yet trusted by the
           resolver in its own right.</t>
-          
+
           <t hangText="Vleg:">This type does not give any information about
           the trust anchors.</t>
-          
-          <t hangText="nonV:">The resolver does not perform DNSSEC validation.</t>
+
+          <t hangText="nonV:">The resolver does not perform DNSSEC
+          validation.</t>
         </list></t>
-   </section>
+    </section>
 
     <section title="Sentinel Test Result Considerations">
       <t>The description in the previous section describes a simple situation
@@ -343,17 +346,16 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       <t>If all of the client resolvers are DNSSEC-validating resolvers, but
       some do not support this trusted key mechanism, then the result will be
       indeterminate with respect to trusted key status ("Vleg"). Similarly, if
-      all the client's resolvers support this mechanism, but some trust
-      the key and some have not, then the result is
-      indeterminate ("Vleg").</t>
+      all the client's resolvers support this mechanism, but some trust the
+      key and some have not, then the result is indeterminate ("Vleg").</t>
 
       <t>There is also the common case of a recursive resolver using a
       forwarder.</t>
 
       <t>If the resolver is non-validating, and it has a single forwarder,
       then the resolver will presumably mirror the capabilities of the
-      forwarder target resolver. If this non-validating resolver has
-      multiple forwarders, then the above considerations will apply.</t>
+      forwarder target resolver. If this non-validating resolver has multiple
+      forwarders, then the above considerations will apply.</t>
 
       <t>If the validating resolver has a forwarding configuration, and uses
       the CD bit on all forwarded queries, then this resolver is acting in a
@@ -362,8 +364,8 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       non-validating resolver. Similarly, if all the forwarder targets do not
       apply this trusted key mechanism, the same considerations apply.</t>
 
-      <t>A more complex case is where all of the following conditions
-      hold: <list style="symbols">
+      <t>A more complex case is where all of the following conditions hold:
+      <list style="symbols">
           <t>Both the validating resolver and the forwarder target resolver
           support this trusted key sentinel mechanism</t>
 
@@ -394,33 +396,35 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
     </section>
 
     <section title="Privacy Considerations">
-      <t>The mechanism in this document enables third parties (with
-      either good or bad intentions) to learn something about the
-      security configuration of recursive name servers. That is,
-      someone who can cause an Internet user to make specific DNS
-      queries (e.g. via web-based advertisements or javascript in web
-      pages), can, under certain specific circumstances that includes
-      additional knowledge of the resolvers that are invoked by the
-      user, determine which trust anchors are configured in these
-      resolvers. Without this additional knowledge, the third party
-      can infer the aggregate capabilities of the user's DNS resolution
-      environment, but cannot necessarily infer the trust
-      configuration of any recursive name server.</t>
+      <t>The mechanism in this document enables third parties (with either
+      good or bad intentions) to learn something about the security
+      configuration of recursive name servers. That is, someone who can cause
+      an Internet user to make specific DNS queries (e.g. via web-based
+      advertisements or javascript in web pages), can, under certain specific
+      circumstances that includes additional knowledge of the resolvers that
+      are invoked by the user, determine which trust anchors are configured in
+      these resolvers. Without this additional knowledge, the third party can
+      infer the aggregate capabilities of the user's DNS resolution
+      environment, but cannot necessarily infer the trust configuration of any
+      recursive name server.</t>
     </section>
 
     <section title="Implementation Experience">
-      <t>Petr Spacek implemented early versions of this technique into
-      the Knot resolver, and identified a number of places where it
-      wasn't clear, and provided very helpful text to address
-      this.</t>
+      <t>Petr Spacek implemented early versions of this technique into the
+      Knot resolver, and identified a number of places where it wasn't clear,
+      and provided very helpful text to address this.</t>
 
-      <t>Ondrej Sury of ISC has reported to the DNSOP Working Group in April 2018
-      that this technique was peer-reviewed and merged into BIND master branch with
-      the intent to backport the feature into older release branches.</t> 
+      <t>Ondrej Sury of ISC has reported to the DNSOP Working Group in April
+      2018 that this technique was peer-reviewed and merged into BIND master
+      branch with the intent to backport the feature into older release
+      branches.</t>
 
-      <t>Benno Overeinder of NLnet Labs reported to the DNSOP Working
-      Group in April 2018 an intention to support this technique in
-      Unbound in the near future.</t>
+      <t>Benno Overeinder of NLnet Labs reported to the DNSOP Working Group in
+      April 2018 an intention to support this technique in Unbound in the near
+      future.</t>
+
+      <t>An implementation of the client side of this protocol is available
+      at: http://www.ksk-test.net</t>
     </section>
 
     <section title="IANA Considerations">
@@ -440,8 +444,8 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       Ralph Dolmans, John Dickinson, Steinar Haug, Bob Harold, Wes Hardaker,
       Paul Hoffman, Matt Larson, Jinmei Tatuya, Edward Lewis, George
       Michaelson, Benno Overeinder, Matthew Pounsett, Andreas Schulze, Mukund
-      Sivaraman, Petr Spacek, Andrew Sullivan, Ondrej Sury, Paul Vixie, Duane Wessels and
-      Paul Wouters for their helpful feedback.</t>
+      Sivaraman, Petr Spacek, Job Snijders, Andrew Sullivan, Ondrej Sury, Paul
+      Vixie, Duane Wessels and Paul Wouters for their helpful feedback.</t>
 
       <t>The authors would like to especially call out Paul Hoffman and Duane
       Wessels for providing comments in the form of a pull request.</t>
@@ -453,19 +457,27 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
 
-      <t>From -11 to -12:<list style="symbols">
-          <t>Moved the Walkthrough Example to the end of the document as an appendix.</t>
+      <t>From -12 to -13:<list style="symbols">
+          <t>Merged Paul Hoffmans PR#19, PR#20.</t>
 
-          <t>Incorporated changes as proposed by Ondrej Sury, relating to a consistent use of Key Tag
-          and a reference to the definition of a Bogus RRset.</t>
+          <t>Moved toy ksk-test.net to implmentation section.</t>
+        </list></t>
+
+      <t>From -11 to -12:<list style="symbols">
+          <t>Moved the Walkthrough Example to the end of the document as an
+          appendix.</t>
+
+          <t>Incorporated changes as proposed by Ondrej Sury, relating to a
+          consistent use of Key Tag and a reference to the definition of a
+          Bogus RRset.</t>
 
           <t>Corrected minor typos.</t>
 
           <t>Revised the Privacy Considerations.</t>
 
-          <t>In response to a request from DNSOP Working Group chairs, a section on
-          reported Implementation Experience has been added, based on postings to the DNSOP
-          Working Group mailing list.</t>
+          <t>In response to a request from DNSOP Working Group chairs, a
+          section on reported Implementation Experience has been added, based
+          on postings to the DNSOP Working Group mailing list.</t>
         </list></t>
 
       <t>From -10 to -11:<list style="symbols">
@@ -476,10 +488,12 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
         </list></t>
 
       <t>From -09 to -10:<list style="symbols">
-          <t>Clarified the precondition list to specify that the resolver had performed
-          DNSSEC-validation by setting the AD bit in the response</t>
+          <t>Clarified the precondition list to specify that the resolver had
+          performed DNSSEC-validation by setting the AD bit in the
+          response</t>
 
-          <t>Clarified the language referring to the operation of RFC8145 signalling.</t>
+          <t>Clarified the language referring to the operation of RFC8145
+          signalling.</t>
         </list></t>
 
       <t>From -08 to -09:<list style="symbols">
@@ -596,7 +610,6 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.8145.xml'?>
     </references>
 
-
     <section title="Protocol Walkthrough Example">
       <t>This Appendix provides a non-normative example of how the sentinel
       mechanism could be used, and what each participant does. It is provided
@@ -665,23 +678,24 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       the http://invalid.example.com/1x1.gif resource (the invalid.example.com
       record is bogus, and none of his resolvers will resolve it). He is able
       to fetch both of the other resources - from this he knows (see the logic
-      in the body of this document) that he is using legacy, validating resolvers. The KSK sentinel
-      method cannot provide him with a definitive answer to the question of
-      what root trust anchors this resolver is using.</t>
+      in the body of this document) that he is using legacy, validating
+      resolvers. The KSK sentinel method cannot provide him with a definitive
+      answer to the question of what root trust anchors this resolver is
+      using.</t>
 
       <t>Dave's resolvers implement the sentinel method, and have picked up
       the new KSK. For the same reason as Charlie, he cannot fetch the
       "invalid" resource. His resolver resolves the
       root-key-sentinel-is-ta-02323.example.com name normally (it contacts the
       example.com authoritative servers, etc); as it supports the sentinel
-      mechanism, just before Dave's recursive resolver sends the reply to Dave's
-      stub, it performs the KSK Sentinel check. The QNAME starts
-      with "root-key-sentinel-is-ta-", and the recursive resolver does indeed
-      have a key with the Key Tag of 02323 in its root trust store. This means
-      that that this part of the KSK Sentinel check passes (it is true that
-      Key Tag 02323 is in the trust anchor store), and the recursive resolver
-      replies normally (with the answer provided by the authoritative server).
-      Dave's recursive resolver then resolves the
+      mechanism, just before Dave's recursive resolver sends the reply to
+      Dave's stub, it performs the KSK Sentinel check. The QNAME starts with
+      "root-key-sentinel-is-ta-", and the recursive resolver does indeed have
+      a key with the Key Tag of 02323 in its root trust store. This means that
+      that this part of the KSK Sentinel check passes (it is true that Key Tag
+      02323 is in the trust anchor store), and the recursive resolver replies
+      normally (with the answer provided by the authoritative server). Dave's
+      recursive resolver then resolves the
       root-key-sentinel-not-ta-02323.example.com name. Once again, it performs
       the normal resolution process, but because it implements KSK Sentinel
       (and the QNAME starts with "root-key-sentinel-not-ta-"), just before
@@ -716,15 +730,14 @@ target="RFC4034"/>), a formula similar to a ones-complement checksum. RRSIG RRs 
       three resources, and then analyzes the results of the tests to determine
       what percentage of users will be affected by the KSK rollover event.</t>
 
-      <t>This description is a simplified example - it is not anticipated
-      that Bob, Charlie, Dave and Ed will actually look for the absence or
-      presence of web resources; instead, the webpage that they load would
-      likely contain JavaScript (or similar) which displays the result of the
-      tests, sends the results to Geoff, or both. This sentinel mechanism does
-      not rely on the web: it can equally be used by trying to resolve the
-      names (for example, using the common "dig" command) and checking which
-      result in a SERVFAIL.</t>
+      <t>This description is a simplified example - it is not anticipated that
+      Bob, Charlie, Dave and Ed will actually look for the absence or presence
+      of web resources; instead, the webpage that they load would likely
+      contain JavaScript (or similar) which displays the result of the tests,
+      sends the results to Geoff, or both. This sentinel mechanism does not
+      rely on the web: it can equally be used by trying to resolve the names
+      (for example, using the common "dig" command) and checking which result
+      in a SERVFAIL.</t>
     </section>
-
   </back>
 </rfc>
