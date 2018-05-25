@@ -109,12 +109,20 @@
       used in this protocol would be able to validate using the root KSK
       indicated by the special names. The protocol uses the DNS SERVFAIL
       response code (RCODE 2) for this purpose because that is the response
-      code that is returned by resolvers when DNSSEC validation fails. If a
+      code that is returned by resolvers when DNSSEC validation fails.</t>
+      
+      <t>If a
       browser or operating system has multiple resolvers configured, and those
       resolvers have different properties (for example, one performs DNSSEC
       validation and one does not), the sentinel mechanism might search among
       the different resolvers, or might not, depending on how the browser or
-      operating system is configured.</t>
+      operating system is configured. If the resolvers don't all have the
+      same setup (such as if some validate but others do not, or if those
+      that validate don't all have the same root KSKs trusted), the
+      results of the sentinel test described in this document may be
+      indeterminate. For example, running the same test twice could get
+      different results if the different resolvers are queried in a different
+      order.</t>
 
       <t>Note that the sentinel mechanism described here measures a very
       different (and likely more useful) metric than <xref target="RFC8145"/>.
@@ -130,7 +138,7 @@
       </section>
     </section>
 
-    <section title="Sentinel Mechanism in Resolvers">
+    <section title="Sentinel Mechanism in Resolvers" anchor="sent_mech_in_resolvers">
       <t>DNSSEC-Validating resolvers that implement this mechanism MUST
       perform validation of responses in accordance with the DNSSEC response
       validation specification <xref target="RFC4035"/>.</t>
@@ -145,7 +153,7 @@
       section 5.3), but zero-padded to five digits (for example, a Key Tag
       value of 42 would be represented in the label as 00042).</t>
 
-      <t>These labels trigger special processing in the resolver when
+      <t>These labels trigger special processing in the validating DNS resolver when
       responses from authoritative servers are received. Labels containing
       "root-key-sentinel-is-ta-&lt;key-tag&gt;" is used to answer the question
       "Is this the Key Tag of a key which the validating DNS resolver is
@@ -220,12 +228,20 @@
       resolution system, and, in particular, whether or not they are using one
       or more validating DNS resolvers that use a particular trust anchor for
       the root zone.</t>
+      
+      <t>Note that while all of <xref target="sent_mech_in_resolvers"/> is
+      about how single resolvers process answers to DNS queries, this
+      entire section is about DNS resolution systems, that is, the
+      set of resolvers that a user might have configured at one time.
+      That set might be a single resolver, or it might be multiple resolvers.
+      <xref target="test_cons"/> discusses difficulties in getting
+      predictable results for this protocol from DNS resolution systems.</t>
 
       <t>The critical aspect of the DNS names used in this mechanism is that
       they contain the specified label for either the positive and negative
       test as the left-most label in the query name.</t>
 
-      <t>The sentinel detection process uses a test with three query
+      <t>The sentinel detection process test a DNS resolution systems with three query
       names:</t>
 
       <t><list style="symbols">
@@ -248,64 +264,69 @@
         </list></t>
 
       <t>The responses received from queries to resolve each of these names
-      can be evaluated to infer a trust key state of the resolution
+      can be evaluated to infer a trust key state of the DNS resolution
       environment. The techniques describes in this document rely on (DNSSEC
       validating) resolvers responding with SERVFAIL to valid answers. Note
       that a slew of other issues can also cause SERVFAIL responses, and so
-      the sentinel processing may sometimes result in incorrect
+      the sentinel processing may sometimes result in incorrect or indeterminate
       conclusions.</t>
 
-      <t>To describe this process of classification, we can classify resolvers
+      <t>To describe this process of classification, we can classify DNS resolution systems
       into four distinct behavior types, for which we will use the labels:
-      "Vnew", "Vold", "Vleg", and "nonV". These labels correspond to resolver
+      "Vnew", "Vold", "Vind", and "nonV". These labels correspond to resolver
       behaviour types as follows:</t>
 
       <t><list style="hanging">
-          <t hangText="Vnew:">A DNSSEC-Validating resolver that is configured
+          <t hangText="Vnew:">A DNSSEC validating resolver that is configured
           to implement this mechanism has loaded the nominated key into its
           local trusted key store will respond with an A or AAAA RRset
           response for "root-key-sentinel-is-ta" queries, SERVFAIL for
-          "root-key-sentinel-not-ta" queries and SERVFAIL for the invalidly
-          signed name queries.</t>
+          "root-key-sentinel-not-ta" queries and SERVFAIL for the
+          signed name queries that return "bogus".</t>
 
-          <t hangText="Vold:">A DNSSEC-Validating resolver that is configured
+          <t hangText="Vold:">A DNSSEC validating resolver that is configured
           to implement this mechanism that has not loaded the nominated key
           into its local trusted key store will respond with an SERVFAIL for
           "root-key-sentinel-is-ta" queries, an A or AAAA RRset response for
-          "root-key-sentinel-not-ta" queries and SERVFAIL for the invalidly
-          signed name queries.</t>
+          "root-key-sentinel-not-ta" queries and SERVFAIL for the
+          signed name queries that return "bogus" validation status.</t>
 
-          <t hangText="Vleg:">A DNSSEC-Validating resolver that does not
+          <t hangText="Vind:">A DNSSEC validating resolver that does not
           implement this mechanism will respond with an A or AAAA RRset
           response for "root-key-sentinel-is-ta", an A or AAAA RRset response
-          for "root-key-sentinel-not-ta" and SERVFAIL for the invalid
-          name.</t>
+          for "root-key-sentinel-not-ta" and SERVFAIL for the
+          name that returns "bogus" validation status.
+          This does not give any information about the trust anchors.</t>
 
-          <t hangText="nonV:">A non-DNSSEC-Validating resolver will respond
+          <t hangText="nonV:">A non-DNSSEC-validating resolver will respond
           with an A or AAAA record response for "root-key-sentinel-is-ta", an
           A record response for "root-key-sentinel-not-ta" and an A or AAAA
-          RRset response for the invalid name.</t>
+          RRset response for the name that returns "bogus" validation
+          status.</t>
         </list></t>
 
-      <t>Please note that SERVFAIL might be cached according to <xref
-      target="RFC2308"/> section 7 for up to 5 minutes and a positive answer
+      <t>Please note that SERVFAIL might be cached according to Section 7 of <xref
+      target="RFC2308"/> for up to 5 minutes and a positive answer
       for up to its TTL.</t>
 
       <t>Given the clear delineation amongst these three cases, if a client
-      directs these three queries to a simple resolver, the variation in
+      directs these three queries to a single resolver, the variation in
       response to the three queries should allow the client to determine the
       category of the resolver, and if it supports this mechanism, whether or
-      not it has a particular key in its trust anchor store.</t>
+      not it has a particular key in its trust anchor store. If a client
+      directs these three queries to a DNS resolution system where all
+      of the resolvers have the same properties, the results will
+      be the same.</t>
 
       <t><figure>
           <artwork><![CDATA[
                                  Query
                    +----------+-----------+------------+
-                   |  is-ta   |  not-ta   |  invalid   |
+                   |  is-ta   |  not-ta   |   bogus    |
            +-------+----------+-----------+------------+
            | Vnew  |    A     |  SERVFAIL |  SERVFAIL  |
            | Vold  | SERVFAIL |      A    |  SERVFAIL  |
-     Type  | Vleg  |    A     |      A    |  SERVFAIL  |
+     Type  | Vind  |    A     |      A    |  SERVFAIL  |
            | nonV  |    A     |      A    |     A      |
            +-------+----------+-----------+------------+
   ]]></artwork>
@@ -318,7 +339,7 @@
           <t hangText="Vold:">The nominated key is not yet trusted by the
           resolver in its own right.</t>
 
-          <t hangText="Vleg:">This type does not give any information about
+          <t hangText="Vind:">This type does not give any information about
           the trust anchors.</t>
 
           <t hangText="nonV:">The resolver does not perform DNSSEC
@@ -326,7 +347,7 @@
         </list></t>
     </section>
 
-    <section title="Sentinel Test Result Considerations">
+    <section title="Sentinel Test Result Considerations" anchor="test_cons">
       <t>The description in the previous section describes a simple situation
       where the test queries were being passed to a single recursive resolver
       that directly queried authoritative name servers.</t>
@@ -344,10 +365,12 @@
       DNS environment ("nonV"), which is effectively the case.</t>
 
       <t>If all of the client resolvers are DNSSEC-validating resolvers, but
-      some do not support this trusted key mechanism, then the result will be
-      indeterminate with respect to trusted key status ("Vleg"). Similarly, if
+      some do not support this trusted key mechanism, then the result will appear as
+      indeterminate with respect to trusted key status ("Vind"). Similarly, if
       all the client's resolvers support this mechanism, but some trust the
-      key and some have not, then the result is indeterminate ("Vleg").</t>
+      key and some have not, then the result is indeterminate ("Vind").</t>
+      
+      <section title="Forwarders">
 
       <t>There is also the common case of a recursive resolver using a
       forwarder.</t>
@@ -374,9 +397,10 @@
           <t>The trusted key state differs between the forwarding resolver and
           the forwarder target resolver</t>
         </list> In such a case, either the outcome is indeterminate validating
-      ("Vleg"), or a case of mixed signals (SERVFAIL in all three responses),
+      ("Vind"), or a case of mixed signals (SERVFAIL in all three responses),
       which is similarly an indeterminate response with respect to the trusted
       key state.</t>
+    </section>
     </section>
 
     <section title="Security Considerations">
@@ -640,7 +664,7 @@
       <t>Geoff sets an authoritative DNS server for example.com, and also a
       webserver (www.example.com). He adds three address records to
       example.com: <list>
-          <t>invalid.example.com. IN AAAA 2001:db8::1</t>
+          <t>bogus.example.com. IN AAAA 2001:db8::1</t>
 
           <t>root-key-sentinel-is-ta-02323.example.com. IN AAAA
           2001:db8::1</t>
@@ -655,12 +679,12 @@
       addresses.</t>
 
       <t>Geoff then DNSSEC signs the example.com zone, and intentionally makes
-      the invalid.example.com record invalid/bogus (for example, by editing
+      the bogus.example.com record have bogus validation status (for example, by editing
       the signed zone and entering garbage for the signature). Geoff also
       configures his webserver to listen on 2001:db8::1 and serve a resource
       (for example, a 1x1 GIF, 1x1.gif) for all of these names. The webserver
       also serves a webpage (www.example.com) which contains links to these 3
-      resources (http://invalid.example.com/1x1.gif,
+      resources (http://bogus.example.com/1x1.gif,
       http://root-key-sentinel-is-ta-02323.example.com/1x1.gif,
       http://root-key-sentinel-not-ta-02323.example.com/1x1.gif).</t>
 
@@ -670,12 +694,12 @@
       removed.</t>
 
       <t>Bob is not using a validating resolver. This means that he will be
-      able to resolve invalid.example.com (and fetch the 1x1 GIF) - this tells
+      able to resolve bogus.example.com (and fetch the 1x1 GIF) - this tells
       him that the KSK roll does not affect him, and so he will be OK.</t>
 
       <t>Charlie's resolvers are validating, but they have not been upgraded
       to support the KSK sentinel mechanism. Charlie will not be able to fetch
-      the http://invalid.example.com/1x1.gif resource (the invalid.example.com
+      the http://bogus.example.com/1x1.gif resource (the bogus.example.com
       record is bogus, and none of his resolvers will resolve it). He is able
       to fetch both of the other resources - from this he knows (see the logic
       in the body of this document) that he is using legacy, validating
@@ -685,7 +709,7 @@
 
       <t>Dave's resolvers implement the sentinel method, and have picked up
       the new KSK. For the same reason as Charlie, he cannot fetch the
-      "invalid" resource. His resolver resolves the
+      "bogus" resource. His resolver resolves the
       root-key-sentinel-is-ta-02323.example.com name normally (it contacts the
       example.com authoritative servers, etc); as it supports the sentinel
       mechanism, just before Dave's recursive resolver sends the reply to
@@ -705,12 +729,12 @@
       from the authoritative server - instead, it replies with a SERVFAIL
       (note that replying with SERVFAIL instead of the original answer is the
       only mechanism that KSK Sentinel uses). This means that Dave cannot
-      fetch "invalid", he can fetch "root-key-sentinel-is-ta-02323", but he
+      fetch "bogus", he can fetch "root-key-sentinel-is-ta-02323", but he
       cannot fetch "root-key-sentinel-not-ta-02323". From this, Dave knows
       that he is behind an upgraded, validating resolver, which has
       successfully installed the new, 02323 KSK.</t>
 
-      <t>Just like Charlie and Dave, Ed cannot fetch the "invalid" record.
+      <t>Just like Charlie and Dave, Ed cannot fetch the "bogus" record.
       This tells him that his resolvers are validating. When his (upgraded)
       resolver performs the KSK Sentinel check for
       "root-key-sentinel-is-ta-02323", it does *not* have the (new, 02323) KSK
@@ -719,7 +743,7 @@
       performs the same check for root-key-sentinel-not-ta-02323.example.com;
       as it does not have the 02323 KSK, it is true that this is not a trust
       anchor for it, and so it replies normally. This means that Ed cannot
-      fetch the "invalid" resource, he also cannot fetch the
+      fetch the "bogus" resource, he also cannot fetch the
       "root-key-sentinel-is-ta-02323" resource, but he can fetch the
       "root-key-sentinel-not-ta-02323" resource. This tells Ed that his
       resolvers have not installed the new KSK.</t>
