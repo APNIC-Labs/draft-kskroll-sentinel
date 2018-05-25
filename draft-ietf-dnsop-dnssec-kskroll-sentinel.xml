@@ -272,9 +272,9 @@
       conclusions.</t>
 
       <t>To describe this process of classification, we can classify DNS resolution systems
-      into four distinct behavior types, for which we will use the labels:
-      "Vnew", "Vold", "Vind", and "nonV". These labels correspond to resolver
-      behaviour types as follows:</t>
+      into five distinct behavior types, for which we will use the labels:
+      "Vnew", "Vold", "Vind", "nonV", and "other". These labels correspond to resolver
+      system behaviour types as follows:</t>
 
       <t><list style="hanging">
           <t hangText="Vnew:">A DNSSEC validating resolver that is configured
@@ -303,6 +303,13 @@
           A record response for "root-key-sentinel-not-ta" and an A or AAAA
           RRset response for the name that returns "bogus" validation
           status.</t>
+          
+          <t hangText="other:">When the resolvers in a resolver system do not
+          all have the same configuration (such as if some perform DNSSEC
+          validation while others do not, or if some have different root
+          KSKs trusted), the result can be different than one of the other
+          four in this list. In such a case, no determination about the
+          resolver system can be made.</t>
         </list></t>
 
       <t>Please note that SERVFAIL might be cached according to Section 7 of <xref
@@ -316,7 +323,9 @@
       not it has a particular key in its trust anchor store. If a client
       directs these three queries to a DNS resolution system where all
       of the resolvers have the same properties, the results will
-      be the same.</t>
+      be the same. If a client directs these three queries to a DNS
+      resolution system where the resolvers have different propertied,
+      the results cannot be determined.</t>
 
       <t><figure>
           <artwork><![CDATA[
@@ -328,22 +337,26 @@
            | Vold  | SERVFAIL |      A    |  SERVFAIL  |
      Type  | Vind  |    A     |      A    |  SERVFAIL  |
            | nonV  |    A     |      A    |     A      |
+           | other |    *     |      *    |     *      |
            +-------+----------+-----------+------------+
   ]]></artwork>
         </figure></t>
 
       <t><list style="hanging">
           <t hangText="Vnew:">The nominated key is trusted by the
-          resolver.</t>
+          resolver system.</t>
 
           <t hangText="Vold:">The nominated key is not yet trusted by the
-          resolver in its own right.</t>
+          resolver system in its own right.</t>
 
           <t hangText="Vind:">This type does not give any information about
-          the trust anchors.</t>
+          the trust anchors of the resolver system.</t>
 
-          <t hangText="nonV:">The resolver does not perform DNSSEC
+          <t hangText="nonV:">The resolver system does not perform DNSSEC
           validation.</t>
+
+          <t hangText="nonV:">The properties of the resolver system cannot
+          be analyzed by this protocol.</t>
         </list></t>
     </section>
 
@@ -397,8 +410,8 @@
           <t>The trusted key state differs between the forwarding resolver and
           the forwarder target resolver</t>
         </list> In such a case, either the outcome is indeterminate validating
-      ("Vind"), or a case of mixed signals (SERVFAIL in all three responses),
-      which is similarly an indeterminate response with respect to the trusted
+      ("Vind"), or a case of mixed signals such as SERVFAIL in all three responses,
+      ("other") which is similarly an indeterminate response with respect to the trusted
       key state.</t>
     </section>
     </section>
