@@ -231,7 +231,7 @@
       
       <t>Note that while all of <xref target="sent_mech_in_resolvers"/> is
       about how single resolvers process answers to DNS queries, this
-      entire section is about DNS resolution systems, that is, the
+      section is about DNS resolution systems, that is, the
       set of resolvers that a user might have configured at one time.
       That set might be a single resolver, or it might be multiple resolvers.
       <xref target="test_cons"/> discusses difficulties in getting
@@ -277,28 +277,32 @@
       system behaviour types as follows:</t>
 
       <t><list style="hanging">
-          <t hangText="Vnew:">A DNSSEC validating resolver that is configured
-          to implement this mechanism has loaded the nominated key into its
-          local trusted key store will respond with an A or AAAA RRset
+          <t hangText="Vnew:">A resolution system consisting of all
+          DNSSEC validating resolvers that are configured
+          to implement this mechanism that has loaded the nominated key into their
+          local trusted key stores will respond with an A or AAAA RRset
           response for "root-key-sentinel-is-ta" queries, SERVFAIL for
           "root-key-sentinel-not-ta" queries and SERVFAIL for the
           signed name queries that return "bogus".</t>
 
-          <t hangText="Vold:">A DNSSEC validating resolver that is configured
+          <t hangText="Vold:">A resolution system consisting of all
+          DNSSEC validating resolvers that are configured
           to implement this mechanism that has not loaded the nominated key
-          into its local trusted key store will respond with an SERVFAIL for
+          into their local trusted key stores will respond with an SERVFAIL for
           "root-key-sentinel-is-ta" queries, an A or AAAA RRset response for
           "root-key-sentinel-not-ta" queries and SERVFAIL for the
           signed name queries that return "bogus" validation status.</t>
 
-          <t hangText="Vind:">A DNSSEC validating resolver that does not
+          <t hangText="Vind:">A resolution system consisting of all
+          DNSSEC validating resolvers that do not
           implement this mechanism will respond with an A or AAAA RRset
           response for "root-key-sentinel-is-ta", an A or AAAA RRset response
           for "root-key-sentinel-not-ta" and SERVFAIL for the
           name that returns "bogus" validation status.
           This does not give any information about the trust anchors.</t>
 
-          <t hangText="nonV:">A non-DNSSEC-validating resolver will respond
+          <t hangText="nonV:">A resolution system consisting of all
+          non-DNSSEC-validating resolvers will respond
           with an A or AAAA record response for "root-key-sentinel-is-ta", an
           A record response for "root-key-sentinel-not-ta" and an A or AAAA
           RRset response for the name that returns "bogus" validation
@@ -324,8 +328,8 @@
       directs these three queries to a DNS resolution system where all
       of the resolvers have the same properties, the results will
       be the same. If a client directs these three queries to a DNS
-      resolution system where the resolvers have different propertied,
-      the results cannot be determined.</t>
+      resolution system where the resolvers have different properties,
+      the results cannot be reliably determined.</t>
 
       <t><figure>
           <artwork><![CDATA[
@@ -650,7 +654,9 @@
     <section title="Protocol Walkthrough Example">
       <t>This Appendix provides a non-normative example of how the sentinel
       mechanism could be used, and what each participant does. It is provided
-      in a conversational tone to be easier to follow.</t>
+      in a conversational tone to be easier to follow.
+      The examples here all assume that each person has just one resolver,
+      or a system of resolvers that have the same properties.</t>
 
       <t>Alice is in charge of the DNS root KSK (Key Signing Key), and would
       like to roll / replace the key with a new one. She publishes the new
