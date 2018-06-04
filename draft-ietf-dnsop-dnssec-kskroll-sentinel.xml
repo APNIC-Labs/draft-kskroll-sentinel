@@ -441,12 +441,10 @@
         <t>The test scenario is explicitly restricted to that of the
         KSK environment where a current active KSK (called
         "KSK-current") is to be replaced with a new KSK
-        (called "KSK-new").</t>
-
-        <t>The test is intended to be undertaken in the
-        period between the original introduction of KSK-new into the
-        root zone and the point of the KSK roll when KSK-current is
-        removed from the root zone.</t>
+        (called "KSK-new").
+        The test is designed to be run between when KSK-new is
+        introduced into the root zone and when the root zone is
+        signed with KSK-new.</t>
 
         <t>The objective of the test is to determine if the user will
         be negatively impacted by the KSK roll. A "negative impact"
