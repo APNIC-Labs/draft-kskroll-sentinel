@@ -412,7 +412,7 @@
 
     </section>
 
-    <section title="Sentinel Tests for a set of Resolvers" anchor="resolver_sets">
+    <section title="Sentinel Tests for a Set of Resolvers" anchor="resolver_sets">
       <t>The description in <xref target="single_resolver"/> describes
       a trust anchor test that can be used in the simple situation
       where the test queries were being passed to a single recursive
