@@ -39,7 +39,7 @@
       </address>
     </author>
 
-    <date day="1" month="June" year="2018"/>
+    <date day="4" month="June" year="2018"/>
 
     <area>Internet</area>
 
@@ -78,23 +78,28 @@
       whose value is equal to the Key Tag of the DNSKEY RR that validates the
       signature.</t>
 
-      <t>This document specifies how validating resolvers can respond to
-      certain queries in a manner that allows a querier to deduce whether a
-      particular key for the root has been loaded into that resolver's trusted
-      key store. In particular, this response mechanism can be used to
-      determine whether a certain root zone KSK is ready to be used as a
-      trusted key, within the context of a planned root zone KSK key roll, by
-      this resolver.</t>
+      <t>This document specifies how security-aware DNS resolvers that
+      perform validation of their responses can respond to certain
+      queries in a manner that allows an agent performing the queries
+      to deduce whether a particular key for the root has been loaded
+      into that resolver's trusted key store. This document also
+      describes a procedure where a collection of resolvers can be
+      tested to determine if at least one of these resolvers has
+      loaded a given key into its trusted key store. These tests can
+      be used to determine whether a certain root zone KSK is ready to
+      be used as a trusted key, within the context of a planned root
+      zone KSK key roll.</t>
 
       <t>There are two primary use cases for this mechanism:</t>
 
       <t><list style="symbols">
-          <t>Users want to know whether the resolvers they use are ready for
-          an upcoming root KSK rollover</t>
+          <t>Users may wish to ascertain whether their DNS resolution
+          environment resolvers is ready for an upcoming root KSK
+          rollover.</t>
 
-          <t>Researchers want to perform Internet-wide studies about the
-          percentage of users who will be ready for an upcoming root KSK
-          rollover</t>
+          <t>Researchers want to perform Internet-wide studies about
+          the proportion of users who will be negatively impacted an
+          upcoming root KSK rollover.</t>
         </list></t>
 
       <t>The mechanism described in this document meets both of these use
@@ -104,12 +109,14 @@
       this mechanism by default, allowing for local configuration directives
       to disable this mechanism if desired.</t>
 
-      <t>The sentinel test described in this document determines whether a
-      user's browser or operating system looking up the special names that are
-      used in this protocol would be able to validate using the root KSK
-      indicated by the special names. The protocol uses the DNS SERVFAIL
-      response code (RCODE 2) for this purpose because that is the response
-      code that is returned by resolvers when DNSSEC validation fails.</t>
+      <t>The KSK sentinel tests described in this document use a test
+      comprising of a set of DNS queries to domain names that have
+      special values for the left-most label. The test relies on
+      recursive resolvers supporting a mechanism that recognises this
+      special name pattern in queries, and under certain defined
+      circumstances will return a DNS SERVFAIL response code (RCODE
+      2), mimicing the response code that is returned by
+      security-aware resolvers when DNSSEC validation fails.</t>
       
       <t>If a browser or operating system is configured with multiple
       resolvers, and those resolvers have different properties (for
@@ -117,12 +124,13 @@
       sentinel test described in this document can still be used, but
       it makes a number of assumptions about DNS resolution behaviour
       that may not necessarily hold in all environments. If these
-      assumptions do not hold (such as, for example, requring the stub
-      resolver to query the next recursive resolver in the locally
-      configured set upon receipt of a SERVFAIL response code) then
-      this test may produce indeterminate or onconsistent results. In
-      some cases where these assumptions do not hold, running the same
-      test twice in succession may generate different results.</t>
+      assumptions do not hold (such as, for example, requiring the
+      stub resolver to query the next recursive resolver in the
+      locally configured set upon receipt of a SERVFAIL response code)
+      then this test may produce indeterminate or inconsistent
+      results. In some cases where these assumptions do not hold,
+      repeating the same test query set may generate different
+      results.</t>
 
       <t>Note that the sentinel mechanism described here measures a
       very different (and likely more useful) metric than <xref
@@ -239,7 +247,7 @@
       is that they contain the specified label for either the positive
       and negative test as the left-most label in the query name.</t>
 
-      <t>The sentinel detection procedure test a DNS resolver using
+      <t>The sentinel detection procedure can test a DNS resolver using
       three queries:</t>
 
       <t><list style="symbols">
@@ -461,6 +469,9 @@
         results of the test will be indeterminate.</t>
 
         <t><list style="symbols">
+          <t>When a recursive resolver returns SERVFAIL the user's
+          stub resolver will re-query using the next resolver in the
+          locally configured resolver set.</t>
 
           <t>When the user's stub resolver passes a query to a
           resolver in the configured resolver set, it will get a
@@ -472,11 +483,16 @@
  
           <t>All DNSSEC-validating resolvers have KSK-current in their
           local trust anchor cache.</t>
-
-          <t>When a recusrive resolver returns SERVFAIL the user's
-          stub resolver will re-query using the next resolver in the
-          locally configured resolver set.</t>
         </list></t>
+
+        <t>There is no current published measurement data that
+        indicates to what extent the first two assumptions listed here
+        are not valid, and how many end users may be impacted by
+        this. In particular, the first assumption, that a consistent
+        SERFAIL response will cause the local stub DNS resolution
+        environment to query all of its configured recursive resolvers
+        before concluding that the name cannot be resolved, is a very
+        critical assumption for this test.</t>
 
       </section>
 
@@ -508,7 +524,7 @@
 
         <t>The responses received from queries to resolve each of
         these names can be evaluated to infer a trust key state of the
-        user's DNS resolution envirionment.</t>
+        user's DNS resolution environment.</t>
 
         <t>We will describe the responses to these queries using a
         simplified notation. Each query will either result in a
@@ -539,13 +555,13 @@
           behaviour of the collection of resolvers during the KSK roll
           cannot be reliably determined.</t>
 
-          <t hangText="(S S A)"> This case imnplies that all of the
+          <t hangText="(S S A)"> This case implies that all of the
           resolvers in the set perform DNSSEC-validation, all of the
           resolvers are aware of the sentinel mechanism, and at least
           one resolver has loaded KSK-new as a local trust anchor. The
           user will not be impacted by the KSK roll.</t>
 
-          <t hangText="(S S S)"> This case imnplies that all of the
+          <t hangText="(S S S)"> This case implies that all of the
           resolvers in the set perform DNSSEC-validation, all of the
           resolvers are aware of the sentinel mechanism, and none of
           the resolvers has loaded KSK-new as a local trust
@@ -571,7 +587,7 @@
       <t>The mechanism does not require any further significant processing of
       DNS responses, and queries of the form described in this document do not
       impose any additional load that could be exploited in an attack over the
-      the normal DNSSEC validation processing load.</t>
+      normal DNSSEC validation processing load.</t>
     </section>
 
     <section title="Privacy Considerations">
