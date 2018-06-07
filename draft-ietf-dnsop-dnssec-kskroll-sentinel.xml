@@ -455,7 +455,7 @@
         situation, it is anticipated that once the KSK is rolled the
         entire set of the user's resolvers will not be able to
         validate the contents of the root zone and the user is likely
-        to loose DNS service as a result of this inability to perform
+        to lose DNS service as a result of this inability to perform
         successful DNSSEC validation.</t>
 
       </section>
@@ -498,7 +498,7 @@
 
       <section title="Test Procedure">
 
-        <t>The sentinel detection process test a DNS resolution
+        <t>The sentinel detection process tests a DNS resolution
         environment with three query names:</t>
 
         <t><list style="symbols">
@@ -649,6 +649,10 @@
 
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
+      
+      <t>From -13 to -14:<list style="symbols">
+          <t>Addressed nits from Bob Harold - https://mailarchive.ietf.org/arch/msg/dnsop/j4Serw0z24o470AnlD8ISo8o9k4 </t>
+          </list></t>
 
       <t>From -12 to -13:<list style="symbols">
           <t>Merged Paul Hoffmans PR#19, PR#20.</t>
