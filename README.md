@@ -7,9 +7,9 @@
 DNSOP                                                          G. Huston
 Internet-Draft                                                  J. Damas
 Intended status: Standards Track                                   APNIC
-Expires: December 6, 2018                                      W. Kumari
+Expires: December 13, 2018                                     W. Kumari
                                                                   Google
-                                                            June 4, 2018
+                                                           June 11, 2018
 
 
               A Root Key Trust Anchor Sentinel for DNSSEC
@@ -48,14 +48,14 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 6, 2018.
+   This Internet-Draft will expire on December 13, 2018.
 
 
 
 
 
 
-Huston, et al.          Expires December 6, 2018                [Page 1]
+Huston, et al.          Expires December 13, 2018               [Page 1]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -111,7 +111,7 @@ Table of Contents
 
 
 
-Huston, et al.          Expires December 6, 2018                [Page 2]
+Huston, et al.          Expires December 13, 2018               [Page 2]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -167,7 +167,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018                [Page 3]
+Huston, et al.          Expires December 13, 2018               [Page 3]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -223,7 +223,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018                [Page 4]
+Huston, et al.          Expires December 13, 2018               [Page 4]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -279,7 +279,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018                [Page 5]
+Huston, et al.          Expires December 13, 2018               [Page 5]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -335,7 +335,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018                [Page 6]
+Huston, et al.          Expires December 13, 2018               [Page 6]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -391,7 +391,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018                [Page 7]
+Huston, et al.          Expires December 13, 2018               [Page 7]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -447,7 +447,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018                [Page 8]
+Huston, et al.          Expires December 13, 2018               [Page 8]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -503,7 +503,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018                [Page 9]
+Huston, et al.          Expires December 13, 2018               [Page 9]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -559,7 +559,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 10]
+Huston, et al.          Expires December 13, 2018              [Page 10]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -615,7 +615,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 11]
+Huston, et al.          Expires December 13, 2018              [Page 11]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -671,7 +671,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 12]
+Huston, et al.          Expires December 13, 2018              [Page 12]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -727,7 +727,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 13]
+Huston, et al.          Expires December 13, 2018              [Page 13]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -783,7 +783,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 14]
+Huston, et al.          Expires December 13, 2018              [Page 14]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -839,7 +839,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 15]
+Huston, et al.          Expires December 13, 2018              [Page 15]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -895,7 +895,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 16]
+Huston, et al.          Expires December 13, 2018              [Page 16]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -951,7 +951,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 17]
+Huston, et al.          Expires December 13, 2018              [Page 17]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -1007,7 +1007,7 @@ Appendix A.  Protocol Walkthrough Example
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 18]
+Huston, et al.          Expires December 13, 2018              [Page 18]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -1063,7 +1063,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 19]
+Huston, et al.          Expires December 13, 2018              [Page 19]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -1119,7 +1119,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 20]
+Huston, et al.          Expires December 13, 2018              [Page 20]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
@@ -1175,5 +1175,5 @@ Authors' Addresses
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 21]
+Huston, et al.          Expires December 13, 2018              [Page 21]
 ```
