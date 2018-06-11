@@ -13,7 +13,7 @@ Expires: December 6, 2018                                      W. Kumari
 
 
               A Root Key Trust Anchor Sentinel for DNSSEC
-                  draft-ietf-dnsop-kskroll-sentinel-13
+                  draft-ietf-dnsop-kskroll-sentinel-14
 
 Abstract
 
@@ -93,12 +93,12 @@ Table of Contents
    7.  Implementation Experience . . . . . . . . . . . . . . . . . .  12
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
    9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  13
-   10. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  13
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  16
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  17
-   Appendix A.  Protocol Walkthrough Example . . . . . . . . . . . .  17
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  20
+   10. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  14
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  17
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  18
+   Appendix A.  Protocol Walkthrough Example . . . . . . . . . . . .  18
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
 
 1.  Introduction
 
@@ -653,21 +653,21 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 7.  Implementation Experience
 
-   Petr Spacek implemented early versions of this technique into the
-   Knot resolver, and identified a number of places where it wasn't
-   clear, and provided very helpful text to address this.
+   [ RFC Editor: Please remove before publication.  As this section will
+   be removed, it is more conversational than would appear in a
+   published doc. ]
 
-   Ondrej Sury of ISC has reported to the DNSOP Working Group in April
-   2018 that this technique was peer-reviewed and merged into BIND
-   master branch with the intent to backport the feature into older
-   release branches.
+   List of known resolver implementations (alphabetical):
 
-   Benno Overeinder of NLnet Labs reported to the DNSOP Working Group in
-   April 2018 an intention to support this technique in Unbound in the
-   near future.
+   BIND   Ondrej Sury of ISC reported to the DNSOP Working Group in
+      April 2018 that this technique was peer-reviewed and merged into
+      BIND master branch with the intent to backport the feature into
+      older release branches.  The merge request:
+      https://gitlab.isc.org/isc-projects/bind9/merge_requests/123
+      Information on configuring this can be found in the BIND 9.13.0
+      Administrator Reference Manual (ARM), available at
+      https://ftp.isc.org/isc/bind9/9.13.0/doc/arm/Bv9ARM.pdf
 
-   An implementation of the client side of this protocol is available
-   at: http://www.ksk-test.net
 
 
 
@@ -675,6 +675,37 @@ Huston, et al.          Expires December 6, 2018               [Page 12]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
+
+   Knot resolver  Petr Spacek implemented early versions of this
+      technique into the Knot resolver, identified a number of places
+      where it wasn't clear, and provided very helpful text to address
+      these issues and make the document mode clear.  Petr also
+      identified an embarrassingly large number of typos (and similar)
+      in the ksk-test setup.  More information is at http://knot-
+      resolver.readthedocs.io/en/stable/modules.html#sentinel-for-
+      detecting-trusted-keys
+
+   Unbound  Benno Overeinder of NLnet Labs reported to the DNSOP Working
+      Group in April 2018 an intention to support this technique in
+      Unbound in the near future.  This is now implemented in Unbound
+      version 1.7.1, available from http://unbound.nlnetlabs.nl/
+      download.html . Configuration information is at
+      http://unbound.nlnetlabs.nl/documentation/unbound.conf.html
+
+   A (partial) list of "client" / user side implementations (the author
+   was keeping a more complete list of implementations, but has
+   misplaced it - apologies, I'm happy to re-add them if you send me a
+   note.):
+
+   http://www.ksk-test.net  An Javascript implementation of the client
+      side of this protocol is available at: http://www.ksk-test.net
+
+   http://test.kskroll.dnssec.lab.nic.cl/  Hugo Salgado-Hernandez has
+      created an implementation at
+      http://test.kskroll.dnssec.lab.nic.cl/
+
+   http://sentinel.research.icann.org/  The code for this implementation
+      is published at https://github.com/paulehoffman/sentinel-testbed
 
 8.  IANA Considerations
 
@@ -693,10 +724,18 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
    Andrews, Richard Barnes, Ray Bellis, Stephane Bortzmeyer, David
    Conrad, Ralph Dolmans, John Dickinson, Steinar Haug, Bob Harold, Wes
    Hardaker, Paul Hoffman, Matt Larson, Jinmei Tatuya, Edward Lewis,
-   George Michaelson, Benno Overeinder, Matthew Pounsett, Andreas
-   Schulze, Mukund Sivaraman, Petr Spacek, Job Snijders, Andrew
-   Sullivan, Ondrej Sury, Paul Vixie, Duane Wessels and Paul Wouters for
-   their helpful feedback.
+
+
+
+Huston, et al.          Expires December 6, 2018               [Page 13]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
+
+
+   George Michaelson, Benno Overeinder, Matthew Pounsett, Hugo Salgado-
+   Hernandez, Andreas Schulze, Mukund Sivaraman, Petr Spacek, Job
+   Snijders, Andrew Sullivan, Ondrej Sury, Paul Vixie, Duane Wessels and
+   Paul Wouters for their helpful feedback.
 
    The authors would like to especially call out Paul Hoffman and Duane
    Wessels for providing comments in the form of a pull request.
@@ -714,25 +753,40 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
       https://mailarchive.ietf.org/arch/msg/dnsop/
       j4Serw0z24o470AnlD8ISo8o9k4
 
+   o  Formatting changes (and a bit more text) in the implementation
+      section.
+
+   o  Closes PR #21: Clarify indeterminate and resolution systems,
+
+   o  Closes PR #22: Updates to -13 describing the test procedure for a
+      set of resolvers
+
+   o  Closes PR #23: Fix sundry typos,
+
+   o  Closes PR #24: Editorial and clarifications to the new text
+
+   o  Closes PR #25: Clarified when the test can be run
+
    From -12 to -13:
 
    o  Merged Paul Hoffmans PR#19, PR#20.
 
-   o  Moved toy ksk-test.net to implmentation section.
+   o  Moved toy ksk-test.net to implementation section.
 
    o  Split the test procedures between the test of a single DNS
       resolvers and the test of a collection of DNS resolvers as would
       be found in an end user environment.
 
+   From -11 to -12:
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 13]
+
+
+Huston, et al.          Expires December 6, 2018               [Page 14]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
-
-   From -11 to -12:
 
    o  Moved the Walkthrough Example to the end of the document as an
       appendix.
@@ -780,15 +834,15 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
    o  Changed magic string from "kskroll-sentinel-" to "root-key-
       sentinel-" -- this time for sure, Rocky!
 
+   From -07 to -06:
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 14]
+
+Huston, et al.          Expires December 6, 2018               [Page 15]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
-
-   From -07 to -06:
 
    o  Addressed GitHub PR #14: Clarifications regarding caching and
       SERVFAIL responses
@@ -837,14 +891,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
    o  Removed Address Record definition.
 
+   o  Clarified that many things can cause SERVFAIL.
 
 
-Huston, et al.          Expires December 6, 2018               [Page 15]
+
+Huston, et al.          Expires December 6, 2018               [Page 16]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
-
-   o  Clarified that many things can cause SERVFAIL.
 
    o  Made examples FQDN.
 
@@ -890,20 +944,17 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
               RFC 4034, DOI 10.17487/RFC4034, March 2005,
               <https://www.rfc-editor.org/info/rfc4034>.
 
-
-
-
-
-
-Huston, et al.          Expires December 6, 2018               [Page 16]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
-
-
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Protocol Modifications for the DNS Security
               Extensions", RFC 4035, DOI 10.17487/RFC4035, March 2005,
               <https://www.rfc-editor.org/info/rfc4035>.
+
+
+
+Huston, et al.          Expires December 6, 2018               [Page 17]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
+
 
    [RFC5011]  StJohns, M., "Automated Updates of DNS Security (DNSSEC)
               Trust Anchors", STD 74, RFC 5011, DOI 10.17487/RFC5011,
@@ -947,20 +998,19 @@ Appendix A.  Protocol Walkthrough Example
    like to be able to perform Internet-wide measurements of what the
    impact will be (and report this back to Alice).
 
-
-
-
-
-Huston, et al.          Expires December 6, 2018               [Page 17]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
-
-
    Geoff sets an authoritative DNS server for example.com, and also a
    webserver (www.example.com).  He adds three address records to
    example.com:
 
       bogus.example.com.  IN AAAA 2001:db8::1
+
+
+
+
+Huston, et al.          Expires December 6, 2018               [Page 18]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
+
 
       root-key-sentinel-is-ta-02323.example.com.  IN AAAA 2001:db8::1
 
@@ -1003,15 +1053,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
    method cannot provide him with a definitive answer to the question of
    whether he will be impacted by the KSK roll.
 
-
-
-
-
-Huston, et al.          Expires December 6, 2018               [Page 18]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
-
-
    Dave's resolvers implement the sentinel method, and have picked up
    the new KSK.  For the same reason as Charlie, he cannot fetch the
    "bogus" resource.  His resolver resolves the root-key-sentinel-is-ta-
@@ -1019,6 +1060,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
    authoritative servers, etc); as it supports the sentinel mechanism,
    just before Dave's recursive resolver sends the reply to Dave's stub,
    it performs the KSK Sentinel check.  The QNAME starts with "root-key-
+
+
+
+Huston, et al.          Expires December 6, 2018               [Page 19]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
+
+
    sentinel-is-ta-", and the recursive resolver does indeed have a key
    with the Key Tag of 02323 in its root trust store.  This means that
    that this part of the KSK Sentinel check passes (it is true that Key
@@ -1059,15 +1108,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
    back to Alice.  He uses some mechanism such as causing users to go to
    a web page to cause a large number of users to attempt to resolve the
    three resources, and then analyzes the results of the tests to
-
-
-
-
-Huston, et al.          Expires December 6, 2018               [Page 19]
-
-Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
-
-
    determine what percentage of users will be affected by the KSK
    rollover event.
 
@@ -1076,6 +1116,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
    presence of web resources; instead, the webpage that they load would
    likely contain JavaScript (or similar) which displays the result of
    the tests, sends the results to Geoff, or both.  This sentinel
+
+
+
+Huston, et al.          Expires December 6, 2018               [Page 20]
+
+Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
+
+
    mechanism does not rely on the web: it can equally be used by trying
    to resolve the names (for example, using the common "dig" command)
    and checking which result in a SERVFAIL.
@@ -1119,5 +1167,13 @@ Authors' Addresses
 
 
 
-Huston, et al.          Expires December 6, 2018               [Page 20]
+
+
+
+
+
+
+
+
+Huston, et al.          Expires December 6, 2018               [Page 21]
 ```
