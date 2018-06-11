@@ -707,6 +707,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
    http://sentinel.research.icann.org/  The code for this implementation
       is published at https://github.com/paulehoffman/sentinel-testbed
 
+   http://www.bellis.me.uk/sentinel/  Ray Bellis client implementation -
+      http://www.bellis.me.uk/sentinel/
+
 8.  IANA Considerations
 
    [Note to IANA, to be removed prior to publication: there are no IANA
@@ -720,10 +723,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
    for the more general stimulation of thoughts about monitoring the
    progress of a roll of the KSK of the root zone of the DNS.
 
-   The authors would like to thank Joe Abley, Mehmet Akcin, Mark
-   Andrews, Richard Barnes, Ray Bellis, Stephane Bortzmeyer, David
-   Conrad, Ralph Dolmans, John Dickinson, Steinar Haug, Bob Harold, Wes
-   Hardaker, Paul Hoffman, Matt Larson, Jinmei Tatuya, Edward Lewis,
+
 
 
 
@@ -732,6 +732,10 @@ Huston, et al.          Expires December 13, 2018              [Page 13]
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
+   The authors would like to thank Joe Abley, Mehmet Akcin, Mark
+   Andrews, Richard Barnes, Ray Bellis, Stephane Bortzmeyer, David
+   Conrad, Ralph Dolmans, John Dickinson, Steinar Haug, Bob Harold, Wes
+   Hardaker, Paul Hoffman, Matt Larson, Jinmei Tatuya, Edward Lewis,
    George Michaelson, Benno Overeinder, Matthew Pounsett, Hugo Salgado-
    Hernandez, Andreas Schulze, Mukund Sivaraman, Petr Spacek, Job
    Snijders, Andrew Sullivan, Ondrej Sury, Paul Vixie, Duane Wessels and
@@ -777,16 +781,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
       resolvers and the test of a collection of DNS resolvers as would
       be found in an end user environment.
 
-   From -11 to -12:
-
-
-
 
 
 Huston, et al.          Expires December 13, 2018              [Page 14]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
+
+   From -11 to -12:
 
    o  Moved the Walkthrough Example to the end of the document as an
       appendix.
@@ -834,8 +836,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
    o  Changed magic string from "kskroll-sentinel-" to "root-key-
       sentinel-" -- this time for sure, Rocky!
 
-   From -07 to -06:
-
 
 
 
@@ -843,6 +843,8 @@ Huston, et al.          Expires December 13, 2018              [Page 15]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
+
+   From -07 to -06:
 
    o  Addressed GitHub PR #14: Clarifications regarding caching and
       SERVFAIL responses
@@ -891,14 +893,14 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
    o  Removed Address Record definition.
 
-   o  Clarified that many things can cause SERVFAIL.
-
 
 
 Huston, et al.          Expires December 13, 2018              [Page 16]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
+
+   o  Clarified that many things can cause SERVFAIL.
 
    o  Made examples FQDN.
 
@@ -944,10 +946,8 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
               RFC 4034, DOI 10.17487/RFC4034, March 2005,
               <https://www.rfc-editor.org/info/rfc4034>.
 
-   [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "Protocol Modifications for the DNS Security
-              Extensions", RFC 4035, DOI 10.17487/RFC4035, March 2005,
-              <https://www.rfc-editor.org/info/rfc4035>.
+
+
 
 
 
@@ -955,6 +955,11 @@ Huston, et al.          Expires December 13, 2018              [Page 17]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
+
+   [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
+              Rose, "Protocol Modifications for the DNS Security
+              Extensions", RFC 4035, DOI 10.17487/RFC4035, March 2005,
+              <https://www.rfc-editor.org/info/rfc4035>.
 
    [RFC5011]  StJohns, M., "Automated Updates of DNS Security (DNSSEC)
               Trust Anchors", STD 74, RFC 5011, DOI 10.17487/RFC5011,
@@ -998,11 +1003,6 @@ Appendix A.  Protocol Walkthrough Example
    like to be able to perform Internet-wide measurements of what the
    impact will be (and report this back to Alice).
 
-   Geoff sets an authoritative DNS server for example.com, and also a
-   webserver (www.example.com).  He adds three address records to
-   example.com:
-
-      bogus.example.com.  IN AAAA 2001:db8::1
 
 
 
@@ -1011,6 +1011,12 @@ Huston, et al.          Expires December 13, 2018              [Page 18]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
+
+   Geoff sets an authoritative DNS server for example.com, and also a
+   webserver (www.example.com).  He adds three address records to
+   example.com:
+
+      bogus.example.com.  IN AAAA 2001:db8::1
 
       root-key-sentinel-is-ta-02323.example.com.  IN AAAA 2001:db8::1
 
@@ -1053,13 +1059,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
    method cannot provide him with a definitive answer to the question of
    whether he will be impacted by the KSK roll.
 
-   Dave's resolvers implement the sentinel method, and have picked up
-   the new KSK.  For the same reason as Charlie, he cannot fetch the
-   "bogus" resource.  His resolver resolves the root-key-sentinel-is-ta-
-   02323.example.com name normally (it contacts the example.com
-   authoritative servers, etc); as it supports the sentinel mechanism,
-   just before Dave's recursive resolver sends the reply to Dave's stub,
-   it performs the KSK Sentinel check.  The QNAME starts with "root-key-
+
 
 
 
@@ -1068,6 +1068,13 @@ Huston, et al.          Expires December 13, 2018              [Page 19]
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
+   Dave's resolvers implement the sentinel method, and have picked up
+   the new KSK.  For the same reason as Charlie, he cannot fetch the
+   "bogus" resource.  His resolver resolves the root-key-sentinel-is-ta-
+   02323.example.com name normally (it contacts the example.com
+   authoritative servers, etc); as it supports the sentinel mechanism,
+   just before Dave's recursive resolver sends the reply to Dave's stub,
+   it performs the KSK Sentinel check.  The QNAME starts with "root-key-
    sentinel-is-ta-", and the recursive resolver does indeed have a key
    with the Key Tag of 02323 in its root trust store.  This means that
    that this part of the KSK Sentinel check passes (it is true that Key
@@ -1108,14 +1115,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
    back to Alice.  He uses some mechanism such as causing users to go to
    a web page to cause a large number of users to attempt to resolve the
    three resources, and then analyzes the results of the tests to
-   determine what percentage of users will be affected by the KSK
-   rollover event.
 
-   This description is a simplified example - it is not anticipated that
-   Bob, Charlie, Dave and Ed will actually look for the absence or
-   presence of web resources; instead, the webpage that they load would
-   likely contain JavaScript (or similar) which displays the result of
-   the tests, sends the results to Geoff, or both.  This sentinel
 
 
 
@@ -1124,6 +1124,14 @@ Huston, et al.          Expires December 13, 2018              [Page 20]
 Internet-Draft         DNSSEC Trusted Key Sentinel             June 2018
 
 
+   determine what percentage of users will be affected by the KSK
+   rollover event.
+
+   This description is a simplified example - it is not anticipated that
+   Bob, Charlie, Dave and Ed will actually look for the absence or
+   presence of web resources; instead, the webpage that they load would
+   likely contain JavaScript (or similar) which displays the result of
+   the tests, sends the results to Geoff, or both.  This sentinel
    mechanism does not rely on the web: it can equally be used by trying
    to resolve the names (for example, using the common "dig" command)
    and checking which result in a SERVFAIL.
@@ -1145,14 +1153,6 @@ Authors' Addresses
    Warren Kumari
 
    Email: warren@kumari.net
-
-
-
-
-
-
-
-
 
 
 

@@ -612,6 +612,9 @@
           <t hangText="http://sentinel.research.icann.org/">The code for this
           implementation is published at
           https://github.com/paulehoffman/sentinel-testbed </t>
+
+          <t hangText="http://www.bellis.me.uk/sentinel/">Ray Bellis client
+          implementation - http://www.bellis.me.uk/sentinel/</t>
         </list></t>
     </section>
 
