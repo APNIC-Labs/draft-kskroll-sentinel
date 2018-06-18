@@ -148,12 +148,16 @@
       perform validation of responses in accordance with the DNSSEC response
       validation specification <xref target="RFC4035"/>.</t>
 
-      <t>This sentinel mechanism makes use of two special labels:<list
+      <t>This sentinel mechanism makes use of two special labels:
+        <list
           style="symbols">
           <t>root-key-sentinel-is-ta-&lt;key-tag&gt;</t>
 
           <t>root-key-sentinel-not-ta-&lt;key-tag&gt;</t>
-        </list> Note that the &lt;key-tag&gt; is specified in the DNS label as
+        </list>
+    </t>
+    <t>
+      Note that the &lt;key-tag&gt; is specified in the DNS label as
       unsigned decimal integer (as described in <xref target="RFC4034"/>,
       section 5.3), but zero-padded to five digits (for example, a Key Tag
       value of 42 would be represented in the label as 00042).</t>
