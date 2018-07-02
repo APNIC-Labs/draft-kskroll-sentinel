@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-14"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-15"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Root Key Trust Anchor
@@ -39,7 +39,7 @@
       </address>
     </author>
 
-    <date day="11" month="June" year="2018"/>
+    <date day="02" month="July" year="2018"/>
 
     <area>Internet</area>
 
@@ -71,12 +71,10 @@
       provide origin authentication and integrity protection for DNS data by
       using digital signatures. DNSSEC uses Key Tags to efficiently match
       signatures to the keys from which they are generated. The Key Tag is a
-      16-bit value computed from the RDATA portion of a DNSKEY RR using a
-      formula found in "Key Tag Calculation" (Appendix B of "Resource Records
-      for the DNS Security Extensions" <xref target="RFC4034"/>), a formula
-      similar to a ones-complement checksum. RRSIG RRs contain a Key Tag field
-      whose value is equal to the Key Tag of the DNSKEY RR that validates the
-      signature.</t>
+      16-bit value computed from the RDATA of a DNSKEY RR as described in
+      Appendix B of <xref target="RFC4034"/>. RRSIG RRs contain a Key Tag
+      field whose value is equal to the Key Tag of the DNSKEY RR that was used
+      to generate the corresponding signature.</t>
 
       <t>This document specifies how security-aware DNS resolvers that perform
       validation of their responses can respond to certain queries in a manner
@@ -85,9 +83,9 @@
       key store. This document also describes a procedure where a collection
       of resolvers can be tested to determine if at least one of these
       resolvers has loaded a given key into its trusted key store. These tests
-      can be used to determine whether a certain root zone KSK is ready to be
-      used as a trusted key, within the context of a planned root zone KSK key
-      roll.</t>
+      can be used to determine whether a certain root zone Key Signing Key
+      (KSK) is ready to be used as a trusted key, within the context of a
+      planned root zone KSK key roll.</t>
 
       <t>There are two primary use cases for this mechanism:</t>
 
@@ -101,12 +99,11 @@
           KSK rollover.</t>
         </list></t>
 
-      <t>The mechanism described in this document meets both of these use
-      cases. This new mechanism is OPTIONAL to implement and use, although for
-      reasons of supporting broad-based measurement techniques, it is strongly
-      preferred that configurations of DNSSEC-validating resolvers enabled
-      this mechanism by default, allowing for local configuration directives
-      to disable this mechanism if desired.</t>
+      <t>The mechanism described in this document satisfy the requirements of
+      both these use-cases. This mechanism is OPTIONAL to implement and use.
+      If implemented, this mechanism SHOULD be enabled by default to
+      facilitate Internet-wide measurement. Configuration options MAY be
+      provided to disable the mechanism for reasons of local policy. </t>
 
       <t>The KSK sentinel tests described in this document use a test
       comprising of a set of DNS queries to domain names that have special
@@ -128,10 +125,10 @@
       results. In some cases where these assumptions do not hold, repeating
       the same test query set may generate different results.</t>
 
-      <t>Note that the sentinel mechanism described here measures a very
-      different (and likely more useful) metric than <xref target="RFC8145"/>.
-      RFC 8145 relies on resolvers reporting towards the root servers a list
-      of locally cached trust anchors for the root zone. Those reports can be
+      <t>Note that the measurements facilitated by the mechanism described in
+      this document are different from those of <xref target="RFC8145"/>. RFC
+      8145 relies on resolvers reporting towards the root servers a list of
+      locally cached trust anchors for the root zone. Those reports can be
       used to infer how many resolvers may be impacted by a KSK roll, but not
       what the user impact of the KSK roll will be.</t>
 
@@ -148,19 +145,12 @@
       perform validation of responses in accordance with the DNSSEC response
       validation specification <xref target="RFC4035"/>.</t>
 
-      <t>This sentinel mechanism makes use of two special labels:
-        <list
+      <t>This sentinel mechanism makes use of two special labels: <list
           style="symbols">
           <t>root-key-sentinel-is-ta-&lt;key-tag&gt;</t>
 
           <t>root-key-sentinel-not-ta-&lt;key-tag&gt;</t>
-        </list>
-    </t>
-    <t>
-      Note that the &lt;key-tag&gt; is specified in the DNS label as
-      unsigned decimal integer (as described in <xref target="RFC4034"/>,
-      section 5.3), but zero-padded to five digits (for example, a Key Tag
-      value of 42 would be represented in the label as 00042).</t>
+        </list></t>
 
       <t>These labels trigger special processing in the validating DNS
       resolver when responses from authoritative servers are received. Labels
@@ -192,6 +182,16 @@
 
         <t>If any one of the preconditions is not met, the resolver MUST NOT
         alter the DNS response based on the mechanism in this document.</t>
+
+        <t>Note that the &lt;key-tag&gt; is specified in the DNS label as
+        unsigned decimal integer (as described in <xref target="RFC4034"/>,
+        section 5.3), but zero-padded to five digits (for example, a Key Tag
+        value of 42 would be represented in the label as 00042). The precise
+        specification of the special labels above should be followed exactly.
+        For example, a label that does not include a Key Tag zero-padded to
+        five digits does not match this specification, and should not be
+        processed as if they did -- in other words, such queries should be
+        handled as any other label and not according to Section 2.2.</t>
       </section>
 
       <section title="Special Processing">
@@ -226,6 +226,11 @@
         RCODE=SERVFAIL (value 2) and the ANSWER section of the DNS response
         MUST be empty, ignoring all other documents which specify content of
         the ANSWER section.</t>
+
+        <t>Instruction "return original answer" means that the resolver MUST
+        process the query without any further special processing; that is,
+        exactly as if the mechanism described in this document was not
+        implemented or disabled.</t>
       </section>
     </section>
 
@@ -367,8 +372,11 @@
         </list></t>
 
       <section title="Forwarders">
-        <t>There is also the common case of a recursive resolver using a
-        forwarder.</t>
+        <t>Some resolvers are configured not to answer queries using the
+        recursive algorithm first described in <xref target="RFC1034"/>
+        section 4.3.2, but instead relay queries to one or more other
+        resolvers. Resolvers configured in this manner are referred to in this
+        document as "forwarders".</t>
 
         <t>If the resolver is non-validating, and it has a single forwarder,
         then the resolver will presumably mirror the capabilities of the
@@ -395,15 +403,15 @@
     </section>
 
     <section anchor="resolver_sets"
-             title="Sentinel Tests for a Set of Resolvers">
+             title="Sentinel Tests from Hosts with More than One Configured Resolve">
       <t>The description in <xref target="single_resolver"/> describes a trust
       anchor test that can be used in the simple situation where the test
       queries were being passed to a single recursive resolver that directly
       queries authoritative name servers.</t>
 
-      <t>However, the common end user scenario is where a user's local DNS
-      resolution environment is configured to use a set of recursive
-      resolvers. The single resolver test technique will not function reliably
+      <t>However, the common end-user scenario is where a user's local DNS
+      resolution environment is configured to use more than one recursive
+      resolver. The single resolver test technique will not function reliably
       in such cases, as a a SERVFAIL response from one resolver may cause the
       local stub resolver to repeat the query against one of the other
       configured resolvers and the results may be inconclusive.</t>
@@ -568,7 +576,7 @@
     <section title="Implementation Experience">
       <t>[ RFC Editor: Please remove before publication. As this section will
       be removed, it is more conversational than would appear in a published
-      doc. ] </t>
+      doc. ]</t>
 
       <t>List of known resolver implementations (alphabetical):</t>
 
@@ -588,8 +596,7 @@
           address these issues and make the document mode clear. Petr also
           identified an embarrassingly large number of typos (and similar) in
           the ksk-test setup. More information is at
-          http://knot-resolver.readthedocs.io/en/stable/modules.html#sentinel-for-detecting-trusted-keys
-          </t>
+          http://knot-resolver.readthedocs.io/en/stable/modules.html#sentinel-for-detecting-trusted-keys</t>
 
           <t hangText="Unbound">Benno Overeinder of NLnet Labs reported to the
           DNSOP Working Group in April 2018 an intention to support this
@@ -615,7 +622,7 @@
 
           <t hangText="http://sentinel.research.icann.org/">The code for this
           implementation is published at
-          https://github.com/paulehoffman/sentinel-testbed </t>
+          https://github.com/paulehoffman/sentinel-testbed</t>
 
           <t hangText="http://www.bellis.me.uk/sentinel/">Ray Bellis client
           implementation - http://www.bellis.me.uk/sentinel/</t>
@@ -623,8 +630,7 @@
     </section>
 
     <section title="IANA Considerations">
-      <t>[Note to IANA, to be removed prior to publication: there are no IANA
-      considerations stated in this version of the document.]</t>
+      <t>This document has no IANA actions. </t>
     </section>
 
     <section title="Acknowledgements">
@@ -644,7 +650,12 @@
       Wessels and Paul Wouters for their helpful feedback.</t>
 
       <t>The authors would like to especially call out Paul Hoffman and Duane
-      Wessels for providing comments in the form of a pull request.</t>
+      Wessels for providing comments in the form of pull requests. Joe Abley
+      also helpfully provided extensive review and OLD / NEW text.</t>
+
+      <t>Petr Spacek wrote some very early implmentations, and provided
+      significant feedback (including pointing out when the test bed didn't
+      match the document!)</t>
     </section>
 
     <section title="Change Log">
@@ -652,6 +663,11 @@
 
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
+
+      <t>From -14 to -15:<list style="symbols">
+          <t>Addressed Joe Abley's thorough review, at:
+          https://mailarchive.ietf.org/arch/msg/dnsop/8ZnN1xj55Yimet2cg-LrdoJafEA</t>
+        </list></t>
 
       <t>From -13 to -14:<list style="symbols">
           <t>Addressed nits from Bob Harold -
@@ -814,7 +830,10 @@
 
   <back>
     <references title="Normative References">
-      <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.2308.xml'?>
+      <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.1034.xml'?>
+
+      <?rfc 
+include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.2308.xml'?>
 
       <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.4033.xml'?>
 
