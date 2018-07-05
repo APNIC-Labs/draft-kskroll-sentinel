@@ -103,7 +103,7 @@
       both these use-cases. This mechanism is OPTIONAL to implement and use.
       If implemented, this mechanism SHOULD be enabled by default to
       facilitate Internet-wide measurement. Configuration options MAY be
-      provided to disable the mechanism for reasons of local policy. </t>
+      provided to disable the mechanism for reasons of local policy.</t>
 
       <t>The KSK sentinel tests described in this document use a test
       comprising of a set of DNS queries to domain names that have special
@@ -230,7 +230,7 @@
         <t>Instruction "return original answer" means that the resolver MUST
         process the query without any further special processing; that is,
         exactly as if the mechanism described in this document was not
-        implemented or disabled.</t>
+        implemented or was disabled.</t>
       </section>
     </section>
 
@@ -403,7 +403,7 @@
     </section>
 
     <section anchor="resolver_sets"
-             title="Sentinel Tests from Hosts with More than One Configured Resolve">
+             title="Sentinel Tests from Hosts with More than One Configured Resolver">
       <t>The description in <xref target="single_resolver"/> describes a trust
       anchor test that can be used in the simple situation where the test
       queries were being passed to a single recursive resolver that directly
@@ -630,7 +630,7 @@
     </section>
 
     <section title="IANA Considerations">
-      <t>This document has no IANA actions. </t>
+      <t>This document has no IANA actions.</t>
     </section>
 
     <section title="Acknowledgements">
@@ -832,8 +832,7 @@
     <references title="Normative References">
       <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.1034.xml'?>
 
-      <?rfc 
-include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.2308.xml'?>
+      <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.2308.xml'?>
 
       <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.4033.xml'?>
 

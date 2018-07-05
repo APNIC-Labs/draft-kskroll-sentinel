@@ -85,7 +85,7 @@ Table of Contents
    3.  Sentinel Tests for a Single DNS Resolver  . . . . . . . . . .   6
      3.1.  Forwarders  . . . . . . . . . . . . . . . . . . . . . . .   8
    4.  Sentinel Tests from Hosts with More than One Configured
-       Resolve . . . . . . . . . . . . . . . . . . . . . . . . . . .   9
+       Resolver  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
      4.1.  Test Scenario and Objective . . . . . . . . . . . . . . .   9
      4.2.  Test Assumptions  . . . . . . . . . . . . . . . . . . . .  10
      4.3.  Test Procedure  . . . . . . . . . . . . . . . . . . . . .  10
@@ -290,7 +290,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             July 2018
    Instruction "return original answer" means that the resolver MUST
    process the query without any further special processing; that is,
    exactly as if the mechanism described in this document was not
-   implemented or disabled.
+   implemented or was disabled.
 
 3.  Sentinel Tests for a Single DNS Resolver
 
@@ -467,7 +467,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel             July 2018
    responses, ("other") which is similarly an indeterminate response
    with respect to the trusted key state.
 
-4.  Sentinel Tests from Hosts with More than One Configured Resolve
+4.  Sentinel Tests from Hosts with More than One Configured Resolver
 
    The description in Section 3 describes a trust anchor test that can
    be used in the simple situation where the test queries were being
