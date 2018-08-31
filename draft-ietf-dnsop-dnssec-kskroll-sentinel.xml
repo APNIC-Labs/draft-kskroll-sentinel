@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-15"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-16"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Root Key Trust Anchor
@@ -39,7 +39,7 @@
       </address>
     </author>
 
-    <date day="02" month="July" year="2018"/>
+    <date day="31" month="August" year="2018"/>
 
     <area>Internet</area>
 
@@ -136,6 +136,9 @@
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
         document are to be interpreted as described in RFC 2119.</t>
+
+        <t>This document comntains a number of terms related to the DNS. The current
+        definitions of these terms can be found in <xref target="RFC7719"/>.</t>
       </section>
     </section>
 
@@ -168,7 +171,7 @@
 
             <t>The result of validation is "Secure".</t>
 
-            <t>The Checking Disabled (CD) bit in the query is not set.</t>
+            <t>The EDNS(0) Checking Disabled (CD) bit in the query is not set.</t>
 
             <t>The QTYPE is either A or AAAA (Query Type value 1 or 28).</t>
 
@@ -255,32 +258,35 @@
 
       <t><list style="symbols">
           <t>A query name containing the left-most label
-          "root-key-sentinel-is-ta-&lt;key-tag&gt;". This corresponds to a a
-          validly-signed RRset in the zone, so that responses associated with
-          queried names in this zone can be authenticated by a
-          DNSSEC-validating resolver. Any validly-signed DNS zone can be used
-          for this test.</t>
+          "root-key-sentinel-is-ta-&lt;key-tag&gt;". This corresponds
+          to a a validly-signed label in the parent zone, so that
+          responses associated with this query name can be
+          authenticated by a DNSSEC-validating resolver. Any
+          validly-signed DNS zone can be used as the parent zone for
+          this test.</t>
 
           <t>A query name containing the left-most label
           "root-key-sentinel-not-ta-&lt;key-tag&gt;". This is also a
-          validly-signed name. Any validly-signed DNS zone can be used for
-          this test.</t>
+          validly-signed label. Any validly-signed DNS zone can be
+          used as the parent zone for this test.</t>
 
-          <t>A query name that is signed with a DNSSEC signature that cannot
-          be validated (described as a "bogus" RRset in Section 5 of <xref
-          target="RFC4033"/>, when, for example, an RRset is not signed with a
-          valid RRSIG record).</t>
+          <t>A query name that is signed with a DNSSEC signature that
+          cannot be validated (described as a "bogus" RRset in Section
+          5 of <xref target="RFC4033"/>, when, for example, an RRset
+          associated with a label in a zoneis not signed with a valid
+          RRSIG record).</t>
         </list></t>
 
-      <t>The responses received from queries to resolve each of these names
+      <t>The responses received from queries to resolve each of these query names
       can be evaluated to infer a trust key state of the DNS resolver.</t>
 
       <t>An essential assumption here is that this technique relies on
-      security-aware (DNSSEC validating) resolvers responding with a SERVFAIL
-      response code to queries where DNSSEC checking is requested and the
-      response cannot be validated. Note that a slew of other issues can also
-      cause SERVFAIL responses, and so the sentinel processing may sometimes
-      result in incorrect or indeterminate conclusions.</t>
+      security-aware (DNSSEC validating) resolvers responding with a
+      SERVFAIL response code to queries where DNSSEC checking is
+      requested and the response cannot be validated. Note that other
+      issues can also cause a resolver to return SERVFAIL responses,
+      and so the sentinel processing may sometimes result in incorrect
+      or indeterminate conclusions.</t>
 
       <t>To describe this process of classification, DNS resolvers are
       classified by five distinct behavior types using the labels: "Vnew",
@@ -310,11 +316,11 @@
           give any information about the trust anchors used by this
           resolver.</t>
 
-          <t hangText="nonV:">A non-security-aware DNS resolver will respond
-          with an A or AAAA record response for "root-key-sentinel-is-ta", an
-          A record response for "root-key-sentinel-not-ta" and an A or AAAA
-          RRset response for the name that returns "bogus" validation
-          status.</t>
+          <t hangText="nonV:">A non-security-aware DNS resolver will
+          respond with an A or AAAA RRset response for
+          "root-key-sentinel-is-ta", an A or AAAA RRset response for
+          "root-key-sentinel-not-ta" and an A or AAAA RRset response
+          for the name that returns "bogus" validation status.</t>
 
           <t hangText="other:">There is the potential to admit other
           combinations of responses to these three queries. While this may
@@ -345,14 +351,19 @@
                    +----------+-----------+------------+
                    |  is-ta   |  not-ta   |   bogus    |
            +-------+----------+-----------+------------+
-           | Vnew  |    A     |  SERVFAIL |  SERVFAIL  |
-           | Vold  | SERVFAIL |      A    |  SERVFAIL  |
-     Type  | Vind  |    A     |      A    |  SERVFAIL  |
-           | nonV  |    A     |      A    |     A      |
+           | Vnew  |    Y     |  SERVFAIL |  SERVFAIL  |
+           | Vold  | SERVFAIL |      Y    |  SERVFAIL  |
+     Type  | Vind  |    Y     |      Y    |  SERVFAIL  |
+           | nonV  |    Y     |      Y    |     Y      |
            | other |    *     |      *    |     *      |
            +-------+----------+-----------+------------+
   ]]></artwork>
         </figure></t>
+
+      <t>In this table the 'Y' response denotes an A or AAAA RRset
+      response (depending on the Query Type of A or AAAA records),
+      'SERVFAIL' denotes a DNS SERVFAIL response code
+      (RCODE 2), and '*' denotes either response.</t>
 
       <t><list style="hanging">
           <t hangText="Vnew:">The nominated key is trusted by the
@@ -382,9 +393,11 @@
         then the resolver will presumably mirror the capabilities of the
         forwarder target resolver.</t>
 
-        <t>If the validating resolver has a forwarding configuration, and uses
-        the CD bit on all forwarded queries, then this resolver is acting in a
-        manner that is identical to a standalone resolver.</t>
+        <t>If the validating resolver has a forwarding configuration,
+        and it sets the EDNS(0) Checking Disabled (CD) bit as described
+        in Section 3.2.2 of <xref target="RFC4035"/> on all forwarded
+        queries, then this resolver is acting in a manner that is
+        identical to a standalone resolver.</t>
 
         <t>A more complex case is where all of the following conditions hold:
         <list style="symbols">
@@ -403,11 +416,11 @@
     </section>
 
     <section anchor="resolver_sets"
-             title="Sentinel Tests from Hosts with More than One Configured Resolver">
+         title="Sentinel Tests for Multiple Resolvers">
       <t>The description in <xref target="single_resolver"/> describes a trust
       anchor test that can be used in the simple situation where the test
       queries were being passed to a single recursive resolver that directly
-      queries authoritative name servers.</t>
+      queried authoritative name servers.</t>
 
       <t>However, the common end-user scenario is where a user's local DNS
       resolution environment is configured to use more than one recursive
@@ -844,6 +857,8 @@
     </references>
 
     <references title="Informative References">
+      <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.7719.xml'?>
+
       <?rfc include='https://xml2rfc.tools.ietf.org/public/rfc/bibxml-rfcs/reference.RFC.8145.xml'?>
     </references>
 
