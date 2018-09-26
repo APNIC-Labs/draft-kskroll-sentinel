@@ -7,13 +7,13 @@
 DNSOP                                                          G. Huston
 Internet-Draft                                                  J. Damas
 Intended status: Standards Track                                   APNIC
-Expires: March 4, 2019                                         W. Kumari
+Expires: March 30, 2019                                        W. Kumari
                                                                   Google
-                                                         August 31, 2018
+                                                      September 26, 2018
 
 
               A Root Key Trust Anchor Sentinel for DNSSEC
-                  draft-ietf-dnsop-kskroll-sentinel-16
+                  draft-ietf-dnsop-kskroll-sentinel-17
 
 Abstract
 
@@ -48,16 +48,16 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 4, 2019.
+   This Internet-Draft will expire on March 30, 2019.
 
 
 
 
 
 
-Huston, et al.            Expires March 4, 2019                 [Page 1]
+Huston, et al.           Expires March 30, 2019                 [Page 1]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
 Copyright Notice
@@ -111,9 +111,9 @@ Table of Contents
 
 
 
-Huston, et al.            Expires March 4, 2019                 [Page 2]
+Huston, et al.           Expires March 30, 2019                 [Page 2]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    [RFC4034].  RRSIG RRs contain a Key Tag field whose value is equal to
@@ -167,9 +167,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                 [Page 3]
+Huston, et al.           Expires March 30, 2019                 [Page 3]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    indeterminate or inconsistent results.  In some cases where these
@@ -223,9 +223,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                 [Page 4]
+Huston, et al.           Expires March 30, 2019                 [Page 4]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    o  The result of validation is "Secure".
@@ -279,9 +279,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                 [Page 5]
+Huston, et al.           Expires March 30, 2019                 [Page 5]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    Instruction "return SERVFAIL" means that the resolver MUST set
@@ -292,7 +292,8 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
    Instruction "return original answer" means that the resolver MUST
    process the query without any further special processing; that is,
    exactly as if the mechanism described in this document was not
-   implemented or was disabled.
+   implemented or was disabled.  The answer for the A or AAAA query is
+   sent on to the client.
 
 3.  Sentinel Tests for a Single DNS Resolver
 
@@ -334,10 +335,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-
-Huston, et al.            Expires March 4, 2019                 [Page 6]
+Huston, et al.           Expires March 30, 2019                 [Page 6]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    The responses received from queries to resolve each of these query
@@ -391,9 +391,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                 [Page 7]
+Huston, et al.           Expires March 30, 2019                 [Page 7]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
       resolver that responds to queries passed to a single IP address is
@@ -447,9 +447,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                 [Page 8]
+Huston, et al.           Expires March 30, 2019                 [Page 8]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
 3.1.  Forwarders
@@ -503,9 +503,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                 [Page 9]
+Huston, et al.           Expires March 30, 2019                 [Page 9]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    In describing a test procedure that can be used in this environment
@@ -559,9 +559,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 10]
+Huston, et al.           Expires March 30, 2019                [Page 10]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    o  All DNSSEC-validating resolvers have KSK-current in their local
@@ -615,9 +615,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 11]
+Huston, et al.           Expires March 30, 2019                [Page 11]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
       validating DNS resolver, and the user will not be impacted by the
@@ -671,9 +671,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 12]
+Huston, et al.           Expires March 30, 2019                [Page 12]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    knowledge, the third party can infer the aggregate capabilities of
@@ -727,9 +727,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 13]
+Huston, et al.           Expires March 30, 2019                [Page 13]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    http://sentinel.research.icann.org/  The code for this implementation
@@ -783,9 +783,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 14]
+Huston, et al.           Expires March 30, 2019                [Page 14]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    From -13 to -14:
@@ -839,9 +839,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 15]
+Huston, et al.           Expires March 30, 2019                [Page 15]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    o  Clarified the preconditions for this mechanism as per Working
@@ -895,9 +895,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 16]
+Huston, et al.           Expires March 30, 2019                [Page 16]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    o  Integrated Petr Spacek's Issue - https://github.com/APNIC-Labs/
@@ -951,9 +951,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 17]
+Huston, et al.           Expires March 30, 2019                [Page 17]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    o  Added a conversational description of how the system is intended
@@ -1007,9 +1007,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 18]
+Huston, et al.           Expires March 30, 2019                [Page 18]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    [RFC8145]  Wessels, D., Kumari, W., and P. Hoffman, "Signaling Trust
@@ -1063,9 +1063,9 @@ Appendix A.  Protocol Walkthrough Example
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 19]
+Huston, et al.           Expires March 30, 2019                [Page 19]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    control of the researcher, and the addresses must be real, reachable
@@ -1119,9 +1119,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 20]
+Huston, et al.           Expires March 30, 2019                [Page 20]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
    sentinel-not-ta-11112.example.com name.  Once again, it performs the
@@ -1175,9 +1175,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 21]
+Huston, et al.           Expires March 30, 2019                [Page 21]
 
-Internet-Draft         DNSSEC Trusted Key Sentinel           August 2018
+Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
 Authors' Addresses
@@ -1231,5 +1231,5 @@ Authors' Addresses
 
 
 
-Huston, et al.            Expires March 4, 2019                [Page 22]
+Huston, et al.           Expires March 30, 2019                [Page 22]
 ```
