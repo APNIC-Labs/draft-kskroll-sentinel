@@ -163,7 +163,11 @@
       resolver is currently trusting as a trust anchor?" Labels containing
       "root-key-sentinel-not-ta-&lt;key-tag&gt;" is used to answer the
       question "Is this the Key Tag of a key which the validating DNS resolver
-      is *not* currently trusting as a trust anchor?"</t>
+      is *not* currently trusting as a trust anchor?". These labels were
+      arrived at after a much discussion, including considering, and rejecting
+      the use of underscore prefixed names. Underscore prefixed names were
+      rejected because a number of browsers / operating systems woud not fetch
+      them.</t>
 
       <section anchor="precond" title="Preconditions">
         <t>All of the following conditions must be met to trigger special
