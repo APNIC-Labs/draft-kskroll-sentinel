@@ -91,12 +91,12 @@
 
       <t><list style="symbols">
           <t>Users may wish to ascertain whether their DNS resolution
-          environment resolvers is ready for an upcoming root KSK
+          environment's resolver is ready for an upcoming root KSK
           rollover.</t>
 
           <t>Researchers want to perform Internet-wide studies about the
-          proportion of users who will be negatively impacted an upcoming root
-          KSK rollover.</t>
+          proportion of users who will be negatively impacted by an upcoming
+          root KSK rollover.</t>
         </list></t>
 
       <t>The mechanism described in this document satisfy the requirements of
@@ -116,14 +116,14 @@
       <t>If a browser or operating system is configured with multiple
       resolvers, and those resolvers have different properties (for example,
       one performs DNSSEC validation and one does not), the sentinel test
-      described in this document can still be used, but it makes a number of
-      assumptions about DNS resolution behaviour that may not necessarily hold
-      in all environments. If these assumptions do not hold (such as, for
-      example, requiring the stub resolver to query the next recursive
-      resolver in the locally configured set upon receipt of a SERVFAIL
-      response code) then this test may produce indeterminate or inconsistent
-      results. In some cases where these assumptions do not hold, repeating
-      the same test query set may generate different results.</t>
+      described in this document can still be used. The sentinel test makes a
+      number of assumptions about DNS resolution behaviour that may not
+      necessarily hold in all environments; if these assumptions do not hold
+      (such as, for example, requiring the stub resolver to query the next
+      recursive resolver in the locally configured set upon receipt of a
+      SERVFAIL response code) then this test may produce indeterminate or
+      inconsistent results. In some cases where these assumptions do not hold,
+      repeating the same test query set may generate different results.</t>
 
       <t>Note that the measurements facilitated by the mechanism described in
       this document are different from those of <xref target="RFC8145"/>. RFC
@@ -134,10 +134,12 @@
 
       <section title="Terminology">
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-        document are to be interpreted as described in RFC 2119.</t>
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+        "OPTIONAL" in this document are to be interpreted as described in BCP
+        14 [RFC2119] [RFC8174] when, and only when, they appear in all
+        capitals, as shown here.</t>
 
-        <t>This document comntains a number of terms related to the DNS. The
+        <t>This document contains a number of terms related to the DNS. The
         current definitions of these terms can be found in <xref
         target="RFC7719"/>.</t>
       </section>
@@ -163,11 +165,20 @@
       resolver is currently trusting as a trust anchor?" Labels containing
       "root-key-sentinel-not-ta-&lt;key-tag&gt;" is used to answer the
       question "Is this the Key Tag of a key which the validating DNS resolver
-      is *not* currently trusting as a trust anchor?". These labels were
-      arrived at after a much discussion, including considering, and rejecting
-      the use of underscore prefixed names. Underscore prefixed names were
-      rejected because a number of browsers / operating systems woud not fetch
-      them.</t>
+      is *not* currently trusting as a trust anchor?". </t>
+
+      <t>The special labels defined here came after extensive IETF evaluation
+      of alternative patterns and approaches in light of the desired behaviour
+      (sections 2.1, 2.2) within the resolver and the applied testing
+      methodology (section 4.3). As one example, underscore prefixed names
+      were rejected because a number of browsers / operating systems would not
+      fetch them, as they were not viewed as valid "hostnames".Attention was
+      paid to the consideration of local collisions and the reservation of
+      Left Hand Side (LHS) labels of a domain name, and the impact upon zone
+      operators who might desire to use a similarly constructed hostname for a
+      purpose other than as documented here. Therefore, it is important to
+      note that the reservation of the labels in this manner is definitely not
+      considered &ldquo;best practice&rdquo;.</t>
 
       <section anchor="precond" title="Preconditions">
         <t>All of the following conditions must be met to trigger special
@@ -396,7 +407,7 @@
 
         <t>If the resolver is non-validating, and it has a single forwarder,
         then the resolver will presumably mirror the capabilities of the
-        forwarder target resolver.</t>
+        forwarder's target resolver.</t>
 
         <t>If the validating resolver has a forwarding configuration, and it
         sets the EDNS(0) Checking Disabled (CD) bit as described in Section
@@ -409,10 +420,11 @@
             <t>Both the validating resolver and the forwarder target resolver
             support this trusted key sentinel mechanism</t>
 
-            <t>The local resolver's queries do not have the CD bit set</t>
+            <t>The local resolver's queries do not have the EDNS(0) CD bit
+            set</t>
 
             <t>The trusted key state differs between the forwarding resolver
-            and the forwarder target resolver</t>
+            and the forwarder's target resolver</t>
           </list> In such a case, either the outcome is indeterminate
         validating ("Vind"), or a case of mixed signals such as SERVFAIL in
         all three responses, ("other") which is similarly an indeterminate
@@ -497,7 +509,9 @@
 
       <section title="Test Procedure">
         <t>The sentinel detection process tests a DNS resolution environment
-        with three query names:</t>
+        with three query names. Note that these same general categories of
+        query as in <xref target="single_resolver"/> but the key tag used is
+        different for some queries:</t>
 
         <t><list style="symbols">
             <t>A query name that is signed with a DNSSEC signature that cannot
@@ -525,11 +539,12 @@
         (denoted as "S"), indicating that all of the resolvers in the
         recursive resolver set returned the SERVFAIL response code, or result
         in a response with the desire RRset value (denoted as "A"). The
-        queries are ordered by the "invalid" name, the "not-ta" label, then
-        the "is-ta" label, and a triplet notation denotes a particular
-        response. For example, the triplet "(S S A)" denotes a SERVFAIL
-        response to the invalid query, a SERVFAIL response to the "not-ta"
-        query and a RRset response to the "is-ta" query.</t>
+        queries are ordered by the "invalid" name, the
+        "root-key-sentinel-not-ta" label, then the "root-key-sentinel-is-ta"
+        label, and a triplet notation denotes a particular response. For
+        example, the triplet "(S S A)" denotes a SERVFAIL response to the
+        invalid query, a SERVFAIL response to the "root-key-sentinel-not-ta"
+        query and a RRset response to the "root-key-sentinel-is-ta" query.</t>
 
         <t>The set of all possible responses to these three queries are:</t>
 
@@ -540,10 +555,10 @@
             impacted by the KSK roll.</t>
 
             <t hangText="(S A *):">If any of the resolvers returns an "A"
-            response the the "not-ta" query, then at least one of the
-            resolvers does not recognise the sentinel mechanism, and the
-            behaviour of the collection of resolvers during the KSK roll
-            cannot be reliably determined.</t>
+            response the the "root-key-sentinel-not-ta" query, then at least
+            one of the resolvers does not recognise the sentinel mechanism,
+            and the behaviour of the collection of resolvers during the KSK
+            roll cannot be reliably determined.</t>
 
             <t hangText="(S S A):">This case implies that all of the resolvers
             in the set perform DNSSEC-validation, all of the resolvers are
