@@ -588,6 +588,10 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
    recursive resolvers before concluding that the name cannot be
    resolved, is a very critical assumption for this test.
 
+   Note that additional precision / determinism may be achievable by
+   bypassing the normal OS behavior and explicitly testing using each
+   configured recursive resolver (e.g using 'dig').
+
 4.3.  Test Procedure
 
    The sentinel detection process tests a DNS resolution environment
@@ -602,16 +606,12 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
    o  A query name containing the left-most label "root-key-sentinel-
       not-ta-<key-tag-of-KSK-current>".  This name MUST be a validly-
-      signed.  Any validly-signed DNS zone can be used for this test.
+      signed name.  Any validly-signed DNS zone can be used for this
+      test.
 
    o  A query name containing the left-most label "root-key-sentinel-is-
-      ta-<key-tag-of-KSK-new>".  This name MUST be a validly-signed.
-      Any validly-signed DNS zone can be used for this test.
-
-   The responses received from queries to resolve each of these names
-   can be evaluated to infer a trust key state of the user's DNS
-   resolution environment.
-
+      ta-<key-tag-of-KSK-new>".  This name MUST be a validly-signed
+      name.  Any validly-signed DNS zone can be used for this test.
 
 
 
@@ -619,6 +619,10 @@ Huston, et al.           Expires March 30, 2019                [Page 11]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
+
+   The responses received from queries to resolve each of these names
+   can be evaluated to infer a trust key state of the user's DNS
+   resolution environment.
 
    The responses to these queries are described using a simplified
    notation.  Each query will either result in a SERFVAIL response
@@ -664,10 +668,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
    resolution system that they use.  If the user executes third party
    code, then this information may also be available to the third party.
 
-   The mechanism does not require resolvers to set otherwise
-   unauthenticated responses to be marked as authenticated, and does not
-   alter the security properties of DNSSEC with respect to the
-   interpretation of the authenticity of responses that are so marked.
 
 
 
@@ -675,6 +675,11 @@ Huston, et al.           Expires March 30, 2019                [Page 12]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
+
+   The mechanism does not require resolvers to set otherwise
+   unauthenticated responses to be marked as authenticated, and does not
+   alter the security properties of DNSSEC with respect to the
+   interpretation of the authenticity of responses that are so marked.
 
    The mechanism does not require any further significant processing of
    DNS responses, and queries of the form described in this document do
@@ -718,12 +723,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
       these issues and make the document mode clear.  Petr also
       identified an embarrassingly large number of typos (and similar)
       in the ksk-test setup.  More information is at http://knot-
-      resolver.readthedocs.io/en/stable/modules.html#sentinel-for-
-      detecting-trusted-keys
 
-   Unbound  Benno Overeinder of NLnet Labs reported to the DNSOP Working
-      Group in April 2018 an intention to support this technique in
-      Unbound in the near future.  This is now implemented in Unbound
 
 
 
@@ -732,6 +732,12 @@ Huston, et al.           Expires March 30, 2019                [Page 13]
 Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
+      resolver.readthedocs.io/en/stable/modules.html#sentinel-for-
+      detecting-trusted-keys
+
+   Unbound  Benno Overeinder of NLnet Labs reported to the DNSOP Working
+      Group in April 2018 an intention to support this technique in
+      Unbound in the near future.  This is now implemented in Unbound
       version 1.7.1, available from http://unbound.nlnetlabs.nl/
       download.html . Configuration information is at
       http://unbound.nlnetlabs.nl/documentation/unbound.conf.html
@@ -775,18 +781,16 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
    Snijders, Andrew Sullivan, Ondrej Sury, Paul Vixie, Duane Wessels and
    Paul Wouters for their helpful feedback.
 
-   The authors would like to especially call out Paul Hoffman and Duane
-   Wessels for providing comments in the form of pull requests.  Joe
-   Abley also helpfully provided extensive review and OLD / NEW text.
-
-
-
 
 
 Huston, et al.           Expires March 30, 2019                [Page 14]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
+
+   The authors would like to especially call out Paul Hoffman and Duane
+   Wessels for providing comments in the form of pull requests.  Joe
+   Abley also helpfully provided extensive review and OLD / NEW text.
 
    Petr Spacek wrote some very early implmentations, and provided
    significant feedback (including pointing out when the test bed didn't
@@ -831,11 +835,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
    o  Moved toy ksk-test.net to implementation section.
 
-   o  Split the test procedures between the test of a single DNS
-      resolvers and the test of a collection of DNS resolvers as would
-      be found in an end user environment.
 
-   From -11 to -12:
 
 
 
@@ -843,6 +843,12 @@ Huston, et al.           Expires March 30, 2019                [Page 15]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
+
+   o  Split the test procedures between the test of a single DNS
+      resolvers and the test of a collection of DNS resolvers as would
+      be found in an end user environment.
+
+   From -11 to -12:
 
    o  Moved the Walkthrough Example to the end of the document as an
       appendix.
@@ -887,18 +893,17 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
    o  Changed title from "A Sentinel for Detecting Trusted Keys in
       DNSSEC" to "A Root Key Trust Anchor Sentinel for DNSSEC".
 
-   o  Changed magic string from "kskroll-sentinel-" to "root-key-
-      sentinel-" -- this time for sure, Rocky!
-
-   From -07 to -06:
-
-
 
 
 Huston, et al.           Expires March 30, 2019                [Page 16]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
+
+   o  Changed magic string from "kskroll-sentinel-" to "root-key-
+      sentinel-" -- this time for sure, Rocky!
+
+   From -07 to -06:
 
    o  Addressed GitHub PR #14: Clarifications regarding caching and
       SERVFAIL responses
@@ -943,11 +948,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
       https://mailarchive.ietf.org/arch/msg/dnsop/
       Kg7AtDhFRNw31He8n0_bMr9hBuE )
 
-   From -01 to 02:
-
-   o  Removed Address Record definition.
-
-   o  Clarified that many things can cause SERVFAIL.
 
 
 
@@ -955,6 +955,12 @@ Huston, et al.           Expires March 30, 2019                [Page 17]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
+
+   From -01 to 02:
+
+   o  Removed Address Record definition.
+
+   o  Clarified that many things can cause SERVFAIL.
 
    o  Made examples FQDN.
 
@@ -999,18 +1005,17 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
               RFC 4033, DOI 10.17487/RFC4033, March 2005,
               <https://www.rfc-editor.org/info/rfc4033>.
 
-   [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "Resource Records for the DNS Security Extensions",
-              RFC 4034, DOI 10.17487/RFC4034, March 2005,
-              <https://www.rfc-editor.org/info/rfc4034>.
-
-
 
 
 Huston, et al.           Expires March 30, 2019                [Page 18]
 
 Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
+
+   [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
+              Rose, "Resource Records for the DNS Security Extensions",
+              RFC 4034, DOI 10.17487/RFC4034, March 2005,
+              <https://www.rfc-editor.org/info/rfc4034>.
 
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Protocol Modifications for the DNS Security
@@ -1055,11 +1060,6 @@ Appendix A.  Protocol Walkthrough Example
    validation.  Charlie's ISP does validate, but the resolvers have not
    yet been upgraded to support this mechanism.  Dave and Ed's resolvers
    have been upgraded to support this mechanism; Dave's resolver has the
-   new KSK, Ed's resolver hasn't managed to install the 02323 KSK in its
-   trust store yet.
-
-   Geoff is a researcher, and would like to both provide a means for
-   Bob, Charlie, Dave and Ed to be able to perform tests, and also would
 
 
 
@@ -1068,6 +1068,11 @@ Huston, et al.           Expires March 30, 2019                [Page 19]
 Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
+   new KSK, Ed's resolver hasn't managed to install the 02323 KSK in its
+   trust store yet.
+
+   Geoff is a researcher, and would like to both provide a means for
+   Bob, Charlie, Dave and Ed to be able to perform tests, and also would
    like to be able to perform Internet-wide measurements of what the
    impact will be (and report this back to Alice).
 
@@ -1082,9 +1087,9 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
       root-key-sentinel-not-ta-11112.example.com.  IN AAAA 2001:db8::1
 
    Note that the use of "example.com" names and the addresses here are
-   examples.  In a real deployment, the domain names need to be under
-   control of the researcher, and the addresses must be real, reachable
-   addresses.
+   examples, and 'bogus' intentionally has invalid DNSSEC signatures.
+   In a real deployment, the domain names need to be under control of
+   the researcher, and the addresses must be real, reachable addresses.
 
    Geoff then DNSSEC signs the example.com zone, and intentionally makes
    the bogus.example.com record have bogus validation status (for
@@ -1111,11 +1116,6 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
    to support the KSK sentinel mechanism.  Charlie will not be able to
    fetch the http://bogus.example.com/1x1.gif resource (the
    bogus.example.com record is bogus, and none of his resolvers will
-   resolve it).  He is able to fetch both of the other resources - from
-   this he knows (see the logic in the body of this document) that he is
-   using validating resolvers, but at least one of these resolvers is
-   not configured to perform sentinel processing.  The KSK sentinel
-
 
 
 
@@ -1124,6 +1124,10 @@ Huston, et al.           Expires March 30, 2019                [Page 20]
 Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
+   resolve it).  He is able to fetch both of the other resources - from
+   this he knows (see the logic in the body of this document) that he is
+   using validating resolvers, but at least one of these resolvers is
+   not configured to perform sentinel processing.  The KSK sentinel
    method cannot provide him with a definitive answer to the question of
    whether he will be impacted by the KSK roll.
 
@@ -1167,11 +1171,7 @@ Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
    sentinel-not-ta-11112.example.com, and as all of Ed's resolvers both
    perform DNSSEC validation and recognise the sentinel label Ed will be
    unable to fetch the "root-key-sentinel-not-ta-11112" resource.  This
-   tells Ed that his resolvers have not installed the new KSK and he
-   will be negatively implacted by the KSK roll..
 
-   Geoff would like to do a large scale test and provide the information
-   back to Alice.  He uses some mechanism such as causing users to go to
 
 
 
@@ -1180,6 +1180,11 @@ Huston, et al.           Expires March 30, 2019                [Page 21]
 Internet-Draft         DNSSEC Trusted Key Sentinel        September 2018
 
 
+   tells Ed that his resolvers have not installed the new KSK and he
+   will be negatively implacted by the KSK roll..
+
+   Geoff would like to do a large scale test and provide the information
+   back to Alice.  He uses some mechanism such as causing users to go to
    a web page to cause a large number of users to attempt to resolve the
    three resources, and then analyzes the results of the tests to
    determine what percentage of users will be affected by the KSK
@@ -1211,11 +1216,6 @@ Authors' Addresses
    Warren Kumari
 
    Email: warren@kumari.net
-
-
-
-
-
 
 
 

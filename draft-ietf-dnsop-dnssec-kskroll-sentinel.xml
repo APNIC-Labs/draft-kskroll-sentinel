@@ -165,7 +165,7 @@
       resolver is currently trusting as a trust anchor?" Labels containing
       "root-key-sentinel-not-ta-&lt;key-tag&gt;" is used to answer the
       question "Is this the Key Tag of a key which the validating DNS resolver
-      is *not* currently trusting as a trust anchor?". </t>
+      is *not* currently trusting as a trust anchor?".</t>
 
       <t>The special labels defined here came after extensive IETF evaluation
       of alternative patterns and approaches in light of the desired behaviour
@@ -505,6 +505,10 @@
         the local stub DNS resolution environment to query all of its
         configured recursive resolvers before concluding that the name cannot
         be resolved, is a very critical assumption for this test.</t>
+
+        <t>Note that additional precision / determinism may be achievable by
+        bypassing the normal OS behavior and explicitly testing using each
+        configured recursive resolver (e.g using 'dig').</t>
       </section>
 
       <section title="Test Procedure">
@@ -521,13 +525,13 @@
 
             <t>A query name containing the left-most label
             "root-key-sentinel-not-ta-&lt;key-tag-of-KSK-current&gt;". This
-            name MUST be a validly-signed. Any validly-signed DNS zone can be
-            used for this test.</t>
+            name MUST be a validly-signed name. Any validly-signed DNS zone
+            can be used for this test.</t>
 
             <t>A query name containing the left-most label
             "root-key-sentinel-is-ta-&lt;key-tag-of-KSK-new&gt;". This name
-            MUST be a validly-signed. Any validly-signed DNS zone can be used
-            for this test.</t>
+            MUST be a validly-signed name. Any validly-signed DNS zone can be
+            used for this test.</t>
           </list></t>
 
         <t>The responses received from queries to resolve each of these names
@@ -914,7 +918,7 @@
       <t>Geoff sets an authoritative DNS server for example.com, and also a
       webserver (www.example.com). He adds three address records to
       example.com: <list>
-          <t>bogus.example.com. IN AAAA 2001:db8::1</t>
+          <t>bogus.example.com. IN AAAA 2001:db8::1 </t>
 
           <t>root-key-sentinel-is-ta-02323.example.com. IN AAAA
           2001:db8::1</t>
@@ -924,9 +928,9 @@
         </list></t>
 
       <t>Note that the use of "example.com" names and the addresses here are
-      examples. In a real deployment, the domain names need to be under
-      control of the researcher, and the addresses must be real, reachable
-      addresses.</t>
+      examples, and 'bogus' intentionally has invalid DNSSEC signatures. In a
+      real deployment, the domain names need to be under control of the
+      researcher, and the addresses must be real, reachable addresses.</t>
 
       <t>Geoff then DNSSEC signs the example.com zone, and intentionally makes
       the bogus.example.com record have bogus validation status (for example,
