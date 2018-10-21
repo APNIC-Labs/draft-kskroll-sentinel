@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-17"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-16"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Root Key Trust Anchor
@@ -39,7 +39,7 @@
       </address>
     </author>
 
-    <date day="26" month="September" year="2018"/>
+    <date day="20" month="October" year="2018"/>
 
     <area>Internet</area>
 
@@ -690,7 +690,7 @@
       Wessels for providing comments in the form of pull requests. Joe Abley
       also helpfully provided extensive review and OLD / NEW text.</t>
 
-      <t>Petr Spacek wrote some very early implmentations, and provided
+      <t>Petr Spacek wrote some very early implementations, and provided
       significant feedback (including pointing out when the test bed didn't
       match the document!)</t>
     </section>
@@ -700,6 +700,24 @@
 
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
+
+      <t>From -15 to -16:<list style="symbols">
+          <t>Addressed IESG comments</t>
+
+          <t>Benjamin Kaduk's Discuss on draft-ietf-dnsop-kskroll-sentinel</t>
+
+          <t>Also added Terry's "This a bad design pattern, but we decided the
+          benefits outweigh the costs this time." text.</t>
+
+          <t>Suggestion from Adam to clarify that bypassing e.g
+          gethostbyname() can provide better testing. </t>
+
+          <t>Nit: Forgot 'name' in 'This name MUST be a validly-signed
+          name.'</t>
+
+          <t>Clarified that 'bogus.example.com' is intentionally DNSSEC bogus
+          / invalid.</t>
+        </list></t>
 
       <t>From -14 to -15:<list style="symbols">
           <t>Addressed Joe Abley's thorough review, at:
@@ -918,7 +936,7 @@
       <t>Geoff sets an authoritative DNS server for example.com, and also a
       webserver (www.example.com). He adds three address records to
       example.com: <list>
-          <t>bogus.example.com. IN AAAA 2001:db8::1 </t>
+          <t>bogus.example.com. IN AAAA 2001:db8::1</t>
 
           <t>root-key-sentinel-is-ta-02323.example.com. IN AAAA
           2001:db8::1</t>
