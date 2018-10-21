@@ -171,10 +171,11 @@
       of alternative patterns and approaches in light of the desired behaviour
       (sections 2.1, 2.2) within the resolver and the applied testing
       methodology (section 4.3). As one example, underscore prefixed names
-      were rejected because a number of browsers / operating systems would not
-      fetch them, as they were not viewed as valid "hostnames".Attention was
+      were rejected because some browsers and operating systems would not
+      fetch them because they domain names but not valid hostnames
+      (see <xref target="RFC7719"/> for these definitions). Attention was
       paid to the consideration of local collisions and the reservation of
-      Left Hand Side (LHS) labels of a domain name, and the impact upon zone
+      leftmost labels of a domain name, and the impact upon zone
       operators who might desire to use a similarly constructed hostname for a
       purpose other than as documented here. Therefore, it is important to
       note that the reservation of the labels in this manner is definitely not
@@ -276,21 +277,21 @@
 
       <t><list style="symbols">
           <t>A query name containing the left-most label
-          "root-key-sentinel-is-ta-&lt;key-tag&gt;". This corresponds to a a
-          validly-signed label in the parent zone, so that responses
+          "root-key-sentinel-is-ta-&lt;key-tag&gt;". This corresponds to a
+          validly-signed name in the parent zone, so that responses
           associated with this query name can be authenticated by a
           DNSSEC-validating resolver. Any validly-signed DNS zone can be used
           as the parent zone for this test.</t>
 
           <t>A query name containing the left-most label
-          "root-key-sentinel-not-ta-&lt;key-tag&gt;". This is also a
-          validly-signed label. Any validly-signed DNS zone can be used as the
+          "root-key-sentinel-not-ta-&lt;key-tag&gt;". This also corresponds to a
+          validly-signed name. Any validly-signed DNS zone can be used as the
           parent zone for this test.</t>
 
           <t>A query name that is signed with a DNSSEC signature that cannot
           be validated (described as a "bogus" RRset in Section 5 of <xref
           target="RFC4033"/>, when, for example, an RRset associated with a
-          label in a zoneis not signed with a valid RRSIG record).</t>
+          zone that is not signed with a valid RRSIG record).</t>
         </list></t>
 
       <t>The responses received from queries to resolve each of these query
@@ -376,9 +377,9 @@
   ]]></artwork>
         </figure></t>
 
-      <t>In this table the 'Y' response denotes an A or AAAA RRset response
-      (depending on the Query Type of A or AAAA records), 'SERVFAIL' denotes a
-      DNS SERVFAIL response code (RCODE 2), and '*' denotes either
+      <t>In this table, the "Y" response denotes an A or AAAA RRset response
+      (depending on the query type of A or AAAA records), "SERVFAIL" denotes a
+      DNS SERVFAIL response code (RCODE 2), and "*" denotes either
       response.</t>
 
       <t><list style="hanging">
@@ -946,7 +947,7 @@
         </list></t>
 
       <t>Note that the use of "example.com" names and the addresses here are
-      examples, and 'bogus' intentionally has invalid DNSSEC signatures. In a
+      examples, and "bogus" intentionally has invalid DNSSEC signatures. In a
       real deployment, the domain names need to be under control of the
       researcher, and the addresses must be real, reachable addresses.</t>
 
