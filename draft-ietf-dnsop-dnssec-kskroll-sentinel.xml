@@ -5,7 +5,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc compact="yes"?>
-<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-16"
+<rfc category="std" docName="draft-ietf-dnsop-kskroll-sentinel-17"
      ipr="trust200902">
   <front>
     <title abbrev="DNSSEC Trusted Key Sentinel">A Root Key Trust Anchor
@@ -172,14 +172,14 @@
       (sections 2.1, 2.2) within the resolver and the applied testing
       methodology (section 4.3). As one example, underscore prefixed names
       were rejected because some browsers and operating systems would not
-      fetch them because they domain names but not valid hostnames
-      (see <xref target="RFC7719"/> for these definitions). Attention was
-      paid to the consideration of local collisions and the reservation of
-      leftmost labels of a domain name, and the impact upon zone
-      operators who might desire to use a similarly constructed hostname for a
-      purpose other than as documented here. Therefore, it is important to
-      note that the reservation of the labels in this manner is definitely not
-      considered &ldquo;best practice&rdquo;.</t>
+      fetch them because they domain names but not valid hostnames (see <xref
+      target="RFC7719"/> for these definitions). Attention was paid to the
+      consideration of local collisions and the reservation of leftmost labels
+      of a domain name, and the impact upon zone operators who might desire to
+      use a similarly constructed hostname for a purpose other than as
+      documented here. Therefore, it is important to note that the reservation
+      of the labels in this manner is definitely not considered &ldquo;best
+      practice&rdquo;.</t>
 
       <section anchor="precond" title="Preconditions">
         <t>All of the following conditions must be met to trigger special
@@ -278,15 +278,15 @@
       <t><list style="symbols">
           <t>A query name containing the left-most label
           "root-key-sentinel-is-ta-&lt;key-tag&gt;". This corresponds to a
-          validly-signed name in the parent zone, so that responses
-          associated with this query name can be authenticated by a
-          DNSSEC-validating resolver. Any validly-signed DNS zone can be used
-          as the parent zone for this test.</t>
+          validly-signed name in the parent zone, so that responses associated
+          with this query name can be authenticated by a DNSSEC-validating
+          resolver. Any validly-signed DNS zone can be used as the parent zone
+          for this test.</t>
 
           <t>A query name containing the left-most label
-          "root-key-sentinel-not-ta-&lt;key-tag&gt;". This also corresponds to a
-          validly-signed name. Any validly-signed DNS zone can be used as the
-          parent zone for this test.</t>
+          "root-key-sentinel-not-ta-&lt;key-tag&gt;". This also corresponds to
+          a validly-signed name. Any validly-signed DNS zone can be used as
+          the parent zone for this test.</t>
 
           <t>A query name that is signed with a DNSSEC signature that cannot
           be validated (described as a "bogus" RRset in Section 5 of <xref
@@ -702,6 +702,14 @@
       <t>Note that this document is being worked on in GitHub - see Abstract.
       The below is mainly large changes, and is not authoritative.</t>
 
+      <t>From -16 to -17:<list style="symbols">
+          <t>Thank to Paul Hoffman for "Lots of editorial fixes for post-IESG
+          draft" (
+          https://github.com/APNIC-Labs/draft-kskroll-sentinel/pull/28 ) </t>
+
+          <t>Repeat after me: Do not drive git while on cold meds...</t>
+        </list></t>
+
       <t>From -15 to -16:<list style="symbols">
           <t>Addressed IESG comments</t>
 
@@ -711,7 +719,7 @@
           benefits outweigh the costs this time." text.</t>
 
           <t>Suggestion from Adam to clarify that bypassing e.g
-          gethostbyname() can provide better testing. </t>
+          gethostbyname() can provide better testing.</t>
 
           <t>Nit: Forgot 'name' in 'This name MUST be a validly-signed
           name.'</t>
